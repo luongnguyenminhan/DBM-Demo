@@ -33,6 +33,7 @@ export interface TypographyBaseProps {
 
 export interface HeadingProps extends Omit<TypographyBaseProps, 'asElement'> {
   level?: HeadingLevel;
+  useCustomFont?: boolean;
 }
 
 export interface TextProps extends TypographyBaseProps {
@@ -191,13 +192,14 @@ const createTypographyElement = (
   return content;
 };
 
-export const Heading: React.FC<HeadingProps> = ({ level = 'h2', ...props }) => {
+export const Heading: React.FC<HeadingProps> = ({ level = 'h2', useCustomFont = true, ...props }) => {
   const defaultSize = headingDefaultSizes[level];
   return createTypographyElement(
     {
       ...props,
       size: props.size || defaultSize,
       weight: props.weight || 'bold',
+      customClassName: classNames(props.customClassName, { 'font-svn-hemi': useCustomFont }),
     },
     defaultSize,
     level
