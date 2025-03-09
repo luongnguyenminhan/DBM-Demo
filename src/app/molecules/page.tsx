@@ -4,6 +4,9 @@ import React from 'react';
 import Typography from '@/components/atomic/typo';
 import Card from '@/components/atomic/card';
 import DropdownMenu from '@/components/molecules/dropdown';
+import PaginationControl from '@/components/molecules/paginationControl';
+import Alert from '@/components/molecules/alert';
+import TabNavigation from '@/components/molecules/tabNavigation';
 import { 
   faUser, 
   faEdit, 
@@ -18,7 +21,9 @@ import {
   faLanguage,
   faGlobe,
   faThumbsUp,
-  faChartBar
+  faChartBar,
+  faCheckCircle,
+  faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -318,6 +323,328 @@ export default function MoleculesShowcase() {
                 />
               </div>
             </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* Pagination Controls */}
+      <section id="pagination" className="space-y-8">
+        <Heading level="h2">Pagination Controls</Heading>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card title="Basic Variants" size="small">
+            <div className="space-y-6">
+              <PaginationControl
+                totalPages={10}
+                currentPage={1}
+                onChange={(page) => console.log('Page changed to:', page)}
+                variant="primary"
+              />
+              
+              <PaginationControl
+                totalPages={10}
+                currentPage={5}
+                onChange={(page) => console.log('Page changed to:', page)}
+                variant="secondary"
+              />
+              
+              <PaginationControl
+                totalPages={10}
+                currentPage={7}
+                onChange={(page) => console.log('Page changed to:', page)}
+                variant="outline"
+              />
+
+              <PaginationControl
+                totalPages={10}
+                currentPage={3}
+                onChange={(page) => console.log('Page changed to:', page)}
+                variant="ghost"
+              />
+            </div>
+          </Card>
+          
+          <Card title="Sizes & Alignments" size="small">
+            <div className="space-y-6">
+              <PaginationControl
+                totalPages={5}
+                currentPage={2}
+                onChange={(page) => console.log('Page changed to:', page)}
+                size="small"
+              />
+              
+              <PaginationControl
+                totalPages={5}
+                currentPage={3}
+                onChange={(page) => console.log('Page changed to:', page)}
+                size="medium"
+                align="center"
+              />
+              
+              <PaginationControl
+                totalPages={5}
+                currentPage={4}
+                onChange={(page) => console.log('Page changed to:', page)}
+                size="large"
+                align="right"
+              />
+            </div>
+          </Card>
+
+          <Card title="Advanced Features" size="small">
+            <div className="space-y-6">
+              <PaginationControl
+                totalPages={20}
+                currentPage={5}
+                onChange={(page) => console.log('Page changed to:', page)}
+                showQuickJump
+                showTotal
+                totalItems={187}
+                pageSize={10}
+                showFirstLastButtons
+              />
+              
+              <PaginationControl
+                totalPages={15}
+                currentPage={3}
+                onChange={(page) => console.log('Page changed to:', page)}
+                siblingCount={2}
+                withAnimation
+                showFirstLastButtons
+              />
+            </div>
+          </Card>
+
+          <Card title="Styling Options" size="small">
+            <div className="space-y-6">
+              <PaginationControl
+                totalPages={8}
+                currentPage={4}
+                onChange={(page) => console.log('Page changed to:', page)}
+                rounded
+                withBackground
+                withBorder={false}
+              />
+              
+              <PaginationControl
+                totalPages={8}
+                currentPage={2}
+                onChange={(page) => console.log('Page changed to:', page)}
+                isFullWidth
+                withBackground
+                rounded
+              />
+
+              <PaginationControl
+                totalPages={8}
+                currentPage={6}
+                onChange={(page) => console.log('Page changed to:', page)}
+                isDisabled
+              />
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* Alert Components */}
+      <section id="alerts" className="space-y-8">
+        <Heading level="h2">Alert Variants</Heading>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card title="Basic Alerts" size="small">
+            <div className="space-y-4">
+              <Alert
+                message="Success alert message"
+                variant="success"
+              />
+              <Alert
+                message="Error alert message"
+                variant="error"
+              />
+              <Alert
+                message="Warning alert message"
+                variant="warning"
+              />
+              <Alert
+                message="Info alert message"
+                variant="info"
+              />
+            </div>
+          </Card>
+
+          <Card title="With Description" size="small">
+            <div className="space-y-4">
+              <Alert
+                message="Success with description"
+                description="This is a success message with additional details."
+                variant="success"
+                icon={faCheckCircle}
+              />
+              <Alert
+                message="Error with description"
+                description="This is an error message with additional details."
+                variant="error"
+                icon={faTimesCircle}
+              />
+            </div>
+          </Card>
+
+          <Card title="Sizes & Styles" size="small">
+            <div className="space-y-4">
+              <Alert
+                message="Small alert"
+                size="small"
+                variant="info"
+              />
+              <Alert
+                message="Medium alert with rounded corners"
+                size="medium"
+                rounded
+                variant="success"
+              />
+              <Alert
+                message="Large alert without background"
+                size="large"
+                withBackground={false}
+                variant="warning"
+              />
+            </div>
+          </Card>
+
+          <Card title="Interactive Alerts" size="small">
+            <div className="space-y-4">
+              <Alert
+                message="Alert with action"
+                actionLabel="Undo"
+                onAction={() => alert('Action clicked')}
+                variant="info"
+              />
+              <Alert
+                message="Auto-closing alert"
+                autoClose
+                autoCloseDuration={5000}
+                variant="success"
+              />
+              <Alert
+                message="Custom styled alert"
+                withShadow
+                rounded
+                withBorder={false}
+                variant="warning"
+              />
+            </div>
+          </Card>
+
+          <Card title="Floating Alerts" size="small">
+            <div className="space-y-4">
+              <Alert
+                message="Top right alert"
+                position="top-right"
+                isFloating
+                variant="info"
+              />
+              <Alert
+                message="Bottom left alert"
+                position="bottom-left"
+                isFloating
+                variant="success"
+              />
+            </div>
+          </Card>
+
+          <Card title="Border Radius Variants" size="small">
+            <div className="space-y-4">
+              <Alert
+                message="Small border radius"
+                variant="info"
+                borderRadius="small"
+              />
+              <Alert
+                message="Medium border radius"
+                variant="success"
+                borderRadius="medium"
+              />
+              <Alert
+                message="Large border radius"
+                variant="warning"
+                borderRadius="large"
+              />
+              <Alert
+                message="Full border radius"
+                variant="error"
+                borderRadius="full"
+              />
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* Tab Navigation */}
+      <section id="tabs" className="space-y-8">
+        <Heading level="h2">Tab Navigation</Heading>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card title="Basic Tabs" size="small">
+            <TabNavigation
+              tabs={[
+                { key: 'tab1', label: 'Tab 1', content: <div className="p-4">Content for Tab 1</div> },
+                { key: 'tab2', label: 'Tab 2', content: <div className="p-4">Content for Tab 2</div> },
+                { key: 'tab3', label: 'Tab 3', content: <div className="p-4">Content for Tab 3</div> },
+              ]}
+              variant="default"
+            />
+          </Card>
+
+          <Card title="Tabs with Icons" size="small">
+            <TabNavigation
+              tabs={[
+                { key: 'profile', label: 'Profile', icon: faUser, content: <div className="p-4">Profile Content</div> },
+                { key: 'settings', label: 'Settings', icon: faCog, content: <div className="p-4">Settings Content</div> },
+                { key: 'notifications', label: 'Alerts', icon: faFlag, content: <div className="p-4">Notifications Content</div> },
+              ]}
+              withIcon
+              variant="primary"
+            />
+          </Card>
+
+          <Card title="Tabs with Badges" size="small">
+            <TabNavigation
+              tabs={[
+                { key: 'inbox', label: 'Inbox', badge: '3', badgeVariant: 'primary', content: <div className="p-4">Inbox Content</div> },
+                { key: 'spam', label: 'Spam', badge: '12', badgeVariant: 'warning', content: <div className="p-4">Spam Content</div> },
+                { key: 'archive', label: 'Archive', content: <div className="p-4">Archive Content</div> },
+              ]}
+              variant="outline"
+              borderRadius="medium"
+            />
+          </Card>
+
+          <Card title="Advanced Features" size="small">
+            <TabNavigation
+              tabs={[
+                { key: 'tab1', label: 'Tab 1', closable: true, content: <div className="p-4">Closable Tab</div> },
+                { key: 'tab2', label: 'Tab 2', disabled: true, content: <div className="p-4">Disabled Tab</div> },
+                { key: 'tab3', label: 'Tab 3', content: <div className="p-4">Normal Tab</div> },
+              ]}
+              variant="secondary"
+              withGradientIndicator
+              withScrollIndicators
+              allowAddTab
+              onAddTab={() => alert('Add new tab clicked')}
+              onTabClose={(key) => alert(`Close tab ${key} clicked`)}
+              borderRadius="medium"  // Add border radius
+            />
+          </Card>
+
+          <Card title="Vertical Tabs" size="small">
+            <TabNavigation
+              tabs={[
+                { key: 'tab1', label: 'Section 1', content: <div className="p-4">Content 1</div> },
+                { key: 'tab2', label: 'Section 2', content: <div className="p-4">Content 2</div> },
+                { key: 'tab3', label: 'Section 3', content: <div className="p-4">Content 3</div> },
+              ]}
+              orientation="vertical"
+              variant="minimal"
+            />
           </Card>
         </div>
       </section>
