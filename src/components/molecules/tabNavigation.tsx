@@ -39,7 +39,6 @@ export interface TabNavigationProps {
     isFullWidth?: boolean;
     withAnimation?: boolean;
     animationType?: 'fade' | 'slide' | 'none';
-    rounded?: boolean;
     withIcon?: boolean;
     iconPosition?: 'left' | 'right' | 'top';
     withBorder?: boolean;
@@ -63,7 +62,6 @@ export interface TabNavigationProps {
     borderRadius?: TabBorderRadius;
 }
 
-
 interface TabBarProps {
     activeKey: string;
     onTabClick: (key: string) => void;
@@ -84,7 +82,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
     isFullWidth = false,
     withAnimation = true,
     animationType = 'fade',
-    rounded = false,
     withIcon = false,
     iconPosition = 'left',
     withBorder = true,
@@ -107,7 +104,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
     onAddTab,
     borderRadius = 'none'
 }) => {
-    // Use the hook instead of local state/effects
     const {
         activeKey,
         scrollPosition,
@@ -125,29 +121,34 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         withScrollIndicators
     });
 
-    // Wrapper for handleTabClose to include onTabClose and key parameter
     const handleTabClose = (e: React.MouseEvent, key: string) => {
         baseHandleTabClose(e);
         onTabClose?.(key);
     };
 
-    // Size classes
     const sizeClasses = {
         small: 'text-xs py-1 px-2',
         medium: 'text-sm py-2 px-4',
         large: 'text-base py-3 px-6',
     };
 
-    // Border radius classes
-    const borderRadiusClasses = {
-        'none': '',
-        'small': 'rounded',
-        'medium': 'rounded-md',
-        'large': 'rounded-lg',
-        'full': 'rounded-full'
+    const directionalBorderRadiusClasses = {
+        horizontal: {
+            'none': '',
+            'small': 'rounded-t-sm',
+            'medium': 'rounded-t-md',
+            'large': 'rounded-t-lg',
+            'full': 'rounded-t-full',
+        },
+        vertical: {
+            'none': '',
+            'small': 'rounded-l-sm',
+            'medium': 'rounded-l-md',
+            'large': 'rounded-l-lg',
+            'full': 'rounded-l-full',
+        },
     };
 
-    // Container classes
     const containerClasses = classNames(
         'tabs-container',
         {
@@ -158,7 +159,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         customClassName
     );
 
-    // Tab bar classes
     const tabBarClasses = classNames(
         'tabs-bar',
         'relative flex',
@@ -176,18 +176,15 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         }
     );
 
-    // Tab classes - base style for all tabs
     const getTabClasses = (tab: TabItem) => {
         return classNames(
             'tab-item',
             'relative flex items-center transition-all cursor-pointer',
             sizeClasses[size],
-            borderRadiusClasses[borderRadius],
+            directionalBorderRadiusClasses[orientation][borderRadius],
             {
                 'opacity-50 cursor-not-allowed': tab.disabled,
                 'flex-col': iconPosition === 'top' && withIcon,
-                'rounded-t-lg': rounded && orientation === 'horizontal',
-                'rounded-r-lg': rounded && orientation === 'vertical',
                 'justify-center': iconPosition === 'top' || centered,
                 'flex-1': alignment === 'stretch',
                 'mx-1': tabBarGutter === undefined && orientation === 'horizontal',
@@ -199,9 +196,10 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         );
     };
 
-    // Get the active indicator classes based on variant
     const getActiveTabClasses = (isActive: boolean, variant: TabVariant) => {
         if (!isActive) return '';
+        
+        const borderClass = orientation === 'horizontal' ? 'border-b-2' : 'border-r-2';
         
         switch (variant) {
             case 'primary':
@@ -209,17 +207,16 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
             case 'secondary':
                 return 'bg-[var(--color-secondary)] !text-white';
             case 'outline':
-                return 'border-[var(--color-primary)] border-b-2 !text-[var(--color-primary)]';
+                return `border-[var(--color-primary)] ${borderClass} !text-[var(--color-primary)]`;
             case 'minimal':
                 return '!text-[var(--color-primary)]';
             default:
                 return withGradientIndicator 
                     ? '!text-[var(--color-primary)]' 
-                    : 'border-[var(--color-primary)] border-b-2 !text-[var(--color-primary)]';
+                    : `border-[var(--color-primary)] ${borderClass} !text-[var(--color-primary)]`;
         }
     };
 
-    // Content animation variants
     const contentAnimationVariants = {
         fade: {
             hidden: { opacity: 0 },
@@ -235,7 +232,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         },
     };
 
-    // Custom tab bar renderer
     const renderCustomTabBar = () => {
         if (renderTabBar) {
             const props: TabBarProps = {
@@ -250,7 +246,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         return null;
     };
 
-    // Render tab labels with optional icons and badges
     const renderTabLabel = (tab: TabItem) => {
         const hasIcon = withIcon && tab.icon;
         
@@ -272,7 +267,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         ) : tab.label;
 
         const badgeElement = tab.badge !== undefined && (
-            <span className={`text-xs px-1.5 py-0.5 rounded-full ml-2 bg-${tab.badgeVariant || 'primary'}-500 text-white`}>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full ml-2 bg-${tab.badgeVariant || 'primary'}-500`}>
                 {tab.badge}
             </span>
         );
@@ -299,32 +294,30 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         );
     };
 
-    // Render the tab indicator
     const renderActiveIndicator = () => {
-        // Skip indicator for primary/secondary variants that use background color instead
         if (variant === 'primary' || variant === 'secondary') return null;
         
         if (withGradientIndicator) {
+            const indicatorClass = orientation === 'horizontal' 
+                ? 'bottom-0 left-0 w-full h-1 rounded-t' 
+                : 'right-0 top-0 h-full w-1 rounded-r';
+            
+            const gradientClass = orientation === 'horizontal' 
+                ? 'bg-gradient-to-r from-pink-500 to-indigo-500' 
+                : 'bg-gradient-to-b from-pink-500 to-indigo-500';
+            
             return (
                 <motion.div
-                    className="absolute bottom-0 h-1 bg-gradient-to-r from-pink-500 to-indigo-500 rounded-t"
+                    className={classNames('absolute', indicatorClass, gradientClass)}
                     layoutId="activeTabIndicator"
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    style={{
-                        width: '100%',
-                        height: '2px',
-                        left: '0',
-                        bottom: '0',
-                    }}
                 />
             );
         }
         
-        // For default/outline/minimal variants
-        return null; // Indicator is handled via border in class names
+        return null;
     };
 
-    // Render the content of the active tab
     const renderTabContent = () => {
         if (!showContent) return null;
         
@@ -365,7 +358,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         );
     };
 
-    // Render scroll buttons
     const renderScrollButtons = () => {
         return (
             <>
@@ -396,7 +388,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         );
     };
 
-    // Render add button
     const renderAddButton = () => {
         if (!allowAddTab) return null;
         
@@ -422,7 +413,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         );
     };
 
-    // Render tabs navigation
     const renderTabs = () => {
         return (
             <div className="relative">
