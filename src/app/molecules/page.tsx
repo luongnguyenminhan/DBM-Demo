@@ -7,6 +7,7 @@ import DropdownMenu from '@/components/molecules/dropdown';
 import PaginationControl from '@/components/molecules/paginationControl';
 import Alert from '@/components/molecules/alert';
 import TabNavigation from '@/components/molecules/tabNavigation';
+import Breadcrumb from '@/components/molecules/breadcrumb';
 import { 
   faUser, 
   faEdit, 
@@ -24,6 +25,7 @@ import {
   faChartBar,
   faCheckCircle,
   faTimesCircle,
+  faHome
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -38,6 +40,109 @@ export default function MoleculesShowcase() {
           A comprehensive display of molecular components
         </Text>
       </div>
+
+      {/* Breadcrumb Components */}
+      <section id="breadcrumbs" className="space-y-8">
+        <Heading level="h2">Breadcrumb Navigation</Heading>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card title="Basic Breadcrumbs" size="small">
+            <div className="space-y-6">
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home', href: '/' },
+                  { key: 'products', label: 'Products', href: '/products' },
+                  { key: 'category', label: 'Electronics', href: '/products/electronics' },
+                ]}
+              />
+
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home', href: '/' },
+                  { key: 'dashboard', label: 'Dashboard', href: '/dashboard' },
+                  { key: 'settings', label: 'Settings', href: '/dashboard/settings' },
+                ]}
+                variant="primary"
+                withCard
+              />
+            </div>
+          </Card>
+
+          <Card title="Sizes & Variants" size="small">
+            <div className="space-y-6">
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home' },
+                  { key: 'level1', label: 'Level 1' },
+                  { key: 'level2', label: 'Level 2' },
+                ]}
+                size="small"
+                variant="secondary"
+              />
+
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home' },
+                  { key: 'level1', label: 'Level 1' },
+                  { key: 'level2', label: 'Level 2' },
+                ]}
+                size="large"
+                variant="minimal"
+              />
+            </div>
+          </Card>
+
+          <Card title="With Icons & Custom Separator" size="small">
+            <div className="space-y-6">
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home', icon: faHome },
+                  { key: 'user', label: 'Profile', icon: faUser },
+                  { key: 'settings', label: 'Settings', icon: faCog },
+                ]}
+                separator="slash"
+                withHomeIcon
+              />
+
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home' },
+                  { key: 'products', label: 'Products' },
+                  { key: 'detail', label: 'Product Detail' },
+                ]}
+                separator="dot"
+              />
+            </div>
+          </Card>
+
+          <Card title="Advanced Features" size="small">
+            <div className="space-y-6">
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home' },
+                  { key: 'category', label: 'Category' },
+                  { key: 'subcategory', label: 'Subcategory' },
+                  { key: 'product', label: 'Product' },
+                  { key: 'detail', label: 'Detail' },
+                ]}
+                maxItems={3}
+                withAnimation
+              />
+
+              <Breadcrumb
+                items={[
+                  { key: 'home', label: 'Home' },
+                  { key: 'products', label: 'Products', disabled: true },
+                  { key: 'active', label: 'Current Page' },
+                ]}
+                loading={false}
+                withCard
+                onSeparatorClick={(index) => console.log('Separator clicked:', index)}
+              />
+            </div>
+          </Card>
+        </div>
+      </section>
 
       {/* Dropdown Components */}
       <section id="dropdowns" className="space-y-8">
@@ -603,6 +708,7 @@ export default function MoleculesShowcase() {
               ]}
               withIcon
               variant="primary"
+              borderRadius="medium"
             />
           </Card>
 
@@ -644,6 +750,7 @@ export default function MoleculesShowcase() {
               ]}
               orientation="vertical"
               variant="minimal"
+              borderRadius="medium"
             />
           </Card>
         </div>
