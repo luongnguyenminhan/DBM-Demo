@@ -11,7 +11,6 @@ import Typography from '@/components/atomic/typo';
 import Badge, { Tag } from '@/components/atomic/badge';
 import Avatar, { AvatarGroup } from '@/components/atomic/avatar';
 
-
 import {
   faUser,
   faEnvelope,
