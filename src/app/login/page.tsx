@@ -1,80 +1,50 @@
 'use client';
 
-import { useState } from 'react';
-import { Form, Input, Card, message } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
-import Button from '@/components/atomic/button';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import LoginForm from '@/components/auth/loginForm';
+import { Toast } from '@/components/molecules/alert';
 
-export default function Login() {
-  const [loading, setLoading] = useState(false);
-
-  const onFinish = (values: { username: string; password: string }) => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      if (values.username === 'admin' && values.password === 'password') {
-        message.success('Login successful!');
-        window.location.href = '/';
-      } else {
-        message.error('Invalid username or password');
-      }
-      setLoading(false);
-    }, 1000);
+export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handleLogin = async (credentials: { email: string; password: string }) => {
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call with delay
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate successful login for demo@example.com/password123
+          if (credentials.email === 'demo@example.com' && credentials.password === 'password123') {
+            resolve(true);
+          } else {
+            reject(new Error('Email hoặc mật khẩu không chính xác'));
+          }
+        }, 1000); // 2 second delay to simulate network request
+      });
+      
+      // Show success toast on successful login
+      Toast.success('Đăng nhập thành công!', {
+        autoCloseDuration: 3000,
+        position: 'top-right'
+      });
+      
+      // Redirect or perform other actions after successful login
+      console.log('Login successful:', credentials);
+      
+    } catch (error) {
+      // Error will be handled by the LoginForm component
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <Card title="Login" className="shadow-lg">
-          <Form
-            name="login"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            layout="vertical"
-          >
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Please input your username!' }]}
-            >
-              <Input 
-                prefix={<FontAwesomeIcon icon={faUser} className="text-gray-400 mr-2" />} 
-                placeholder="Username" 
-                size="large" 
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-              <Input.Password
-                prefix={<FontAwesomeIcon icon={faLock} className="text-gray-400 mr-2" />}
-                placeholder="Password"
-                size="large"
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Button 
-                variant="primary" 
-                htmlType="submit" 
-                loading={loading} 
-                block
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                Log in
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-      </motion.div>
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
+      <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-2/5">
+        <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+      </div>
     </div>
   );
 }

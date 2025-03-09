@@ -11,8 +11,8 @@ import classNames from 'classnames';
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'gradient';
 export type ButtonSize = 'small' | 'medium' | 'large';
 
-// Define ButtonProps, omitting 'size', 'type', and 'variant' from AntButtonProps
-export interface ButtonProps extends Omit<AntButtonProps, 'size' | 'type' | 'variant'> {
+// Define ButtonProps, omitting 'size' and 'variant' from AntButtonProps
+export interface ButtonProps extends Omit<AntButtonProps, 'size' | 'variant' | 'type'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   leftIcon?: IconDefinition;
@@ -23,6 +23,8 @@ export interface ButtonProps extends Omit<AntButtonProps, 'size' | 'type' | 'var
   customClassName?: string;
   withRipple?: boolean;
   rounded?: boolean;
+  htmlType?: 'button' | 'submit' | 'reset';
+  type?: 'link' | 'text' | 'primary' | 'default' | 'dashed'; // Ant Design button type
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -110,6 +112,7 @@ const Button: React.FC<ButtonProps> = ({
       whileHover="hover"
       whileTap="tap"
       variants={buttonVariants}
+      type={props.htmlType || 'button'}
     >
       {isLoading && (
         <span className="animate-spin mr-2">
@@ -126,6 +129,7 @@ const Button: React.FC<ButtonProps> = ({
       className={buttonClasses}
       onClick={handleClick}
       disabled={isDisabled || isLoading}
+      type={props.htmlType || 'button'}
     >
       {isLoading && (
         <span className="animate-spin mr-2">
@@ -144,11 +148,13 @@ const Button: React.FC<ButtonProps> = ({
   if (useAntButton) {
     return (
       <AntButton
+        type={props.type || 'default'}
         className={buttonClasses}
         onClick={handleClick}
         disabled={isDisabled}
         loading={isLoading}
         size={size === 'small' ? 'small' : size === 'large' ? 'large' : 'middle'}
+        htmlType={props.htmlType}
         {...props}
       >
         {leftIcon && !isLoading && <FontAwesomeIcon icon={leftIcon} />}
