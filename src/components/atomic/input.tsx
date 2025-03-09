@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Input as AntInput, InputProps as AntInputProps, InputRef } from 'antd';
 import classNames from 'classnames';
+import { useInputState } from '../../hooks/use-input-state';
+import type { ChangeEvent, FocusEvent } from 'react';
 
 export type InputVariant = 'default' | 'primary' | 'secondary' | 'outlined' | 'ghost';
 export type InputSize = 'small' | 'medium' | 'large';
@@ -59,8 +61,17 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
     },
     ref
   ) => {
-    const [isFocused, setIsFocused] = useState(false);
-    const [hasValue, setHasValue] = useState(Boolean(value));
+    // Cast the onChange handler to the compatible type
+    const handleInputChange = onChange as unknown as (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    const handleInputFocus = onFocus as unknown as (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    const handleInputBlur = onBlur as unknown as (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+
+    const { isFocused, hasValue, handleFocus, handleBlur, handleChange } = useInputState(
+      value as string,
+      handleInputChange,
+      handleInputFocus,
+      handleInputBlur
+    );
 
     // Size classes
     const sizeClasses = {
@@ -155,42 +166,21 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       blurred: { scale: 1 },
     };
 
-    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-      setIsFocused(true);
-      onFocus?.(e);
-    };
-
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      setIsFocused(false);
-      onBlur?.(e);
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setHasValue(e.target.value.length > 0);
-      onChange?.(e);
-    };
-
     const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setHasValue(e.target.value.length > 0);
         if (onChange) {
-            const event = e as unknown as React.ChangeEvent<HTMLInputElement>;
-            onChange(event);
+            onChange({ target: { value: e.target.value } } as React.ChangeEvent<HTMLInputElement>);
         }
     };
 
     const handleTextAreaFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        setIsFocused(true);
         if (onFocus) {
-            const event = e as unknown as React.FocusEvent<HTMLInputElement>;
-            onFocus(event);
+            onFocus(e as unknown as React.FocusEvent<HTMLInputElement>);
         }
     };
 
     const handleTextAreaBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        setIsFocused(false);
         if (onBlur) {
-            const event = e as unknown as React.FocusEvent<HTMLInputElement>;
-            onBlur(event);
+            onBlur(e as unknown as React.FocusEvent<HTMLInputElement>);
         }
     };
   
