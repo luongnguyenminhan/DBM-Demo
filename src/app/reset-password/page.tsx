@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ResetPasswordForm from '@/components/auth/resetPasswordForm';
-import { Toast } from '@/components/molecules/alert';
 import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
-export default function ResetPasswordPage() {
+// Create a client component that uses useSearchParams
+function ResetPasswordContent() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
-  const router = useRouter();
   const { redirectWithDelay } = useAuthRedirect();
   
   // Get email from query parameters
@@ -55,21 +54,37 @@ export default function ResetPasswordPage() {
 
   if (!email) {
     return (
-      <AuthContentWrapper>
-        <div className="text-center p-8">
-          <p className="text-lg text-gray-600">Đang chuyển hướng...</p>
-        </div>
-      </AuthContentWrapper>
+      <div className="text-center p-8">
+        <p className="text-lg text-gray-600">Đang chuyển hướng...</p>
+      </div>
     );
   }
 
   return (
+    <ResetPasswordForm 
+      onSubmit={handleResetPassword} 
+      email={email}
+      isLoading={isLoading} 
+    />
+  );
+}
+
+// Loading fallback component
+function LoadingFallback() {
+  return (
+    <div className="text-center p-8">
+      <p className="text-lg text-gray-600">Đang tải...</p>
+    </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function ResetPasswordPage() {
+  return (
     <AuthContentWrapper>
-      <ResetPasswordForm 
-        onSubmit={handleResetPassword} 
-        email={email}
-        isLoading={isLoading} 
-      />
+      <Suspense fallback={<LoadingFallback />}>
+        <ResetPasswordContent />
+      </Suspense>
     </AuthContentWrapper>
   );
 }

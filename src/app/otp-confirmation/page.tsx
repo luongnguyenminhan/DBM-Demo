@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import OtpConfirmationForm from '@/components/auth/otpConfirmationForm';
 import { Toast } from '@/components/molecules/alert';
 import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
-export default function OtpConfirmationPage() {
+// Client component that safely uses useSearchParams
+function OtpConfirmationContent() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
-  const router = useRouter();
   const { redirectWithDelay } = useAuthRedirect();
   
   // Get email and purpose from query parameters
@@ -82,14 +82,32 @@ export default function OtpConfirmationPage() {
   };
 
   return (
+    <OtpConfirmationForm 
+      onSubmit={handleOtpConfirmation} 
+      email={email} 
+      isLoading={isLoading} 
+      resendOTP={handleResendOtp}
+      purpose={purpose}
+    />
+  );
+}
+
+// Loading fallback component
+function LoadingFallback() {
+  return (
+    <div className="text-center p-8">
+      <p className="text-lg text-gray-600">Đang tải...</p>
+    </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function OtpConfirmationPage() {
+  return (
     <AuthContentWrapper>
-      <OtpConfirmationForm 
-        onSubmit={handleOtpConfirmation} 
-        email={email} 
-        isLoading={isLoading} 
-        resendOTP={handleResendOtp}
-        purpose={purpose}
-      />
+      <Suspense fallback={<LoadingFallback />}>
+        <OtpConfirmationContent />
+      </Suspense>
     </AuthContentWrapper>
   );
 }
