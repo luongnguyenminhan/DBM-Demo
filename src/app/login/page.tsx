@@ -69,7 +69,7 @@ export default function LoginPage() {
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
         <div className="w-full max-w-5xl mx-auto">
-          <LoginForm onSubmit={handleLogin} isLoading={isLoading} locale="vi" />
+          <LoginForm onSubmit={handleLogin} isLoading={isLoading}/>
         </div>
       </main>
       
