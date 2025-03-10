@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import RegisterForm from '@/components/auth/registerForm';
 import { Toast } from '@/components/molecules/alert';
+import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,10 +42,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 2xl:p-20">
-      <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-2/5">
-        <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
-      </div>
-    </div>
+    <AuthContentWrapper>
+      <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
+    </AuthContentWrapper>
   );
 }

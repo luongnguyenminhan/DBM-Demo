@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import LoginForm from '@/components/auth/loginForm';
 import { Toast } from '@/components/molecules/alert';
+import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,10 +42,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 2xl:p-20">
-      <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-2/5">
-        <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-      </div>
-    </div>
+    <AuthContentWrapper>
+      <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+    </AuthContentWrapper>
   );
 }

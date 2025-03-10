@@ -4,11 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import OtpConfirmationForm from '@/components/auth/otpConfirmationForm';
 import { Toast } from '@/components/molecules/alert';
+import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
 export default function OtpConfirmationPage() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { redirectWithDelay } = useAuthRedirect();
   
   // Get email and purpose from query parameters
   const email = searchParams.get('email') || '';
@@ -46,15 +49,13 @@ export default function OtpConfirmationPage() {
       });
       
       // Redirect based on purpose
-      setTimeout(() => {
-        if (purpose === 'passwordReset') {
-          router.push(`/reset-password?email=${encodeURIComponent(emailAddress)}`);
-        } else if (purpose === 'registration') {
-          router.push('/registration-complete');
-        } else {
-          router.push('/dashboard');
-        }
-      }, 1000);
+      if (purpose === 'passwordReset') {
+        redirectWithDelay(`/reset-password?email=${encodeURIComponent(emailAddress)}`, 1000);
+      } else if (purpose === 'registration') {
+        redirectWithDelay('/registration-complete', 1000);
+      } else {
+        redirectWithDelay('/dashboard', 1000);
+      }
       
     } catch (error) {
       // Error will be handled by the form component
@@ -81,16 +82,14 @@ export default function OtpConfirmationPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 2xl:p-20">
-      <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-2/5">
-        <OtpConfirmationForm 
-          onSubmit={handleOtpConfirmation} 
-          email={email} 
-          isLoading={isLoading} 
-          resendOTP={handleResendOtp}
-          purpose={purpose}
-        />
-      </div>
-    </div>
+    <AuthContentWrapper>
+      <OtpConfirmationForm 
+        onSubmit={handleOtpConfirmation} 
+        email={email} 
+        isLoading={isLoading} 
+        resendOTP={handleResendOtp}
+        purpose={purpose}
+      />
+    </AuthContentWrapper>
   );
 }

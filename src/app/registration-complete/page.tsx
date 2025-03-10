@@ -1,25 +1,36 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import RegistrationCompleteForm from '@/components/auth/registrationCompleteForm';
-import useRegistrationComplete from '@/hooks/use-registrationComplete';
 import { Toast } from '@/components/molecules/alert';
+import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
 export default function RegistrationCompletePage() {
-    const { handleContinueToLogin, handleRegisterAnother } = useRegistrationComplete();
+    const { redirectWithDelay } = useAuthRedirect();
 
-    // Show initial success toast
-    Toast.success('Đăng ký thành công!', {
-        position: "top-right",
-        autoCloseDuration: 3000,
-    });
+    useEffect(() => {
+        // Show initial success toast
+        Toast.success('Đăng ký thành công!', {
+            position: "top-right",
+            autoCloseDuration: 3000,
+        });
+    }, []);
+
+    const handleContinueToLogin = () => {
+        redirectWithDelay('/login', 500);
+    };
+
+    const handleRegisterAnother = () => {
+        redirectWithDelay('/register', 500);
+    };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 2xl:p-20">
+        <AuthContentWrapper>
             <RegistrationCompleteForm 
                 onContinue={handleContinueToLogin}
                 onRegisterAnother={handleRegisterAnother}
             />
-        </div>
+        </AuthContentWrapper>
     );
 }

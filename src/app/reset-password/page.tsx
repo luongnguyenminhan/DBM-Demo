@@ -4,30 +4,26 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ResetPasswordForm from '@/components/auth/resetPasswordForm';
 import { Toast } from '@/components/molecules/alert';
+import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
 export default function ResetPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { redirectWithDelay } = useAuthRedirect();
   
   // Get email from query parameters
   const email = searchParams.get('email') || '';
   
   useEffect(() => {
     if (!email) {
-      Toast.error('Không tìm thấy thông tin email. Vui lòng thử lại.', {
-        position: "top-right",
-        autoCloseDuration: 5000,
+      redirectWithDelay('/forgot-password', 3000, {
+        type: 'error',
+        text: 'Không tìm thấy thông tin email. Vui lòng thử lại.'
       });
-      
-      // Redirect to forgot password after a short delay if no email is provided
-      const timer = setTimeout(() => {
-        router.push('/forgot-password');
-      }, 3000);
-      
-      return () => clearTimeout(timer);
     }
-  }, [email, router]);
+  }, [email, redirectWithDelay]);
   
   const handleResetPassword = async (passwordData: { password: string; email: string }) => {
     setIsLoading(true);
@@ -43,16 +39,11 @@ export default function ResetPasswordPage() {
       // Use passwordData in a console log to avoid the unused variable warning
       console.log(`Resetting password for ${passwordData.email} with new password length: ${passwordData.password.length}`);
       
-      // Success case
-      Toast.success('Mật khẩu đã được đặt lại thành công!', {
-        position: "top-right",
-        autoCloseDuration: 3000,
+      // Success case and redirect to login
+      redirectWithDelay('/login', 2000, {
+        type: 'success',
+        text: 'Mật khẩu đã được đặt lại thành công!'
       });
-      
-      // Redirect to login after a success (handled by the form)
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
       
     } catch (error) {
       // Error will be handled by the form component
@@ -64,23 +55,21 @@ export default function ResetPasswordPage() {
 
   if (!email) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <AuthContentWrapper>
         <div className="text-center p-8">
           <p className="text-lg text-gray-600">Đang chuyển hướng...</p>
         </div>
-      </div>
+      </AuthContentWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 2xl:p-20">
-      <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-2/5">
-        <ResetPasswordForm 
-          onSubmit={handleResetPassword} 
-          email={email}
-          isLoading={isLoading} 
-        />
-      </div>
-    </div>
+    <AuthContentWrapper>
+      <ResetPasswordForm 
+        onSubmit={handleResetPassword} 
+        email={email}
+        isLoading={isLoading} 
+      />
+    </AuthContentWrapper>
   );
 }
