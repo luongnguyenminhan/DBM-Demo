@@ -23,7 +23,7 @@ export interface ButtonProps extends Omit<AntButtonProps, 'size' | 'variant' | '
   customClassName?: string;
   withRipple?: boolean;
   rounded?: boolean;
-  htmlType?: 'button' | 'submit' | 'reset';
+  htmltype?: 'button' | 'submit' | 'reset';
   type?: 'link' | 'text' | 'primary' | 'default' | 'dashed'; // Ant Design button type
 }
 
@@ -112,7 +112,7 @@ const Button: React.FC<ButtonProps> = ({
       whileHover="hover"
       whileTap="tap"
       variants={buttonVariants}
-      type={props.htmlType || 'button'}
+      type={props.htmltype || 'button'}
     >
       {isLoading && (
         <span className="animate-spin mr-2">
@@ -129,7 +129,7 @@ const Button: React.FC<ButtonProps> = ({
       className={buttonClasses}
       onClick={handleClick}
       disabled={isDisabled || isLoading}
-      type={props.htmlType || 'button'}
+      type={props.htmltype || 'button'}
     >
       {isLoading && (
         <span className="animate-spin mr-2">
@@ -154,7 +154,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled={isDisabled}
         loading={isLoading}
         size={size === 'small' ? 'small' : size === 'large' ? 'large' : 'middle'}
-        htmlType={props.htmlType}
+        htmltype={props.htmltype}
         {...props}
       >
         {leftIcon && !isLoading && <FontAwesomeIcon icon={leftIcon} />}

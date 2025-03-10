@@ -63,17 +63,14 @@
   --border-secondary: var(--color-secondary);
   --border-white: white;
   --border-gray: #e5e7eb;
-  
-  /* Custom font */
-  --font-svn-hemi-head: 'SVN-Hemi-Head', sans-serif;
 }
 
-@theme inline {
+/* Theme variables */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-custom: var(--font-svn-hemi-head);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -157,9 +154,4 @@ body {
 
 .animate-shake {
   animation: shake 0.8s ease-in-out both;
-}
-
-/* Custom font classes */
-.font-svn-hemi {
-  font-family: var(--font-svn-hemi-head);
 }

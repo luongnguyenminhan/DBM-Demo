@@ -195,7 +195,6 @@ const Badge: React.FC<BadgeProps> = ({
     </span>
   );
 
-  // If it's a standalone badge (not attached to children)
   if (!children) {
     // Apply animations if needed
     if (withAnimation) {

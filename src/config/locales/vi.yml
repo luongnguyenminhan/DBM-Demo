@@ -1,0 +1,23 @@
+login:
+  heading: "Chào Mừng Trở Lại"
+  subheading: "Vui lòng đăng nhập để tiếp tục"
+  sidebar:
+    title: "Thành công bắt đầu từ đây"
+    description: "Đăng nhập để truy cập vào nền tảng quản lý hiệu quả nhất cho doanh nghiệp của bạn"
+  form:
+    email: 
+      label: "Địa chỉ Email"
+      placeholder: "Nhập email của bạn"
+    password:
+      label: "Mật khẩu"
+      placeholder: "Nhập mật khẩu của bạn"
+    remember: "Ghi nhớ đăng nhập"
+    forgot_password: "Quên mật khẩu?"
+    submit: "Đăng Nhập"
+  divider: "Hoặc đăng nhập với"
+  social:
+    google: "Google"
+    facebook: "Facebook"
+  signup:
+    text: "Chưa có tài khoản?"
+    link: "Đăng Ký Ngay"
