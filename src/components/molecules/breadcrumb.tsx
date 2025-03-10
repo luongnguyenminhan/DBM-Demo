@@ -8,7 +8,7 @@ import { faChevronRight, faHome } from '@fortawesome/free-solid-svg-icons';
 import Typography from '../atomic/typo';
 import Icon from '../atomic/icon';
 import Card from '../atomic/card';
-import { useBreadcrumb } from '@/hooks/use_breadcrumb';
+import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 
 export type BreadcrumbVariant = 'default' | 'primary' | 'secondary' | 'minimal';
 export type BreadcrumbSize = 'small' | 'medium' | 'large';

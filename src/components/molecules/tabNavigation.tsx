@@ -7,7 +7,7 @@ import { faChevronLeft, faChevronRight, faPlus } from '@fortawesome/free-solid-s
 import Typography from '../atomic/typo';
 import Icon, { IconButton } from '../atomic/icon';
 import Spinner from '../atomic/spinner';
-import { useTabNavigation } from '@/hooks/use_tabNavigation';
+import { useTabNavigation } from '@/hooks/use-tabNavigation';
 
 export type TabVariant = 'default' | 'primary' | 'secondary' | 'outline' | 'minimal';
 export type TabSize = 'small' | 'medium' | 'large';

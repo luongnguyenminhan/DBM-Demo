@@ -1,38 +1,43 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Button from '../atomic/button';
 import Input from '../atomic/input';
 import Typography from '../atomic/typo';
 import { Toast } from '../molecules/alert';
-import { faEnvelope, faLock, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
-import useLoginForm from '../../hooks/use-loginForm';
+import { faEnvelope, faLock, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import useRegisterForm from '../../hooks/use_registerForm';
 import AuthLayout from './authLayout';
 const { Heading, Text } = Typography;
 
-interface LoginFormProps {
-  onSubmit: (credentials: { email: string; password: string }) => Promise<void>;
+interface RegisterFormProps {
+  onSubmit: (userData: { name: string; email: string; password: string }) => Promise<void>;
   isLoading?: boolean;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false }) => {
   const {
+    name,
+    setName,
     email,
     setEmail,
     password,
     setPassword,
+    confirmPassword,
+    setConfirmPassword,
     error,
     setError,
-    handleSubmit,
+    isSubmitting,
+    nameError,
     emailError,
     passwordError,
+    confirmPasswordError,
+    validateName,
     validateEmail,
     validatePassword,
-    isSubmitting,
-    setIsSubmitting
-  } = useLoginForm({ onSubmit });
-
-  const [rememberMe, setRememberMe] = useState(false);
+    validateConfirmPassword,
+    handleSubmit
+  } = useRegisterForm({ onSubmit });
 
   // Show toast when error changes
   useEffect(() => {
@@ -51,46 +56,50 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
 
   const isProcessing = isLoading || isSubmitting;
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEmail(value);
-    validateEmail(value);
-  };
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-    validatePassword(value);
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    setIsSubmitting(true);
-    await handleSubmit(e);
-    setIsSubmitting(false);
+    setPassword(e.target.value);
+    if (confirmPassword) validateConfirmPassword(confirmPassword);
   };
 
   return (
     <AuthLayout
-      sideTitle="Find your true self"
-      sideDescription="Đăng nhập để truy cập vào EnterViu - khám phá bản thân."
+      sideTitle="Bắt đầu hành trình mới"
+      sideDescription="Đăng ký để trở thành thành viên của EnterViu - nơi bạn khám phá tiềm năng của bản thân."
       sideTag="EnterViu"
     >
       <div className="text-center mb-6">
         <Heading level="h1" size="2xl" withGradient className="mb-2">
-          Chào Mừng Trở Lại
+          Tạo Tài Khoản Mới
         </Heading>
         <Text variant="secondary" size="base">
-          Vui lòng đăng nhập để tiếp tục
+          Điền thông tin để đăng ký tài khoản
         </Text>
       </div>
 
-      <form onSubmit={handleFormSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Họ và tên"
+          type="text"
+          placeholder="Nhập họ và tên của bạn"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onBlur={() => validateName(name)}
+          leftIcon={faUser}
+          isRequired
+          variant="outlined"
+          withFloatingLabel
+          isError={!!nameError}
+          errorMessage={nameError} 
+          isFullWidth
+          isDisabled={isProcessing}
+        />
+
         <Input
           label="Địa chỉ Email"
           type="email"
           placeholder="Nhập email của bạn"
           value={email}
-          onChange={handleEmailChange}
+          onChange={(e) => setEmail(e.target.value)}
           onBlur={() => validateEmail(email)}
           leftIcon={faEnvelope}
           isRequired
@@ -119,30 +128,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
           isDisabled={isProcessing}
         />
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              checked={rememberMe}
-              onChange={() => setRememberMe(!rememberMe)}
-            />
-            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-600">
-              Ghi nhớ đăng nhập
-            </label>
-          </div>
-          <Text
-            asLink
-            href="/forgot-password"
-            variant="primary"
-            size="sm"
-            customClassName="hover:underline"
-          >
-            Quên mật khẩu?
-          </Text>
-        </div>
+        <Input
+          label="Xác nhận mật khẩu"
+          type="password"
+          placeholder="Nhập lại mật khẩu của bạn"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          onBlur={() => validateConfirmPassword(confirmPassword)}
+          leftIcon={faLock}
+          isRequired
+          variant="outlined"
+          withFloatingLabel
+          isError={!!confirmPasswordError}
+          errorMessage={confirmPasswordError}
+          isFullWidth
+          isDisabled={isProcessing}
+        />
 
         <div className="pt-2">
           <Button
@@ -151,12 +152,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
             isFullWidth
             isLoading={isProcessing}
             size="large"
-            rightIcon={!isProcessing ? faSignInAlt : undefined}
+            rightIcon={!isProcessing ? faUserPlus : undefined}
             rounded
             disabled={isProcessing}
           >
             <div className="flex items-center justify-center">
-              {isProcessing ? null : 'Đăng Nhập'}
+              {isProcessing ? null : 'Đăng Ký'}
             </div>
           </Button>
         </div>
@@ -168,7 +169,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Hoặc đăng nhập với</span>
+            <span className="px-2 bg-white text-gray-500">Hoặc đăng ký với</span>
           </div>
         </div>
 
@@ -204,15 +205,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
 
       <div className="text-center mt-6">
         <Text variant="secondary" size="sm">
-          Chưa có tài khoản?{' '}
+          Đã có tài khoản?{' '}
           <Text
             asLink
-            href="/register"
+            href="/login"
             variant="primary"
             size="sm"
             customClassName="hover:underline font-medium"
           >
-            Đăng Ký Ngay
+            Đăng Nhập
           </Text>
         </Text>
       </div>
@@ -220,4 +221,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

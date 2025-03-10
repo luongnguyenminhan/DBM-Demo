@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Input as AntInput, InputProps as AntInputProps, InputRef } from 'antd';
@@ -166,6 +166,13 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       blurred: { scale: 1 },
     };
 
+    // Error text animation variants
+    const errorTextVariants = {
+      initial: { opacity: 0, height: 0, marginTop: 0 },
+      animate: { opacity: 1, height: 'auto', marginTop: 4 },
+      exit: { opacity: 0, height: 0, marginTop: 0 }
+    };
+
     const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (onChange) {
             onChange({ target: { value: e.target.value } } as React.ChangeEvent<HTMLInputElement>);
@@ -275,13 +282,35 @@ const inputProps = {
           renderInput()
         )}
 
-        {(isError && errorMessage) && (
-          <div className={helperTextClasses}>{errorMessage}</div>
-        )}
+        <AnimatePresence mode="wait">
+          {(isError && errorMessage) && (
+            <motion.div 
+              key="error"
+              className={helperTextClasses}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={errorTextVariants}
+              transition={{ duration: 0.2 }}
+            >
+              {errorMessage}
+            </motion.div>
+          )}
 
-        {!isError && helperText && (
-          <div className={helperTextClasses}>{helperText}</div>
-        )}
+          {!isError && helperText && (
+            <motion.div 
+              key="helper"
+              className={helperTextClasses}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={errorTextVariants}
+              transition={{ duration: 0.2 }}
+            >
+              {helperText}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
