@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Button from '../atomic/button';
 import Input from '../atomic/input';
 import Typography from '../atomic/typo';
@@ -27,29 +27,25 @@ const OtpConfirmationForm: React.FC<OtpConfirmationFormProps> = ({
 }) => {
   const {
     otp,
-    setOtp,
     userEmail,
-    setUserEmail,
     error,
     setError,
     success,
     isSubmitting,
     isResending,
     otpError,
+    emailError,
     resendTimeout,
     canResend,
-    validateOtp,
+    inputRefs,
+    handleEmailChange,
+    handleInputChange,
+    handleDigitInput,
+    handleKeyDown,
+    handlePaste,
     handleSubmit,
     handleResendOtp
   } = useOtpConfirmation({ onSubmit, email, resendOTP });
-
-  // Fix: correct type for the inputRefs
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  
-  // Setup inputRefs array when component mounts
-  useEffect(() => {
-    inputRefs.current = Array(6).fill(null);
-  }, []);
 
   // Show toast when error changes
   useEffect(() => {
@@ -97,72 +93,6 @@ const OtpConfirmationForm: React.FC<OtpConfirmationFormProps> = ({
     sideDescription = 'Xác thực danh tính của bạn để đặt lại mật khẩu an toàn.';
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    
-    // Ensure input is numeric
-    if (!/^\d*$/.test(value)) return;
-    
-    setOtp(value);
-    validateOtp(value);
-  };
-
-  // Handle individual digit input
-  const handleDigitInput = (index: number, value: string) => {
-    // Allow only single digits
-    if (!/^\d?$/.test(value)) return;
-    
-    // Create a new OTP string by replacing the digit at the specified index
-    const newOtp = otp.padEnd(6, ' ').split('');
-    newOtp[index] = value;
-    const updatedOtp = newOtp.join('').trim();
-    
-    setOtp(updatedOtp);
-    
-    // Auto-focus next input if a digit was entered
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-    
-    // Validate if all digits have been entered
-    if (updatedOtp.length === 6) {
-      validateOtp(updatedOtp);
-    }
-  };
-  
-  // Handle backspace key
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Move to previous field on backspace if current field is empty
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  // Handle paste event for OTP
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').trim();
-    
-    // Check if pasted content is 6 digits
-    if (/^\d{6}$/.test(pastedData)) {
-      setOtp(pastedData);
-      validateOtp(pastedData);
-      
-      // Update individual inputs
-      for (let i = 0; i < Math.min(6, pastedData.length); i++) {
-        if (inputRefs.current[i]) {
-          const inputRef = inputRefs.current[i];
-          if (inputRef) {
-            inputRef.value = pastedData[i];
-          }
-        }
-      }
-      
-      // Focus the last input
-      inputRefs.current[5]?.focus();
-    }
-  };
-
   return (
     <AuthLayout
       sideTitle={sideTitle}
@@ -185,77 +115,77 @@ const OtpConfirmationForm: React.FC<OtpConfirmationFormProps> = ({
             type="email"
             placeholder="Nhập email của bạn"
             value={userEmail}
-            onChange={(e) => setUserEmail(e.target.value)}
+            onChange={handleEmailChange}
             leftIcon={faEnvelope}
             isRequired
             variant="outlined"
             withFloatingLabel
             isFullWidth
             isDisabled={isProcessing || !!success}
+            isError={!!emailError}
+            errorMessage={emailError}
           />
         )}
         
-          <div className="mb-2">
-            <Text variant="secondary" size="sm">
-              Mã OTP
-              <span className="text-[var(--color-error)] ml-1">*</span>
-            </Text>
-          </div>
-          
-          {/* Hidden input for form submission */}
-          <input 
-            type="hidden"
-            name="otp"
-            value={otp}
-          />
-          
-          {/* OTP input grid with individual digit inputs */}
-          <div className="grid grid-cols-6 gap-2 mb-2">
-            {[0, 1, 2, 3, 4, 5].map((index) => (
-              <input
-                key={index}
-                ref={(el) => {
-                  // Fix: correctly assign the ref
-                  inputRefs.current[index] = el;
-                }}
-                type="text"
-                maxLength={1}
-                className={`w-full h-14 text-center text-xl font-semibold border rounded-md focus:outline-none focus:ring-2 
-                  ${otpError ? 'border-[var(--color-error)] focus:ring-[var(--color-error)]' : 'focus:ring-[var(--color-primary)] border-gray-300'}
-                  ${isProcessing || !!success ? 'opacity-70 cursor-not-allowed' : ''}`}
-                value={otp[index] || ''}
-                onChange={(e) => handleDigitInput(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={index === 0 ? handlePaste : undefined}
-                disabled={isProcessing || !!success}
-                inputMode="numeric"
-              />
-            ))}
-          </div>
-          
-          {/* Error message for OTP */}
-          {otpError && (
-            <div className="text-xs mt-1 text-[var(--color-error)]">
-              {otpError}
-            </div>
-          )}
-          
-          {/* Legacy single input for fallback */}
-          <div className="hidden">
-            <Input
+        <div className="mb-2">
+          <Text variant="secondary" size="sm">
+            Mã OTP
+            <span className="text-[var(--color-error)] ml-1">*</span>
+          </Text>
+        </div>
+        
+        {/* Hidden input for form submission */}
+        <input 
+          type="hidden"
+          name="otp"
+          value={otp}
+        />
+        
+        {/* OTP input grid with individual digit inputs */}
+        <div className="grid grid-cols-6 gap-2 mb-2">
+          {[0, 1, 2, 3, 4, 5].map((index) => (
+            <input
+              key={index}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
               type="text"
-              placeholder="Nhập mã xác thực 6 số"
-              value={otp}
-              onChange={handleInputChange}
-              leftIcon={faKey}
-              variant="outlined"
-              isError={!!otpError}
-              errorMessage={otpError}
-              isFullWidth
-              isDisabled={isProcessing || !!success}
-              maxLength={6}
+              maxLength={1}
+              className={`w-full h-14 text-center text-xl font-semibold border rounded-md focus:outline-none focus:ring-2 
+                ${otpError ? 'border-[var(--color-error)] focus:ring-[var(--color-error)]' : 'focus:ring-[var(--color-primary)] border-gray-300'}
+                ${isProcessing || !!success ? 'opacity-70 cursor-not-allowed' : ''}`}
+              value={otp[index] || ''}
+              onChange={(e) => handleDigitInput(index, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(index, e)}
+              onPaste={index === 0 ? handlePaste : undefined}
+              disabled={isProcessing || !!success}
+              inputMode="numeric"
             />
-          
+          ))}
+        </div>
+        
+        {/* Error message for OTP */}
+        {otpError && (
+          <div className="text-xs mt-1 text-[var(--color-error)]">
+            {otpError}
+          </div>
+        )}
+        
+        {/* Legacy single input for fallback */}
+        <div className="hidden">
+          <Input
+            type="text"
+            placeholder="Nhập mã xác thực 6 số"
+            value={otp}
+            onChange={handleInputChange}
+            leftIcon={faKey}
+            variant="outlined"
+            isError={!!otpError}
+            errorMessage={otpError}
+            isFullWidth
+            isDisabled={isProcessing || !!success}
+            maxLength={6}
+          />
         </div>
 
         <div className="pt-2">

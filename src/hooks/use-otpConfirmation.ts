@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface UseOtpConfirmationProps {
   onSubmit: (otp: string, email: string) => Promise<void>;
@@ -15,9 +15,13 @@ const useOtpConfirmation = ({ onSubmit, email = '', resendOTP }: UseOtpConfirmat
   const [isResending, setIsResending] = useState<boolean>(false);
   const [resendTimeout, setResendTimeout] = useState<number>(60);
   const [canResend, setCanResend] = useState<boolean>(false);
+  
+  // Input refs for individual digit inputs
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
   // Validation states
   const [otpError, setOtpError] = useState<string | undefined>(undefined);
+  const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -50,14 +54,104 @@ const useOtpConfirmation = ({ onSubmit, email = '', resendOTP }: UseOtpConfirmat
     return true;
   };
 
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!value.trim()) {
+      setEmailError('Email không được để trống');
+      return false;
+    }
+    
+    if (!emailRegex.test(value)) {
+      setEmailError('Email không hợp lệ');
+      return false;
+    }
+    
+    setEmailError(undefined);
+    return true;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setUserEmail(value);
+    validateEmail(value);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    // Ensure input is numeric
+    if (!/^\d*$/.test(value)) return;
+    
+    setOtp(value);
+    validateOtp(value);
+  };
+
+  // Handle individual digit input
+  const handleDigitInput = (index: number, value: string) => {
+    // Allow only single digits
+    if (!/^\d?$/.test(value)) return;
+    
+    // Create a new OTP string by replacing the digit at the specified index
+    const newOtp = otp.padEnd(6, ' ').split('');
+    newOtp[index] = value;
+    const updatedOtp = newOtp.join('').trim();
+    
+    setOtp(updatedOtp);
+    
+    // Auto-focus next input if a digit was entered
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+    
+    // Validate if all digits have been entered
+    if (updatedOtp.length === 6) {
+      validateOtp(updatedOtp);
+    }
+  };
+  
+  // Handle backspace key
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Move to previous field on backspace if current field is empty
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // Handle paste event for OTP
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').trim();
+    
+    // Check if pasted content is 6 digits
+    if (/^\d{6}$/.test(pastedData)) {
+      setOtp(pastedData);
+      validateOtp(pastedData);
+      
+      // Update individual inputs
+      for (let i = 0; i < Math.min(6, pastedData.length); i++) {
+        const inputRef = inputRefs.current[i];
+        if (inputRef) {
+          inputRef.value = pastedData[i];
+        }
+      }
+      
+      // Focus the last input
+      inputRefs.current[5]?.focus();
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const isOtpValid = validateOtp(otp);
-    
-    if (!isOtpValid) {
-      return;
+    // Validate email if it's required
+    if (!email) {
+      const isEmailValid = validateEmail(userEmail);
+      if (!isEmailValid) return;
     }
+    
+    const isOtpValid = validateOtp(otp);
+    if (!isOtpValid) return;
     
     try {
       setIsSubmitting(true);
@@ -103,11 +197,20 @@ const useOtpConfirmation = ({ onSubmit, email = '', resendOTP }: UseOtpConfirmat
     success,
     setSuccess,
     isSubmitting,
+    setIsSubmitting,
     isResending,
     otpError,
+    emailError,
     resendTimeout,
     canResend,
+    inputRefs,
     validateOtp,
+    validateEmail,
+    handleEmailChange,
+    handleInputChange,
+    handleDigitInput,
+    handleKeyDown,
+    handlePaste,
     handleSubmit,
     handleResendOtp
   };
