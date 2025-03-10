@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useFormValidation } from './use-form-validation';
 
 interface LoginCredentials {
   email: string;
@@ -17,8 +18,8 @@ interface UseLoginFormReturn {
   error: string | null;
   setError: (error: string | null) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
-  emailError: string;
-  passwordError: string;
+  emailError: string | undefined;
+  passwordError: string | undefined;
   validateEmail: (email: string) => boolean;
   validatePassword: (password: string) => boolean;
   isSubmitting: boolean;
@@ -29,36 +30,24 @@ export const useLoginForm = ({ onSubmit }: UseLoginFormProps): UseLoginFormRetur
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [emailError, setEmailError] = useState<string | undefined>(undefined);
+  const [passwordError, setPasswordError] = useState<string | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Email validation
+  // Use our common validation hook
+  const { validateEmail: commonValidateEmail, validatePassword: commonValidatePassword } = useFormValidation();
+
+  // Updated validation methods to use the common validators
   const validateEmail = (email: string): boolean => {
-    if (!email) {
-      setEmailError('Email không được để trống');
-      return false;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailError('Email không đúng định dạng');
-      return false;
-    }
-    setEmailError('');
-    return true;
+    const result = commonValidateEmail(email);
+    setEmailError(result.message);
+    return result.isValid;
   };
 
-  // Password validation
   const validatePassword = (password: string): boolean => {
-    if (!password) {
-      setPasswordError('Mật khẩu không được để trống');
-      return false;
-    }
-    if (password.length < 6) {
-      setPasswordError('Mật khẩu phải có ít nhất 6 ký tự');
-      return false;
-    }
-    setPasswordError('');
-    return true;
+    const result = commonValidatePassword(password);
+    setPasswordError(result.message);
+    return result.isValid;
   };
 
   // Form validation

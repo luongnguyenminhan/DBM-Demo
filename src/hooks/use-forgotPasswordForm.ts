@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useFormValidation } from './use-form-validation';
 
 interface UseForgotPasswordFormProps {
   onSubmit: (email: string) => Promise<void>;
@@ -9,22 +10,15 @@ const useForgotPasswordForm = ({ onSubmit }: UseForgotPasswordFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Validation states
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
+  // Use our common validation hook
+  const { validateEmail: commonValidateEmail } = useFormValidation();
+
   const validateEmail = (value: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!value.trim()) {
-      setEmailError('Email không được để trống');
-      return false;
-    }
-    if (!emailRegex.test(value)) {
-      setEmailError('Email không hợp lệ');
-      return false;
-    }
-    setEmailError(undefined);
-    return true;
+    const result = commonValidateEmail(value);
+    setEmailError(result.message);
+    return result.isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

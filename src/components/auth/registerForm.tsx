@@ -6,7 +6,7 @@ import Input from '../atomic/input';
 import Typography from '../atomic/typo';
 import { Toast } from '../molecules/alert';
 import { faEnvelope, faLock, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import useRegisterForm from '../../hooks/use_registerForm';
+import useRegisterForm from '../../hooks/use-registerForm';
 import AuthLayout from './authLayout';
 const { Heading, Text } = Typography;
 

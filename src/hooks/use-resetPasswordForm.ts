@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useFormValidation } from './use-form-validation';
 
 interface UseResetPasswordFormProps {
   onSubmit: (passwordData: { password: string; email: string }) => Promise<void>;
@@ -17,30 +18,19 @@ const useResetPasswordForm = ({ onSubmit, email = '' }: UseResetPasswordFormProp
   const [passwordError, setPasswordError] = useState<string | undefined>(undefined);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | undefined>(undefined);
 
+  // Use our common validation hook
+  const { validatePassword: commonValidatePassword, validateConfirmPassword: commonValidateConfirmPassword } = useFormValidation();
+
   const validatePassword = (value: string) => {
-    if (!value) {
-      setPasswordError('Mật khẩu không được để trống');
-      return false;
-    }
-    if (value.length < 6) {
-      setPasswordError('Mật khẩu phải có ít nhất 6 ký tự');
-      return false;
-    }
-    setPasswordError(undefined);
-    return true;
+    const result = commonValidatePassword(value);
+    setPasswordError(result.message);
+    return result.isValid;
   };
 
   const validateConfirmPassword = (value: string) => {
-    if (!value) {
-      setConfirmPasswordError('Xác nhận mật khẩu không được để trống');
-      return false;
-    }
-    if (value !== password) {
-      setConfirmPasswordError('Mật khẩu không khớp');
-      return false;
-    }
-    setConfirmPasswordError(undefined);
-    return true;
+    const result = commonValidateConfirmPassword(value, password);
+    setConfirmPasswordError(result.message);
+    return result.isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useFormValidation } from './use-form-validation';
 
 interface UseOtpConfirmationProps {
   onSubmit: (otp: string, email: string) => Promise<void>;
@@ -23,6 +24,9 @@ const useOtpConfirmation = ({ onSubmit, email = '', resendOTP }: UseOtpConfirmat
   const [otpError, setOtpError] = useState<string | undefined>(undefined);
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
+  // Use our common validation hook
+  const { validateOtp: commonValidateOtp, validateEmail: commonValidateEmail } = useFormValidation();
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     
@@ -40,35 +44,15 @@ const useOtpConfirmation = ({ onSubmit, email = '', resendOTP }: UseOtpConfirmat
   }, [resendTimeout, canResend]);
 
   const validateOtp = (value: string) => {
-    if (!value.trim()) {
-      setOtpError('Mã OTP không được để trống');
-      return false;
-    }
-    
-    if (value.length !== 6 || !/^\d+$/.test(value)) {
-      setOtpError('Mã OTP phải gồm 6 chữ số');
-      return false;
-    }
-    
-    setOtpError(undefined);
-    return true;
+    const result = commonValidateOtp(value);
+    setOtpError(result.message);
+    return result.isValid;
   };
 
   const validateEmail = (value: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!value.trim()) {
-      setEmailError('Email không được để trống');
-      return false;
-    }
-    
-    if (!emailRegex.test(value)) {
-      setEmailError('Email không hợp lệ');
-      return false;
-    }
-    
-    setEmailError(undefined);
-    return true;
+    const result = commonValidateEmail(value);
+    setEmailError(result.message);
+    return result.isValid;
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
