@@ -4,7 +4,7 @@ import React from 'react';
 import Button from '../atomic/button';
 import Typography from '../atomic/typo';
 import { faCheckCircle, faSignInAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import authTemplate from './authTemplate';
+import AuthTemplate from './authTemplate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const { Heading, Text } = Typography;
 
@@ -18,7 +18,7 @@ const RegistrationCompleteForm: React.FC<RegistrationCompleteFormProps> = ({
   onRegisterAnother
 }) => {
   return (
-    <authTemplate
+    <AuthTemplate
       sideTitle="Success!"
       sideDescription="Chúc mừng bạn đã đăng ký thành công và trở thành thành viên của EnterViu."
       sideTag="EnterViu"
@@ -80,7 +80,7 @@ const RegistrationCompleteForm: React.FC<RegistrationCompleteFormProps> = ({
           </Text>
         </div>
       </div>
-    </authTemplate>
+    </AuthTemplate>
   );
 };
 

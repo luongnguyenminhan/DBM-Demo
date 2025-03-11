@@ -7,7 +7,7 @@ import Typography from '../atomic/typo';
 import { Toast } from '../molecules/alert';
 import { faEnvelope, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import useForgotPasswordForm from '../../hooks/use-forgotPasswordForm';
-import authTemplate from './authTemplate';
+import AuthTemplate from './authTemplate';
 const { Heading, Text } = Typography;
 
 interface ForgotPasswordFormProps {
@@ -58,7 +58,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSubmit, isLoa
   const isProcessing = isLoading || isSubmitting;
 
   return (
-    <authTemplate
+    <AuthTemplate
       sideTitle="Recover your account"
       sideDescription="Quên mật khẩu? Đừng lo lắng. Chúng tôi sẽ giúp bạn khôi phục tài khoản."
       sideTag="EnterViu"
@@ -137,7 +137,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSubmit, isLoa
           </Text>
         </Text>
       </div>
-    </authTemplate>
+    </AuthTemplate>
   );
 };
 

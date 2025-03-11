@@ -7,7 +7,7 @@ import Typography from '../atomic/typo';
 import { Toast } from '../molecules/alert';
 import { faEnvelope, faLock, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import useLoginForm from '../../hooks/use-loginForm';
-import authTemplate from './authTemplate';
+import AuthTemplate from './authTemplate';
 const { Heading, Text } = Typography;
 
 interface LoginFormProps {
@@ -70,7 +70,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
   };
 
   return (
-    <authTemplate
+    <AuthTemplate
       sideTitle="Find your true self"
       sideDescription="Đăng nhập để truy cập vào EnterViu - khám phá bản thân."
       sideTag="EnterViu"
@@ -216,7 +216,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
           </Text>
         </Text>
       </div>
-    </authTemplate>
+    </AuthTemplate>
   );
 };
 
