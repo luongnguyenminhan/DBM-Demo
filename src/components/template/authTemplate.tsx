@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-interface AuthLayoutProps {
+interface AuthTemplateProps {
   children: React.ReactNode;
   variant?: 'default' | 'success';
   confettiParticles?: Array<{
@@ -14,11 +14,11 @@ interface AuthLayoutProps {
   }>;
 }
 
-export default function AuthLayout({
+export default function AuthTemplate({
   children,
   variant = 'default',
   confettiParticles,
-}: AuthLayoutProps) {
+}: AuthTemplateProps) {
   const borderColor = variant === 'success' ? 'border-green-700' : 'border-gray-700';
   const fromGradient = variant === 'success' ? 'from-green-100' : 'from-purple-100';
   const toGradient = variant === 'success' ? 'to-teal-200' : 'to-indigo-200';

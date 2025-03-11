@@ -1,9 +1,9 @@
-import AuthLayout from '@/components/layouts/AuthLayout';
+import AuthTemplate from '@/components/template/authTemplate';
 
 export default function ResetPasswordLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AuthLayout>{children}</AuthLayout>;
+  return <AuthTemplate>{children}</AuthTemplate>;
 }

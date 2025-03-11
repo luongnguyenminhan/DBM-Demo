@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import AuthLayout from '@/components/layouts/AuthLayout';
+import AuthTemplate from '@/components/template/authTemplate';
 
 export default function RegistrationCompleteLayout({
   children,
@@ -20,8 +20,8 @@ export default function RegistrationCompleteLayout({
   }, []);
 
   return (
-    <AuthLayout variant="success" confettiParticles={confettiParticles}>
+    <AuthTemplate variant="success" confettiParticles={confettiParticles}>
       {children}
-    </AuthLayout>
+    </AuthTemplate>
   );
 }

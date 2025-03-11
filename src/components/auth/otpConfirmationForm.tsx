@@ -7,7 +7,7 @@ import Typography from '../atomic/typo';
 import { Toast } from '../molecules/alert';
 import { faEnvelope, faKey, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import useOtpConfirmation from '../../hooks/use-otpConfirmation';
-import AuthLayout from './authLayout';
+import authTemplate from './authTemplate';
 const { Heading, Text } = Typography;
 
 interface OtpConfirmationFormProps {
@@ -94,7 +94,7 @@ const OtpConfirmationForm: React.FC<OtpConfirmationFormProps> = ({
   }
 
   return (
-    <AuthLayout
+    <authTemplate
       sideTitle={sideTitle}
       sideDescription={sideDescription}
       sideTag="EnterViu"
@@ -232,7 +232,7 @@ const OtpConfirmationForm: React.FC<OtpConfirmationFormProps> = ({
           </Text>
         </Text>
       </div>
-    </AuthLayout>
+    </authTemplate>
   );
 };
 

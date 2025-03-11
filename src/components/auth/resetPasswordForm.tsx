@@ -7,7 +7,7 @@ import Typography from '../atomic/typo';
 import { Toast } from '../molecules/alert';
 import { faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 import useResetPasswordForm from '../../hooks/use-resetPasswordForm';
-import AuthLayout from './authLayout';
+import authTemplate from './authTemplate';
 const { Heading, Text } = Typography;
 
 interface ResetPasswordFormProps {
@@ -73,7 +73,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   };
 
   return (
-    <AuthLayout
+    <authTemplate
       sideTitle="Create a new password"
       sideDescription="Đặt lại mật khẩu mới để bảo vệ tài khoản của bạn an toàn."
       sideTag="EnterViu"
@@ -170,7 +170,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           </Text>
         </div>
       )}
-    </AuthLayout>
+    </authTemplate>
   );
 };
 

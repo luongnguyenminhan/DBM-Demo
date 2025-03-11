@@ -7,7 +7,7 @@ import Typography from '../atomic/typo';
 import { Toast } from '../molecules/alert';
 import { faEnvelope, faLock, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import useRegisterForm from '../../hooks/use-registerForm';
-import AuthLayout from './authLayout';
+import authTemplate from './authTemplate';
 const { Heading, Text } = Typography;
 
 interface RegisterFormProps {
@@ -62,7 +62,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
   };
 
   return (
-    <AuthLayout
+    <authTemplate
       sideTitle="Bắt đầu hành trình mới"
       sideDescription="Đăng ký để trở thành thành viên của EnterViu - nơi bạn khám phá tiềm năng của bản thân."
       sideTag="EnterViu"
@@ -217,7 +217,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
           </Text>
         </Text>
       </div>
-    </AuthLayout>
+    </authTemplate>
   );
 };
 

@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 const { Heading, Text } = Typography;
 
-interface AuthLayoutProps {
+interface authTemplateProps {
   children: ReactNode;
   sideTitle: string;
   sideDescription: string;
@@ -17,7 +17,7 @@ interface AuthLayoutProps {
   sideTag?: string;
 }
 
-const AuthLayout: React.FC<AuthLayoutProps> = ({
+const authTemplate: React.FC<authTemplateProps> = ({
   children,
   sideTitle,
   sideDescription,
@@ -105,4 +105,4 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   );
 };
 
-export default AuthLayout;
+export default authTemplate;
