@@ -233,20 +233,20 @@ const Modal: React.FC<ModalProps> = ({
           style={{ zIndex }}
         >
           {/* Backdrop/Overlay */}
-          {!hideOverlay && (
-            <motion.div
+            {!hideOverlay && (
+              <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className={classNames(
-                'absolute inset-0 bg-black bg-opacity-50',
-                overlayClassName
+                'absolute inset-0 bg-black/50 backdrop-blur-md', // Added backdrop-blur-md and background color with opacity
+              overlayClassName
               )}
               onClick={closeOnOutsideClick && isDismissable ? onClose : undefined}
-            />
-          )}
+              />
+            )}
 
-          {/* Modal Content */}
+                {/* Modal Content */}
           <motion.div
             role="dialog"
             aria-modal="true"
