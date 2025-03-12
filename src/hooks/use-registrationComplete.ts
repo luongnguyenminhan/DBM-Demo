@@ -11,12 +11,12 @@ const useRegistrationComplete = ({ redirectToLogin = true }: UseRegistrationComp
   
   const handleContinueToLogin = () => {
     setIsRedirecting(true);
-    router.push('/login');
+    router.push('/auth/login');
   };
   
   const handleRegisterAnother = () => {
     setIsRedirecting(true);
-    router.push('/register');
+    router.push('/auth/register');
   };
   
   // Automatically redirect to login if redirectToLogin is true

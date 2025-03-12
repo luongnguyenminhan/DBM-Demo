@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ResetPasswordForm from '@/components/auth/resetPasswordForm';
 import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
-import authApi from '@/apis/authenticationApi';
-import { Toast } from '@/components/molecules/alert';
+import { useAuthPage } from '@/hooks/use_authPage';
 
 // Create a client component that uses useSearchParams
 function ResetPasswordContent() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, handleResetPassword } = useAuthPage();
   const searchParams = useSearchParams();
   const { redirectWithDelay } = useAuthRedirect();
   
@@ -39,42 +38,9 @@ function ResetPasswordContent() {
     }
   }, [email, redirectWithDelay]);
   
-  const handleResetPassword = async (passwordData: { password: string; email: string }) => {
-    setIsLoading(true);
-    
-    try {
-      const resetData = {
-        token: token,
-        new_password: passwordData.password
-      };
-      
-      const response = await authApi.resetPassword(resetData);
-      
-      if (response.status === 200) {
-        Toast.success('Mật khẩu đã được đặt lại thành công!', {
-          position: "top-right",
-          autoCloseDuration: 3000,
-        });
-        
-        // Redirect to login page on success
-        redirectWithDelay('/login', 2000);
-      } else {
-        Toast.error(response.message || 'Không thể đặt lại mật khẩu', {
-          position: "top-right",
-          autoCloseDuration: 3000,
-        });
-        throw new Error(response.message || 'Không thể đặt lại mật khẩu');
-      }
-    } catch (error: unknown) {
-      console.error('Password reset failed:', error);
-      Toast.error('Không thể đặt lại mật khẩu. Vui lòng thử lại sau.', {
-        position: "top-right",
-        autoCloseDuration: 3000,
-      });
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+  const handleResetPasswordWithToken = async (passwordData: { password: string; email: string }) => {
+    await handleResetPassword(passwordData, token);
+    // Not returning anything ensures Promise<void>
   };
 
   if (!email) {
@@ -87,7 +53,7 @@ function ResetPasswordContent() {
 
   return (
     <ResetPasswordForm 
-      onSubmit={handleResetPassword} 
+      onSubmit={handleResetPasswordWithToken} 
       email={email}
       isLoading={isLoading} 
     />

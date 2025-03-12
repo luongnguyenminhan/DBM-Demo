@@ -15,9 +15,10 @@
   --color-secondary-light: #FFEBD4;
   --color-secondary-dark: #FFB3B3;
   
-  --color-dark: #424242;
-  --color-dark-light: #616161;
-  --color-dark-darker: #212121;
+  /* Darker text colors for better contrast */
+  --color-dark: #212121;  /* Darker than before */
+  --color-dark-light: #424242;  /* Darker than before */
+  --color-dark-darker: #121212;  /* Darker than before */
   
   --color-white: #FFFFFF;
   --color-off-white: #F5F5F5;
@@ -33,11 +34,18 @@
   --color-error: #F44336;
   --color-info: #2196F3;
   
-  /* Text colors */
-  --text-primary: var(--color-dark);
-  --text-secondary: #757575;
+  /* Text colors - Updated for better contrast */
+  --text-primary: var(--color-dark);  /* Using the darker color */
+  --text-secondary: #424242;  /* Darker than before for better readability */
   --text-on-primary: var(--color-white);
   --text-on-secondary: var(--color-white);
+  
+  /* Additional text colors for better hierarchy */
+  --text-muted: #616161;  /* For less important text */
+  --text-disabled: #9e9e9e;  /* For disabled content */
+  --text-placeholder: #757575;  /* For placeholder text */
+  --text-link: var(--color-primary-dark);  /* For links */
+  --text-link-hover: var(--color-primary);  /* For links on hover */
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -70,16 +78,40 @@
     --background: #0a0a0a;
     --foreground: #ededed;
     --text-primary: #f5f5f5;
-    --text-secondary: #a0a0a0;
+    --text-secondary: #bdbdbd;
+    --text-muted: #9e9e9e;
+    --text-disabled: #757575;
+    --text-placeholder: #616161;
     --color-dark-light: #757575;
     --color-off-white: #1a1a1a;
+    
+    /* Dark mode specific overrides for StatCard change indicators */
+    --stat-positive-bg: rgba(74, 222, 128, 0.2);
+    --stat-positive-text: rgb(134, 239, 172);
+    --stat-negative-bg: rgba(248, 113, 113, 0.2);
+    --stat-negative-text: rgb(252, 165, 165);
+    --stat-neutral-bg: rgba(148, 163, 184, 0.2);
+    --stat-neutral-text: rgb(203, 213, 225);
   }
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text-primary);  /* Using text-primary instead of foreground for better consistency */
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;  /* Improved readability with better line height */
+  -webkit-font-smoothing: antialiased;  /* Better font rendering on WebKit/Blink browsers */
+  -moz-osx-font-smoothing: grayscale;  /* Better font rendering on Firefox */
+}
+
+/* Improved link default styles */
+a {
+  color: var(--text-link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--text-link-hover);
 }
 
 /* Utility classes for gradient backgrounds */
