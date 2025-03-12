@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import ResetPasswordForm from '@/components/auth/resetPasswordForm';
 import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import authApi from '@/apis/authenticationApi';
+import { Toast } from '@/components/molecules/alert';
 
 // Create a client component that uses useSearchParams
 function ResetPasswordContent() {
@@ -12,8 +14,21 @@ function ResetPasswordContent() {
   const searchParams = useSearchParams();
   const { redirectWithDelay } = useAuthRedirect();
   
-  // Get email from query parameters
-  const email = searchParams.get('email') || '';
+  // Get encoded email from query parameters and decode it
+  const encodedEmail = searchParams.get('email') || '';
+  const token = searchParams.get('token') || '';
+  
+  // Decode the base64-encoded email
+  let email = '';
+  try {
+    if (encodedEmail) {
+      email = atob(encodedEmail);
+    }
+  } catch (error) {
+    console.error('Error decoding email:', error);
+    // If decoding fails, use the raw value (might be unencoded in some cases)
+    email = encodedEmail;
+  }
   
   useEffect(() => {
     if (!email) {
@@ -28,24 +43,34 @@ function ResetPasswordContent() {
     setIsLoading(true);
     
     try {
-      // Simulate API call with delay
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(true);
-        }, 1500); // 1.5 second delay to simulate network request
+      const resetData = {
+        token: token,
+        new_password: passwordData.password
+      };
+      
+      const response = await authApi.resetPassword(resetData);
+      
+      if (response.status === 200) {
+        Toast.success('Mật khẩu đã được đặt lại thành công!', {
+          position: "top-right",
+          autoCloseDuration: 3000,
+        });
+        
+        // Redirect to login page on success
+        redirectWithDelay('/login', 2000);
+      } else {
+        Toast.error(response.message || 'Không thể đặt lại mật khẩu', {
+          position: "top-right",
+          autoCloseDuration: 3000,
+        });
+        throw new Error(response.message || 'Không thể đặt lại mật khẩu');
+      }
+    } catch (error: unknown) {
+      console.error('Password reset failed:', error);
+      Toast.error('Không thể đặt lại mật khẩu. Vui lòng thử lại sau.', {
+        position: "top-right",
+        autoCloseDuration: 3000,
       });
-      
-      // Use passwordData in a console log to avoid the unused variable warning
-      console.log(`Resetting password for ${passwordData.email} with new password length: ${passwordData.password.length}`);
-      
-      // Success case and redirect to login
-      redirectWithDelay('/login', 2000, {
-        type: 'success',
-        text: 'Mật khẩu đã được đặt lại thành công!'
-      });
-      
-    } catch (error) {
-      // Error will be handled by the form component
       throw error;
     } finally {
       setIsLoading(false);

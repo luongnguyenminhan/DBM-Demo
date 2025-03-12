@@ -6,6 +6,7 @@ import OtpConfirmationForm from '@/components/auth/otpConfirmationForm';
 import { Toast } from '@/components/molecules/alert';
 import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import authApi from '@/apis/authenticationApi';
 
 // Client component that safely uses useSearchParams
 function OtpConfirmationContent() {
@@ -13,9 +14,21 @@ function OtpConfirmationContent() {
   const searchParams = useSearchParams();
   const { redirectWithDelay } = useAuthRedirect();
   
-  // Get email and purpose from query parameters
-  const email = searchParams.get('email') || '';
+  // Get encoded email and purpose from query parameters
+  const encodedEmail = searchParams.get('email') || '';
   const purpose = (searchParams.get('purpose') || 'registration') as 'registration' | 'passwordReset' | 'login';
+  
+  // Decode the base64-encoded email
+  let email = '';
+  try {
+    if (encodedEmail) {
+      email = atob(encodedEmail);
+    }
+  } catch (error) {
+    console.error('Error decoding email:', error);
+    // If decoding fails, use the raw value (might be unencoded in some cases)
+    email = encodedEmail;
+  }
   
   useEffect(() => {
     if (!email) {
@@ -30,35 +43,43 @@ function OtpConfirmationContent() {
     setIsLoading(true);
     
     try {
-      // Simulate API call with delay
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // For demonstration purposes, reject if OTP is 111111
-          if (otp === '111111') {
-            reject(new Error('Mã OTP không hợp lệ'));
-          } else {
-            resolve(true);
-          }
-        }, 1500); // 1.5 second delay to simulate network request
-      });
+      const verificationData = {
+        email: emailAddress,
+        token: otp
+      };
       
-      // Success case
-      Toast.success('Xác thực OTP thành công!', {
+      const response = await authApi.verifyEmail(verificationData);
+      
+      if (response.status === 200) {
+        // Success case
+        Toast.success('Xác thực OTP thành công!', {
+          position: "top-right",
+          autoCloseDuration: 3000,
+        });
+        
+        // Redirect based on purpose
+        if (purpose === 'passwordReset') {
+          // Keep the email encoded for the next step
+          redirectWithDelay(`/reset-password?email=${encodedEmail}`, 1000);
+        } else if (purpose === 'registration') {
+          redirectWithDelay('/registration-complete', 1000);
+        } else {
+          redirectWithDelay('/dashboard', 1000);
+        }
+      } else {
+        console.error('OTP verification failed:', response);
+        Toast.error(response.message || 'Xác thực thất bại', {
+          autoCloseDuration: 3000,
+          position: 'top-right'
+        });
+        throw new Error(response.message || 'Xác thực thất bại');
+      }
+    } catch (error) {
+      console.error('OTP verification failed:', error);
+      Toast.error('Mã OTP không hợp lệ hoặc đã hết hạn', {
         position: "top-right",
         autoCloseDuration: 3000,
       });
-      
-      // Redirect based on purpose
-      if (purpose === 'passwordReset') {
-        redirectWithDelay(`/reset-password?email=${encodeURIComponent(emailAddress)}`, 1000);
-      } else if (purpose === 'registration') {
-        redirectWithDelay('/registration-complete', 1000);
-      } else {
-        redirectWithDelay('/dashboard', 1000);
-      }
-      
-    } catch (error) {
-      // Error will be handled by the form component
       throw error;
     } finally {
       setIsLoading(false);
@@ -67,16 +88,27 @@ function OtpConfirmationContent() {
 
   const handleResendOtp = async () => {
     try {
-      // Simulate API call with delay
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(true);
-        }, 1000); // 1 second delay
-      });
+      const response = await authApi.requestEmailVerification({ email });
       
-      return Promise.resolve();
+      if (response.status === 200) {
+        Toast.success('Mã OTP mới đã được gửi!', {
+          position: "top-right",
+          autoCloseDuration: 3000,
+        });
+        return Promise.resolve();
+      } else {
+        Toast.error(response.message || 'Không thể gửi lại mã OTP', {
+          position: "top-right",
+          autoCloseDuration: 3000,
+        });
+        return Promise.reject(new Error(response.message || 'Không thể gửi lại mã OTP'));
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Failed to resend OTP:', error);
+      Toast.error('Không thể gửi lại mã OTP', {
+        position: "top-right",
+        autoCloseDuration: 3000,
+      });
       return Promise.reject(new Error('Không thể gửi lại mã OTP'));
     }
   };

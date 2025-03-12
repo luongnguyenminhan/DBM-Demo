@@ -1,4 +1,4 @@
-export interface ApiResponse<T = unknown> {
+export interface CommonResponse<T = unknown> {
   status: number;
   error_code?: number | null;
   message?: string | null;
@@ -6,12 +6,12 @@ export interface ApiResponse<T = unknown> {
   metadata?: Record<string, unknown> | null;
 }
 
-export interface PaginationParams {
-  pageIndex: number;
-  pageSize: number;
+export interface PaginationParameter {
+  page_index: number;
+  page_size: number;
 }
 
-export interface PaginatedResult<T = unknown> {
+export interface Pagination<T = unknown> {
   items: T[];
   total_count: number;
   page_index: number;
