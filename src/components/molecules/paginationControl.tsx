@@ -40,6 +40,9 @@ export interface PaginationControlProps {
     rounded?: boolean;
     withBackground?: boolean;
     withBorder?: boolean;
+    // Add explicit props for API metadata
+    hasNextPage?: boolean;
+    hasPreviousPage?: boolean;
 }
 
 const PaginationControl: React.FC<PaginationControlProps> = ({
@@ -62,6 +65,9 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
     rounded = false,
     withBackground = false,
     withBorder = true,
+    // Initialize metadata props with undefined, which means we'll use calculated values
+    hasNextPage,
+    hasPreviousPage,
 }) => {
     const [pageNumber, setPageNumber] = useState<string>('');
     const pagination = usePagination({
@@ -89,6 +95,11 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         medium: 'medium',
         large: 'large',
     };
+
+    // Calculate if it's the first or last page
+    // If API metadata is provided, use it; otherwise, fall back to calculated values
+    const isFirstPage = hasPreviousPage !== undefined ? !hasPreviousPage : currentPage === 1;
+    const isLastPage = hasNextPage !== undefined ? !hasNextPage : currentPage === totalPages;
 
     // Handle page change
     const handlePageChange = (page: number) => {
@@ -230,7 +241,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
                             size={buttonSizeMap[size]}
                             leftIcon={faAngleDoubleLeft}
                             onClick={() => handlePageChange(1)}
-                            isDisabled={isDisabled || pagination.isFirstPage}
+                            isDisabled={isDisabled || isFirstPage}
                             rounded={rounded}
                         />
                     </motion.div>
@@ -246,8 +257,8 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
                         variant="outline"
                         size={buttonSizeMap[size]}
                         leftIcon={faChevronLeft}
-                        onClick={pagination.goToPrevPage}
-                        isDisabled={isDisabled || pagination.isFirstPage}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        isDisabled={isDisabled || isFirstPage}
                         rounded={rounded}
                     />
                 </motion.div>
@@ -265,8 +276,8 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
                         variant="outline"
                         size={buttonSizeMap[size]}
                         rightIcon={faChevronRight}
-                        onClick={pagination.goToNextPage}
-                        isDisabled={isDisabled || pagination.isLastPage}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        isDisabled={isDisabled || isLastPage}
                         rounded={rounded}
                     />
                 </motion.div>
@@ -283,7 +294,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
                             size={buttonSizeMap[size]}
                             rightIcon={faAngleDoubleRight}
                             onClick={() => handlePageChange(totalPages)}
-                            isDisabled={isDisabled || pagination.isLastPage}
+                            isDisabled={isDisabled || isLastPage}
                             rounded={rounded}
                         />
                     </motion.div>
