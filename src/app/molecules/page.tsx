@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Typography from '@/components/atomic/typo';
 import Card from '@/components/atomic/card';
 import DropdownMenu from '@/components/molecules/dropdown';
@@ -9,7 +9,6 @@ import Alert from '@/components/molecules/alert';
 import TabNavigation from '@/components/molecules/tabNavigation';
 import Breadcrumb from '@/components/molecules/breadcrumb';
 import StatCard from '@/components/molecules/StatCard';
-import TableHeader, { SortDirection } from '@/components/molecules/tableHeader';
 import { 
   faUser, 
   faEdit, 
@@ -31,11 +30,7 @@ import {
   faUsers,
   faClock,
   faCalendarAlt,
-  faChartPie,
-  faFilter,
-  faSearch,
-  faList,
-  faTable
+  faChartPie
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -43,25 +38,6 @@ const { Heading, Text } = Typography;
 
 export default function MoleculesShowcase() {
   // State for TableHeader examples
-  const [sortColumn, setSortColumn] = useState<string | undefined>('name');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-  const [activeFilters, setActiveFilters] = useState<Record<string, boolean>>({
-    status: true,
-  });
-  
-  // Handle TableHeader sort change
-  const handleSort = (column: string, direction: SortDirection) => {
-    setSortColumn(column);
-    setSortDirection(direction);
-  };
-  
-  // Handle TableHeader filter click
-  const handleFilter = (column: string) => {
-    setActiveFilters(prev => ({
-      ...prev,
-      [column]: !prev[column]
-    }));
-  };
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-12">
@@ -919,123 +895,6 @@ export default function MoleculesShowcase() {
               variant="minimal"
               borderRadius="medium"
             />
-          </Card>
-        </div>
-      </section>
-
-      {/* Table Headers */}
-      <section id="table-headers" className="space-y-8">
-        <Heading level="h2">Table Headers</Heading>
-        
-        <div className="grid grid-cols-1 gap-4">
-          <Card title="Basic Table Headers" size="small">
-            <div className="space-y-6">
-              <TableHeader 
-                columns={[
-                  { key: 'name', title: 'Name', sortable: true },
-                  { key: 'email', title: 'Email', sortable: true },
-                  { key: 'role', title: 'Role', sortable: true },
-                  { key: 'status', title: 'Status', sortable: true, filterable: true }
-                ]}
-                sortColumn={sortColumn}
-                sortDirection={sortDirection}
-                onSort={handleSort}
-                variant="default"
-                withBackground
-              />
-              
-              <TableHeader 
-                columns={[
-                  { key: 'product', title: 'Product', icon: faTable, sortable: true },
-                  { key: 'category', title: 'Category', icon: faList, sortable: true },
-                  { key: 'price', title: 'Price', align: 'right', sortable: true },
-                  { key: 'stock', title: 'Stock', align: 'right', sortable: true }
-                ]}
-                variant="primary"
-                rounded
-                withShadow
-              />
-            </div>
-          </Card>
-
-          <Card title="Filter & Selection Options" size="small">
-            <div className="space-y-6">
-              <TableHeader 
-                columns={[
-                  { key: 'id', title: 'ID', width: '80px', align: 'center' },
-                  { key: 'title', title: 'Title', sortable: true, filterable: true },
-                  { key: 'category', title: 'Category', sortable: true, filterable: true },
-                  { key: 'status', title: 'Status', sortable: true, filterable: true, align: 'center' }
-                ]}
-                showSelectAll
-                selectedAll={false}
-                onSelectAll={(selected) => console.log('Select all:', selected)}
-                withFilter
-                onFilter={handleFilter}
-                activeFilters={activeFilters}
-                withVerticalDividers
-              />
-              
-              <TableHeader 
-                columns={[
-                  { key: 'id', title: '#', width: '50px' },
-                  { key: 'name', title: 'User Name', sortable: true, minWidth: '200px' },
-                  { key: 'email', title: 'Email Address', sortable: true, minWidth: '250px' },
-                  { key: 'lastActive', title: 'Last Active', sortable: true, align: 'center' },
-                ]}
-                actions={
-                  <DropdownMenu
-                    items={[
-                      { key: 'export', label: 'Export', icon: faShare },
-                      { key: 'filter', label: 'Advanced Filter', icon: faFilter },
-                      { key: 'search', label: 'Search', icon: faSearch }
-                    ]}
-                    trigger={<FontAwesomeIcon icon={faCog} />}
-                    buttonProps={{ variant: 'ghost' }}
-                    placement="bottom"
-                  />
-                }
-                variant="outlined"
-                withBorder
-              />
-            </div>
-          </Card>
-
-          <Card title="Sizes & Loading State" size="small">
-            <div className="space-y-6">
-              <TableHeader 
-                columns={[
-                  { key: 'id', title: 'ID' },
-                  { key: 'name', title: 'Name' },
-                  { key: 'email', title: 'Email' }
-                ]}
-                size="small"
-                variant="minimal"
-              />
-              
-              <TableHeader 
-                columns={[
-                  { key: 'id', title: 'ID' },
-                  { key: 'name', title: 'Name' },
-                  { key: 'email', title: 'Email' }
-                ]}
-                size="large"
-                variant="secondary"
-              />
-              
-              <TableHeader 
-                columns={[
-                  { key: 'id', title: 'ID', width: '80px' },
-                  { key: 'title', title: 'Very Long Title That Should Scroll', minWidth: '300px' },
-                  { key: 'description', title: 'Description', minWidth: '400px' },
-                  { key: 'category', title: 'Category', minWidth: '200px' },
-                  { key: 'status', title: 'Status', minWidth: '150px' },
-                  { key: 'created', title: 'Created', minWidth: '200px' }
-                ]}
-                withHorizontalScroll
-                isSticky
-              />
-            </div>
           </Card>
         </div>
       </section>
