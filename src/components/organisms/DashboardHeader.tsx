@@ -5,7 +5,6 @@ import { faFilter, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Input from '@/components/atomic/input';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 
 const { Heading, Text } = Typography;
 
@@ -22,19 +21,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 }) => {
   return (
     <>
-      {/* Breadcrumb Navigation */}
-      <div className="mb-6">
-        <Breadcrumb 
-          items={[
-            { key: 'home', label: 'Home', href: '/' },
-            { key: 'dashboard', label: 'Dashboard' }
-          ]}
-          withHomeIcon
-          variant="default"
-          size="medium"
-        />
-      </div>
-      
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>

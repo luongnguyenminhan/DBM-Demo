@@ -260,7 +260,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         const labelElement = typeof tab.label === 'string' ? (
             <Typography.Text 
                 size={size === 'small' ? 'xs' : size === 'large' ? 'lg' : 'sm'}
-                className="whitespace-nowrap"
+                className="whitespace-nowrap mx-2"
             >
                 {tab.label}
             </Typography.Text>

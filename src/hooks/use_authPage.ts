@@ -49,7 +49,7 @@ export const useAuthPage = () => {
             // Redirect to dashboard after a short delay
             return redirectWithDelay('/dashboard', 1500);
         }
-      } else if (response.status === 401) {
+      } else if (response.status === 401 && !response.message?.includes("không chính xác")) {
         // Email verification required case
         Toast.warning('Your email address needs to be verified', {
           autoCloseDuration: 3000,
@@ -60,7 +60,7 @@ export const useAuthPage = () => {
         const encodedEmail = btoa(credentials.email);
         
         // Redirect to OTP confirmation with email parameter after short delay
-        return redirectWithDelay(`/otp-confirmation?email=${encodedEmail}&purpose=login`, 1500);
+        return redirectWithDelay(`otp-confirmation?email=${encodedEmail}&purpose=login`, 1500);
       } else {
         // Other non-success cases
         Toast.error(response.message || 'Login failed', {
@@ -111,7 +111,7 @@ export const useAuthPage = () => {
         const encryptedEmail = btoa(userData.email);
         
         // Redirect to OTP confirmation page after a short delay
-        return redirectWithDelay(`/otp-confirmation?email=${encryptedEmail}&purpose=registration`, 1500);
+        return redirectWithDelay(`otp-confirmation?email=${encryptedEmail}&purpose=registration`, 1500);
       } else {
         console.error('Registration failed:', response);
         Toast.error(response.message || 'Đăng ký thất bại', {

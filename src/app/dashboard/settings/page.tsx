@@ -43,36 +43,8 @@ export default function UserSettings() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Sidebar Navigation */}
-        <div className="lg:col-span-1">
-          <Card withShadow>
-            <div className="p-3">
-              <nav className="space-y-1">
-                {[
-                  { label: 'Thông tin cá nhân', icon: faUser, active: true },
-                  { label: 'Tích hợp', icon: faCamera, active: false },
-                  { label: 'Thông báo', icon: faBell, active: false },
-                  { label: 'Quản lý tài khoản', icon: faTrash, active: false },
-                ].map((item, index) => (
-                  <a 
-                    key={index}
-                    href="#" 
-                    className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                      item.active 
-                        ? 'bg-primary-50 text-primary-700' 
-                        : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    <i className={`fas fa-${item.icon.iconName} mr-3 h-4 w-4`}></i>
-                    <span>{item.label}</span>
-                  </a>
-                ))}
-              </nav>
-            </div>
-          </Card>
-        </div>
-
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-3 space-y-6">
           <TabNavigation
             tabs={[
               {
@@ -98,7 +70,6 @@ export default function UserSettings() {
                               rounded
                               withRipple
                             >
-                              <span className="sr-only">Change</span>
                             </Button>
                           </div>
                         </div>

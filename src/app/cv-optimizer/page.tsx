@@ -1,1 +1,0 @@
-// This file should be removed as it's been moved to /dashboard/cv-optimizer/page.tsx

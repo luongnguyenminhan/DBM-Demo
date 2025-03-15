@@ -235,7 +235,8 @@ export const Text: React.FC<TextProps> = ({
       customClassName: classNames(props.customClassName, {
         'cursor-pointer hover:underline': asLink,
         'mb-4': paragraph,
-        'm-2': true, // Added margin left
+        'mr-2': true, // Added margin left
+        'my-2': true,
       }),
     },
     isCaption ? 'sm' : 'base',
