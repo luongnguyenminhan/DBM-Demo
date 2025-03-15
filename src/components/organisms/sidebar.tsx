@@ -394,7 +394,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       {renderUserProfile()}
 
       {/* Custom Footer Component */}
-      {footer && <div className={collapsed ? "p-2" : "p-4"}>{footer}</div>}
+      {footer && (
+        <div className={`${collapsed ? "p-2" : "p-4"} transition-all duration-200`}>
+          {footer}
+        </div>
+      )}
       
       
     </motion.div>

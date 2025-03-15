@@ -9,10 +9,10 @@ import {
   faUserTie, 
   faBriefcase, 
   faCog,
+  faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { Sidebar, Header } from '@/components/organisms';
 import Button from '@/components/atomic/button';
-import Image from 'next/image';
 
 const sidebarItems = [
   { key: 'overview', label: 'Tổng quan', href: '/dashboard', icon: faTachometerAlt },
@@ -31,10 +31,15 @@ export default function DashboardLayout({
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
-  const sidebarFooter = (
-      <Button variant="outline" isFullWidth>
-        Log Out
-      </Button>
+  const sidebarFooter = (isCollapsed: boolean) => (
+    <Button 
+      variant="outline" 
+      isFullWidth={!isCollapsed}
+      className={isCollapsed ? 'w-10 h-10 mx-auto' : ''}
+      leftIcon={faSignOutAlt}
+    >
+      {isCollapsed ? '' : 'Log Out'}
+    </Button>
   );
 
   return (
@@ -46,7 +51,7 @@ export default function DashboardLayout({
         onCollapsedChange={setSidebarCollapsed}
         variant="light"
         width="240px"
-        collapsedWidth="64px"
+        collapsedWidth="70px"
         isCollapsible={true}
         isOpen={true}
         userProfile={{
@@ -56,7 +61,7 @@ export default function DashboardLayout({
         }}
         logoText="ENTERVIU"
         logoImageSrc="/logo.png"
-        footer={sidebarFooter}
+        footer={sidebarFooter(sidebarCollapsed)}
       />
 
       {/* Main Content */}

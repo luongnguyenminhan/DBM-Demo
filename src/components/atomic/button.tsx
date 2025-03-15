@@ -70,6 +70,18 @@ const Button: React.FC<ButtonProps> = ({
     },
   );
 
+  const iconClasses = classNames({
+    'mr-2': !!children && leftIcon,
+    'ml-2': !!children && rightIcon,
+    'w-4 h-4': size === 'small',
+    'w-5 h-5': size === 'medium',
+    'w-6 h-6': size === 'large',
+  });
+
+  const renderIcon = (icon: IconDefinition, className: string) => (
+    <FontAwesomeIcon icon={icon} className={className} />
+  );
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (isDisabled || isLoading) return;
 
@@ -119,9 +131,9 @@ const Button: React.FC<ButtonProps> = ({
           <FontAwesomeIcon icon={faSpinner} />
         </span>
       )}
-      {leftIcon && !isLoading && <FontAwesomeIcon icon={leftIcon} />}
+      {leftIcon && !isLoading && renderIcon(leftIcon, iconClasses)}
       {children}
-      {rightIcon && <FontAwesomeIcon icon={rightIcon} />}
+      {rightIcon && renderIcon(rightIcon, iconClasses)}
     </motion.button>
   ) : (
     <button
@@ -136,9 +148,9 @@ const Button: React.FC<ButtonProps> = ({
           <FontAwesomeIcon icon={faSpinner} />
         </span>
       )}
-      {leftIcon && !isLoading && <FontAwesomeIcon icon={leftIcon} />}
+      {leftIcon && !isLoading && renderIcon(leftIcon, iconClasses)}
       {children}
-      {rightIcon && <FontAwesomeIcon icon={rightIcon} />}
+      {rightIcon && renderIcon(rightIcon, iconClasses)}
     </button>
   );
 
