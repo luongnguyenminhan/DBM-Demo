@@ -135,7 +135,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
           </div>
           <Text
             asLink
-            href="/forgot-password"
+            href="forgot-password"
             variant="primary"
             size="sm"
             customClassName="hover:underline"
@@ -207,7 +207,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
           Chưa có tài khoản?{' '}
           <Text
             asLink
-            href="/register"
+            href="register"
             variant="primary"
             size="sm"
             customClassName="hover:underline font-medium"

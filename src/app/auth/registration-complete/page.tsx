@@ -18,11 +18,11 @@ export default function RegistrationCompletePage() {
     }, []);
 
     const handleContinueToLogin = () => {
-        redirectWithDelay('/login', 500);
+        redirectWithDelay('login', 500);
     };
 
     const handleRegisterAnother = () => {
-        redirectWithDelay('/register', 500);
+        redirectWithDelay('register', 500);
     };
 
     return (

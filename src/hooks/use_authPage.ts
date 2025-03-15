@@ -185,7 +185,7 @@ export const useAuthPage = () => {
         });
         
         // Redirect to login page on success
-        return redirectWithDelay('/login', 2000);
+        return redirectWithDelay('auth/login', 2000);
       } else {
         Toast.error(response.message || 'Không thể đặt lại mật khẩu', {
           position: "top-right",

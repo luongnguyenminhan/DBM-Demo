@@ -1,5 +1,7 @@
+'use client';
+
 import { useState, useEffect, useRef, RefObject } from 'react';
-import { TabItem } from '@/components/molecules/tabNavigation';
+import type { TabItem } from '@/components/molecules/tabNavigation';
 
 // Defines the structure for scroll position indicators
 interface ScrollPosition {

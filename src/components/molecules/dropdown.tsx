@@ -44,14 +44,15 @@ export interface DropdownMenuProps {
     defaultOpen?: boolean;
     rounded?: boolean;
     onVisibleChange?: (visible: boolean) => void;
+    onSelect?: (key: string) => void; // Add onSelect prop to handle item selection
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
     items,
     trigger,
     buttonProps,
-    variant = 'primary',
-    size = 'medium',
+    variant,
+    size,
     label = 'Select',
     placement = 'bottom',
     isFullWidth = false,
@@ -63,9 +64,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     defaultOpen = false,
     rounded = false,
     onVisibleChange,
+    onSelect,
 }) => {
     const [isOpen, setIsOpen] = useState(defaultOpen);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
 
     // Container classes
     const containerClasses = classNames(
@@ -164,6 +166,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             onVisibleChange?.(false);
         }
         
+        // Call the onSelect prop with the item key if provided
+        onSelect?.(item.key);
+        
+        // Also call the item's onClick if provided
         item.onClick?.();
     };
 

@@ -9,6 +9,7 @@ import { faBriefcase, faPlus, faBuilding, faCheck, faUser, faCalendarAlt, faChev
 import Badge from '@/components/atomic/badge';
 import Icon from '@/components/atomic/icon';
 import Image from 'next/image';
+import StatCard from '@/components/molecules/StatCard';
 
 const { Heading, Text } = Typography;
 
@@ -126,53 +127,33 @@ export default function JobApplicationTracker() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card withShadow className="p-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <Text variant="muted" size="sm">Tổng ứng tuyển</Text>
-              <Text size="2xl" weight="bold">{stats.total}</Text>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Icon icon={faBriefcase} variant="primary" size="md" />
-            </div>
-          </div>
-        </Card>
+        <StatCard
+          metric="Tổng ứng tuyển"
+          value={stats.total}
+          icon={faBriefcase}
+          variant="default"
+        />
         
-        <Card withShadow className="p-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <Text variant="muted" size="sm">Đang xử lý</Text>
-              <Text size="2xl" weight="bold">{stats.active}</Text>
-            </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <Icon icon={faBuilding} variant="success" size="md" />
-            </div>
-          </div>
-        </Card>
+        <StatCard
+          metric="Đang xử lý"
+          value={stats.active}
+          icon={faBuilding}
+          variant="default"
+        />
         
-        <Card withShadow className="p-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <Text variant="muted" size="sm">Phỏng vấn</Text>
-              <Text size="2xl" weight="bold">{stats.interviews}</Text>
-            </div>
-            <div className="bg-yellow-100 p-3 rounded-full">
-              <Icon icon={faUser} variant="warning" size="md" />
-            </div>
-          </div>
-        </Card>
+        <StatCard
+          metric="Phỏng vấn"
+          value={stats.interviews}
+          icon={faUser}
+          variant="default"
+        />
         
-        <Card withShadow className="p-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <Text variant="muted" size="sm">Offer</Text>
-              <Text size="2xl" weight="bold">{stats.offers}</Text>
-            </div>
-            <div className="bg-red-100 p-3 rounded-full">
-              <Icon icon={faCheck} variant="error" size="md" />
-            </div>
-          </div>
-        </Card>
+        <StatCard
+          metric="Offer"
+          value={stats.offers}
+          icon={faCheck}
+          variant="default"
+        />
       </div>
 
       {/* Applications List */}

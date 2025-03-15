@@ -28,10 +28,29 @@ export interface MeetingUpdateRequest {
 }
 
 export interface MeetingResponse {
-    id?: string;
+    id: string;
     meeting_id?: string;
     platform?: string;
     start_time?: string;
     end_time?: string;
     status?: string;
+    [key: string]: string | undefined;
+}
+
+export interface Meeting {
+    id: number;
+    title: string;
+    date: string;
+    duration: string;
+    attendees: number;
+    status: 'scheduled' | 'completed' | 'cancelled';
+}
+
+export interface MeetingAnalytics {
+    totalMeetings: number;
+    completedMeetings: number;
+    cancelledMeetings: number;
+    totalMeetingHours: number;
+    averageDuration: number;
+    totalParticipants: number;
 }

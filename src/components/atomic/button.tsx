@@ -58,6 +58,7 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const buttonClasses = classNames(
+    customClassName,
     'transition-all duration-200 flex items-center justify-center gap-2 font-medium',
     sizeClasses[size],
     variantClasses[variant],
@@ -67,7 +68,6 @@ const Button: React.FC<ButtonProps> = ({
       'rounded-full': rounded,
       'rounded-md': !rounded,
     },
-    customClassName
   );
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

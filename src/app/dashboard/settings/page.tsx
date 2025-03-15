@@ -307,13 +307,16 @@ export default function UserSettings() {
                       
                       <div className="border-t pt-6">
                         <Heading level="h3" size="lg" className="mb-2 text-error-600">Xóa tài khoản</Heading>
-                        <Text variant="muted" className="mb-4">Khi xóa tài khoản, tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.</Text>
-                        <Button 
-                          variant="outline" 
-                          leftIcon={faTrash}
-                        >
-                          Xóa tài khoản của tôi
-                        </Button>
+                        <Text variant="muted">Khi xóa tài khoản, tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.</Text>
+                        <div className="flex my-2">
+                          <Button 
+                            variant="outline" 
+                            leftIcon={faTrash}
+                            customClassName="text-error-600 hover:bg-error-50 border-error-600"
+                          >
+                            Delete my account
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </Card>

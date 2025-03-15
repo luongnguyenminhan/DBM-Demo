@@ -144,7 +144,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         <div className="text-center mt-6">
           <Text
             asLink
-            href="/login"
+            href="auth/login"
             variant="primary"
             size="sm"
             customClassName="hover:underline font-medium"
@@ -160,7 +160,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             Nhớ mật khẩu cũ?{' '}
             <Text
               asLink
-              href="/login"
+              href="auth/login"
               variant="primary"
               size="sm"
               customClassName="hover:underline font-medium"

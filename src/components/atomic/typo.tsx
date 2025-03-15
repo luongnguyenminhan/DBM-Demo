@@ -203,7 +203,6 @@ export const Heading: React.FC<HeadingProps> = ({ level = 'h2', ...props }) => {
     level
   );
 };
-
 export const Text: React.FC<TextProps> = ({
   paragraph = false,
   isCaption = false,
@@ -236,6 +235,7 @@ export const Text: React.FC<TextProps> = ({
       customClassName: classNames(props.customClassName, {
         'cursor-pointer hover:underline': asLink,
         'mb-4': paragraph,
+        'm-2': true, // Added margin left
       }),
     },
     isCaption ? 'sm' : 'base',

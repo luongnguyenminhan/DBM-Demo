@@ -113,7 +113,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSubmit, isLoa
           Nhớ mật khẩu?{' '}
           <Text
             asLink
-            href="/login"
+            href="login"
             variant="primary"
             size="sm"
             customClassName="hover:underline font-medium"
@@ -128,7 +128,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSubmit, isLoa
           Chưa có tài khoản?{' '}
           <Text
             asLink
-            href="/register"
+            href="register"
             variant="primary"
             size="sm"
             customClassName="hover:underline font-medium"

@@ -208,7 +208,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
           Đã có tài khoản?{' '}
           <Text
             asLink
-            href="/login"
+            href="login"
             variant="primary"
             size="sm"
             customClassName="hover:underline font-medium"
