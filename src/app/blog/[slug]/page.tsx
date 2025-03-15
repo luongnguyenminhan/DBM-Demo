@@ -4,7 +4,6 @@ import React from 'react';
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 import { faCalendarAlt, faUser, faTag, faArrowLeft, faShare, faComment } from '@fortawesome/free-solid-svg-icons';
 import Avatar from '@/components/atomic/avatar';
 import Icon from '@/components/atomic/icon';
@@ -71,19 +70,6 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
     return (
         <div className="p-6 h-full space-y-6">
-            {/* Breadcrumb Navigation */}
-            <div className="mb-6">
-                <Breadcrumb
-                    items={[
-                        { key: 'home', label: 'Trang chủ', href: '/' },
-                        { key: 'blog', label: 'Blog', href: '/blog' },
-                        { key: 'post', label: post.title }
-                    ]}
-                    withHomeIcon
-                    variant="default"
-                    size="medium"
-                />
-            </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* Main Content */}

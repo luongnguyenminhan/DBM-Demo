@@ -5,7 +5,6 @@ import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
 import StatCard from '@/components/molecules/StatCard';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 import Icon from '@/components/atomic/icon';
 import { faChartLine, faList, faUser, faCalendarCheck, faEye, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -14,19 +13,6 @@ const { Heading, Text } = Typography;
 export default function DashboardOverview() {
   return (
     <div className="p-6 h-full space-y-6">
-      {/* Breadcrumb Navigation */}
-      <div className="mb-6">
-        <Breadcrumb 
-          items={[
-            { key: 'home', label: 'Home', href: '/' },
-            { key: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-            { key: 'overview', label: 'Tổng quan' }
-          ]}
-          withHomeIcon
-          variant="default"
-          size="medium"
-        />
-      </div>
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">

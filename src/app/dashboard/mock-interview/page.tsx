@@ -48,19 +48,6 @@ export default function MockInterview() {
 
   return (
     <div className="p-6 h-full space-y-6">
-      {/* Breadcrumb Navigation */}
-      <div className="mb-6">
-        <Breadcrumb 
-          items={[
-            { key: 'home', label: 'Trang chủ', href: '/' },
-            { key: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-            { key: 'mock-interview', label: 'Phỏng vấn ảo' }
-          ]}
-          withHomeIcon
-          variant="default"
-          size="medium"
-        />
-      </div>
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">

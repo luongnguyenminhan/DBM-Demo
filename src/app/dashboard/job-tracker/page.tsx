@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 import { faBriefcase, faPlus, faBuilding, faCheck, faUser, faCalendarAlt, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Badge from '@/components/atomic/badge';
 import Icon from '@/components/atomic/icon';
@@ -91,18 +90,6 @@ export default function JobApplicationTracker() {
   return (
     <div className="p-6 h-full space-y-6">
       {/* Breadcrumb Navigation */}
-      <div className="mb-6">
-        <Breadcrumb 
-          items={[
-            { key: 'home', label: 'Trang chủ', href: '/' },
-            { key: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-            { key: 'job-tracker', label: 'Quản lý ứng tuyển' }
-          ]}
-          withHomeIcon
-          variant="default"
-          size="medium"
-        />
-      </div>
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">

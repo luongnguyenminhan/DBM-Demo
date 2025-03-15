@@ -185,13 +185,15 @@ const Header: React.FC<HeaderProps> = ({
           {/* User Menu or Login Button */}
           {isLoggedIn ? (
             <div className="flex items-center">
-              <IconButton 
-                icon={faBell}
-                variant={variant === 'colored' ? 'default' : 'primary'}
-                className="mr-4"
-                withBackground={variant !== 'colored'}
-                customColor={variant === 'colored' ? 'white' : undefined}
-              />
+              <div className="hidden md:block mr-4">
+                <IconButton 
+                  icon={faBell}
+                  variant={variant === 'colored' ? 'default' : 'primary'}
+                  className=""
+                  withBackground={variant !== 'colored'}
+                  customColor={variant === 'colored' ? 'white' : undefined}
+                />
+              </div>
               <DropdownMenu
                 items={userDropdownItems}
                 placement="bottom"

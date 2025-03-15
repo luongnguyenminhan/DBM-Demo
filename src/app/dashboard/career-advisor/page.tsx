@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 import Input from '@/components/atomic/input';
 import { faRocket, faGraduationCap, faRoute, faStar } from '@fortawesome/free-solid-svg-icons';
 import DropdownMenu from '@/components/molecules/dropdown';
@@ -22,18 +21,6 @@ export default function CareerPathAdvisor() {
   return (
     <div className="p-6 h-full space-y-6">
       {/* Breadcrumb Navigation */}
-      <div className="mb-6">
-        <Breadcrumb 
-          items={[
-            { key: 'home', label: 'Trang chủ', href: '/' },
-            { key: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-            { key: 'career-advisor', label: 'Tư vấn lộ trình' }
-          ]}
-          withHomeIcon
-          variant="default"
-          size="medium"
-        />
-      </div>
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">

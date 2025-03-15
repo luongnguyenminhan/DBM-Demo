@@ -34,6 +34,7 @@ export interface BreadcrumbProps {
     withAnimation?: boolean;
     withHomeIcon?: boolean;
     onClick?: (key: string) => void;
+    onItemClick?: (item: BreadcrumbItem, index?: number) => void;
     maxItems?: number;
     collapsedLabel?: string;
     withCard?: boolean;
@@ -59,6 +60,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
     withAnimation = true,
     withHomeIcon = true,
     onClick,
+    onItemClick,
     maxItems,
     collapsedLabel = '...',
     withCard = false,
@@ -145,7 +147,15 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 >
                     <div
                         className={getItemClasses(item, isLast)}
-                        onClick={() => !isLast && !item.disabled && handleItemClick(item.key)}
+                        onClick={() => {
+                            if (isLast || item.disabled) return;
+                            
+                            if (onItemClick) {
+                                onItemClick(item, index);
+                            } else {
+                                handleItemClick(item.key);
+                            }
+                        }}
                     >
                         {index === 0 && withHomeIcon && !item.icon && (
                             <Icon icon={faHome} className="mr-1" />

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
-import Breadcrumb from '@/components/molecules/breadcrumb';
+
 import { faCloudUploadAlt, faFileAlt, faChartLine, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 const { Heading, Text } = Typography;
@@ -44,19 +44,6 @@ export default function AIScoringSystem() {
 
   return (
     <div className="p-6 h-full space-y-6">
-      {/* Breadcrumb Navigation */}
-      <div className="mb-6">
-        <Breadcrumb 
-          items={[
-            { key: 'home', label: 'Home', href: '/' },
-            { key: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-            { key: 'ai-scoring', label: 'Chấm điểm CV' }
-          ]}
-          withHomeIcon
-          variant="default"
-          size="medium"
-        />
-      </div>
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">

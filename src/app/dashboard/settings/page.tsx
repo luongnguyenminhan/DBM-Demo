@@ -5,7 +5,6 @@ import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
 import Input from '@/components/atomic/input';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 import Avatar from '@/components/atomic/avatar';
 import { faUser, faBell, faTrash, faCamera, faSave, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import TabNavigation from '@/components/molecules/tabNavigation';
@@ -31,18 +30,6 @@ export default function UserSettings() {
   return (
     <div className="p-6 h-full space-y-6">
       {/* Breadcrumb Navigation */}
-      <div className="mb-6">
-        <Breadcrumb 
-          items={[
-            { key: 'home', label: 'Trang chủ', href: '/' },
-            { key: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-            { key: 'settings', label: 'Cài đặt tài khoản' }
-          ]}
-          withHomeIcon
-          variant="default"
-          size="medium"
-        />
-      </div>
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
