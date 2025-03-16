@@ -10,7 +10,7 @@ import Typography from '@/components/atomic/typo';
 import DashboardMetrics from '@/components/organisms/dashboardMetrics';
 import SkillsContainer from '@/components/organisms/skillsContainer';
 import JobsList from '@/components/organisms/jobsList';
-import ChatSection from '@/components/organisms/ChatSection';
+import ChatSection from '@/components/organisms/chatSection';
 import CVPreview from '@/components/organisms/CVPreview';
 import BadgesContainer from '@/components/organisms/badgesContainer';
 import { MessageSender } from '@/components/atomic/message';

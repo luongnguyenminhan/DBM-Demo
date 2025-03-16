@@ -15,7 +15,7 @@ import Button from '@/components/atomic/button';
 import Typography from '@/components/atomic/typo';
 import Avatar from '@/components/atomic/avatar';
 import Message, { MessageSender } from '@/components/atomic/message';
-import ChatInput from '@/components/molecules/ChatInput';
+import ChatInput from '@/components/molecules/chatInput';
 import Icon, { IconButton } from '@/components/atomic/icon';
 import Tooltip from '@/components/atomic/tooltip';
 

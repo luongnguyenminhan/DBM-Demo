@@ -3,16 +3,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
-import { faPlus, faChartLine, faCode, faDatabase, faLaptopCode, faPuzzlePiece, faMicrochip, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faChartLine, faCode, faDatabase, faLaptopCode, faPuzzlePiece, faMicrochip, IconDefinition, faBriefcase } from '@fortawesome/free-solid-svg-icons';
 
-import SkillCard from '@/components/molecules/SkillCard';
+import SkillCard from '@/components/molecules/skillCard';
 import SectionHeader from '@/components/molecules/sectionHeader';
 import Card from '@/components/atomic/card';
 import Button from '@/components/atomic/button';
 import DropdownMenu from '@/components/molecules/dropdown';
 import SearchBar from '@/components/molecules/searchBar';
 import Typography from '@/components/atomic/typo';
-import ProgressStats from '@/components/molecules/ProgressStats';
+import ProgressStats from '@/components/molecules/progressStats';
 
 export interface Skill {
   id: string;

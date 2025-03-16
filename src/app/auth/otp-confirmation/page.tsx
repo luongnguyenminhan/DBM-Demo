@@ -4,7 +4,7 @@ import React, { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import OtpConfirmationForm from '@/components/auth/otpConfirmationForm';
 import { Toast } from '@/components/molecules/alert';
-import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
+import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthPage } from '@/hooks/use_authPage';
 
 // Client component that safely uses useSearchParams
