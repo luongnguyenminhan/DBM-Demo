@@ -44,7 +44,7 @@ export interface DropdownMenuProps {
     defaultOpen?: boolean;
     rounded?: boolean;
     onVisibleChange?: (visible: boolean) => void;
-    onSelect?: (key: string) => void; // Add onSelect prop to handle item selection
+    onSelect?: (key: string) => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({

@@ -6,284 +6,328 @@ import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
 import Input from '@/components/atomic/input';
 import Avatar from '@/components/atomic/avatar';
-import { faUser, faBell, faTrash, faCamera, faSave, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import TabNavigation from '@/components/molecules/tabNavigation';
+import Badge from '@/components/atomic/badge';
+import { 
+    faUser, 
+    faBell, 
+    faTrash, 
+    faCamera, 
+    faSave, 
+    faEnvelope, 
+    faFilePdf, 
+    faEye, 
+    faDownload, 
+    faUpload, 
+    faPencil 
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const { Heading, Text } = Typography;
 
-export default function UserSettings() {
-  const [name, setName] = useState('Nguyen Van A');
-  const [email, setEmail] = useState('example@mail.com');
-  const [notifications, setNotifications] = useState({
-    email: true,
-    application: true,
-    marketing: false,
-  });
-  
-  const toggleNotification = (key: string) => {
-    setNotifications(prev => ({
-      ...prev,
-      [key]: !prev[key as keyof typeof prev]
-    }));
-  };
+export default function UserProfile() {
+    // User information state
+    const [name, setName] = useState('Nguyễn Văn A');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [email, setEmail] = useState('example@mail.com');
+    const [phoneNumber, setPhoneNumber] = useState('+84 123 456 789');
+    const [bio, setBio] = useState('Lập trình viên front-end với 3 năm kinh nghiệm');
+    
+    // CV management state
+    const [cvList, setCvList] = useState([
+        { 
+            id: '1', 
+            name: 'CV Lập trình viên Frontend', 
+            date: '15/01/2025',
+            format: 'PDF',
+            size: '1.2 MB',
+            status: 'active',
+            matchScore: 85
+        },
+        { 
+            id: '2', 
+            name: 'CV Thiết kế UI/UX', 
+            date: '20/02/2025',
+            format: 'PDF',
+            size: '2.1 MB',
+            status: 'inactive',
+            matchScore: 72
+        },
+        { 
+            id: '3', 
+            name: 'CV Lập trình viên Full Stack', 
+            date: '05/03/2025',
+            format: 'PDF',
+            size: '1.8 MB',
+            status: 'active',
+            matchScore: 91
+        }
+    ]);
+    
+    // Delete CV handler
+    const handleDeleteCV = (id: string) => {
+        setCvList(cvList.filter(cv => cv.id !== id));
+    };
+    
+    // Get match score badge variant based on score
+    const getMatchBadgeVariant = (score: number) => {
+        if (score >= 90) return 'success';
+        if (score >= 70) return 'primary';
+        if (score >= 50) return 'warning';
+        return 'error';
+    };
 
-  return (
-    <div className="p-6 h-full space-y-6">
-      {/* Breadcrumb Navigation */}
-      
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div>
-          <Heading level="h1" size="2xl">Cài đặt tài khoản</Heading>
-          <Text variant="muted" size="lg" className="mt-1">
-            Quản lý thông tin cá nhân và tùy chọn tài khoản
-          </Text>
-        </div>
-      </div>
+    return (
+        <div className="p-6 h-full space-y-6">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div>
+                    <Heading level="h1" size="2xl">Quản lý tài khoản</Heading>
+                    <Text variant="muted" size="lg" className="mt-1">
+                        Quản lý thông tin cá nhân và CV của bạn
+                    </Text>
+                </div>
+            </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sidebar Navigation */}
-        {/* Main Content */}
-        <div className="lg:col-span-3 space-y-6">
-          <TabNavigation
-            tabs={[
-              {
-                key: 'personal',
-                label: 'Thông tin cá nhân',
-                icon: faUser,
-                content: (
-                  <Card withShadow>
-                    <div className="p-6 space-y-6">
-                      <div className="flex flex-col sm:flex-row items-center gap-6">
-                        <div className="relative">
-                          <Avatar 
-                            src="https://i.pravatar.cc/300" 
-                            size="2xl"
-                            withBorder
-                            borderColor="var(--border-primary)"
-                          />
-                          <div className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                {/* User Settings Card */}
+                <Card withShadow className='col-span-2'>
+                    <div className="p-6">
+                        <Heading level="h2" size="xl" className="mb-4">Thông tin cá nhân</Heading>
+                        
+                        <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
+                            <div className="relative">
+                                <Avatar 
+                                    src="https://i.pravatar.cc/300" 
+                                    size="2xl"
+                                    withBorder
+                                    borderColor="var(--border-primary)"
+                                />
+                                <div className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
+                                    <Button
+                                        variant="primary"
+                                        size="small"
+                                        leftIcon={faCamera}
+                                        rounded
+                                        withRipple
+                                    >
+                                    </Button>
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2 text-center sm:text-left">
+                                <Text size="lg" weight="bold">{name}</Text>
+                                <Text variant="muted">{email}</Text>
+                                <Text size="sm">Tham gia: 10 tháng 5, 2023</Text>
+                                <Badge content="Đã xác thực" variant="success" size="sm" />
+                            </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 gap-4">
+                            <div>
+                                <Text weight="medium" className="mb-1">Họ và tên</Text>
+                                <Input 
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Nhập tên của bạn"
+                                />
+                            </div>
+                            
+                            <div>
+                                <Text weight="medium" className="mb-1">Email (Không thể chỉnh sửa)</Text>
+                                <Input 
+                                    value={email}
+                                    placeholder="Email của bạn"
+                                    leftIcon={faEnvelope}
+                                    disabled
+                                />
+                            </div>
+                            
+                            <div>
+                                <Text weight="medium" className="mb-1">Số điện thoại</Text>
+                                <Input 
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    placeholder="Nhập số điện thoại của bạn"
+                                />
+                            </div>
+                            
+                            <div>
+                                <Text weight="medium" className="mb-1">Giới thiệu</Text>
+                                <Input 
+                                    value={bio}
+                                    onChange={(e) => setBio(e.target.value)}
+                                    placeholder="Giới thiệu ngắn về bản thân"
+                                    asTextArea
+                                    rows={3}
+                                />
+                            </div>
+                            
+                            <div>
+                                <Text weight="medium" className="mb-1">Kỹ năng</Text>
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    <Badge content="React" variant="primary" shape="rounded" />
+                                    <Badge content="TypeScript" variant="primary" shape="rounded" />
+                                    <Badge content="NextJS" variant="primary" shape="rounded" />
+                                    <Badge content="Tailwind CSS" variant="primary" shape="rounded" />
+                                    <Badge content="UX Design" variant="secondary" shape="rounded" />
+                                    <Badge content="+ Thêm kỹ năng" variant="default" shape="rounded" leftIcon={faUser} onClick={() => {}} />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="flex justify-end mt-4">
                             <Button
-                              variant="primary"
-                              size="small"
-                              leftIcon={faCamera}
-                              rounded
-                              withRipple
+                                variant="primary"
+                                leftIcon={faSave}
                             >
+                                Lưu thay đổi
                             </Button>
-                          </div>
                         </div>
-                        
-                        <div className="space-y-2 text-center sm:text-left">
-                          <Text size="lg" weight="bold">{name}</Text>
-                          <Text variant="muted">{email}</Text>
-                          <Text size="sm">Tham gia: 10 tháng 5, 2023</Text>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 gap-4">
-                        <div>
-                          <Text weight="medium" className="mb-1">Họ và tên</Text>
-                          <Input 
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Nhập tên của bạn"
-                          />
-                        </div>
-                        
-                        <div>
-                          <Text weight="medium" className="mb-1">Email</Text>
-                          <Input 
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Nhập email của bạn"
-                            leftIcon={faEnvelope}
-                          />
-                        </div>
-                        
-                        <div>
-                          <Text weight="medium" className="mb-1">Số điện thoại</Text>
-                          <Input 
-                            placeholder="Nhập số điện thoại của bạn"
-                          />
-                        </div>
-                        
-                        <div>
-                          <Text weight="medium" className="mb-1">Bio</Text>
-                          <Input 
-                            placeholder="Giới thiệu ngắn về bản thân"
-                            asTextArea
-                            rows={3}
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-end">
-                        <Button
-                          variant="primary"
-                          leftIcon={faSave}
-                        >
-                          Lưu thay đổi
-                        </Button>
-                      </div>
                     </div>
-                  </Card>
-                )
-              },
-              {
-                key: 'integrations',
-                label: 'Tích hợp',
-                icon: faCamera,
-                content: (
-                  <Card withShadow>
-                    <div className="p-6 space-y-6">
-                      <div className="flex items-start justify-between p-4 border rounded-md">
-                        <div>
-                          <Text weight="medium">LinkedIn</Text>
-                          <Text size="sm" variant="muted" className="mt-1">Kết nối tài khoản LinkedIn để đồng bộ CV và kinh nghiệm</Text>
-                        </div>
-                        <Button variant="primary" size="small">Kết nối</Button>
-                      </div>
-                      
-                      <div className="flex items-start justify-between p-4 border rounded-md">
-                        <div>
-                          <Text weight="medium">Google Drive</Text>
-                          <Text size="sm" variant="muted" className="mt-1">Lưu trữ và đồng bộ CV của bạn trên Google Drive</Text>
-                        </div>
-                        <Button variant="outline" size="small">Kết nối</Button>
-                      </div>
-                    </div>
-                  </Card>
-                )
-              },
-              {
-                key: 'notifications',
-                label: 'Thông báo',
-                icon: faBell,
-                content: (
-                  <Card withShadow>
-                    <div className="p-6 space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Text weight="medium">Thông báo qua email</Text>
-                            <Text size="sm" variant="muted">Nhận thông báo qua email</Text>
-                          </div>
-                          <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                            <input 
-                              type="checkbox" 
-                              id="toggle-email" 
-                              className="sr-only"
-                              checked={notifications.email}
-                              onChange={() => toggleNotification('email')}
-                            />
-                            <label 
-                              className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.email ? 'bg-primary-500' : 'bg-gray-300'}`}
-                              htmlFor="toggle-email"
+                </Card>
+
+                {/* CV Management Card */}
+                <Card withShadow className='col-span-3'>
+                    <div className="p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <Heading level="h2" size="xl">Quản lý CV</Heading>
+                            <Button
+                                variant="primary"
+                                leftIcon={faUpload}
                             >
-                              <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.email ? 'translate-x-4' : ''}`}></span>
-                            </label>
-                          </div>
+                                Tải lên CV mới
+                            </Button>
                         </div>
                         
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Text weight="medium">Thông báo về đơn ứng tuyển</Text>
-                            <Text size="sm" variant="muted">Nhận thông báo khi có cập nhật về đơn ứng tuyển</Text>
-                          </div>
-                          <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                            <input 
-                              type="checkbox" 
-                              id="toggle-application" 
-                              className="sr-only"
-                              checked={notifications.application}
-                              onChange={() => toggleNotification('application')}
-                            />
-                            <label 
-                              className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.application ? 'bg-primary-500' : 'bg-gray-300'}`}
-                              htmlFor="toggle-application"
-                            >
-                              <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.application ? 'translate-x-4' : ''}`}></span>
-                            </label>
-                          </div>
+                        <div className="overflow-hidden rounded-lg border border-gray-200 mb-4">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Tên CV
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Ngày tạo
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Độ phù hợp
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Trạng thái
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Hành động
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {cvList.map((cv) => (
+                                        <tr key={cv.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="flex items-center">
+                                                    <div className="flex-shrink-0">
+                                                        <FontAwesomeIcon icon={faFilePdf} className="text-red-500" />
+                                                    </div>
+                                                    <div className="ml-4">
+                                                        <div className="text-sm font-medium text-gray-900">{cv.name}</div>
+                                                        <div className="text-xs text-gray-500">{cv.format} · {cv.size}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {cv.date}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <Badge 
+                                                    content={`${cv.matchScore}%`} 
+                                                    variant={getMatchBadgeVariant(cv.matchScore)} 
+                                                    size="sm"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <Badge 
+                                                    content={cv.status === 'active' ? 'Đang dùng' : 'Không dùng'} 
+                                                    variant={cv.status === 'active' ? 'success' : 'default'} 
+                                                    size="sm"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <div className="flex justify-end gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="small"
+                                                        leftIcon={faEye}
+                                                        customClassName="text-blue-600"
+                                                        title="Xem CV"
+                                                    />
+                                                    <Button
+                                                        variant="outline"
+                                                        size="small"
+                                                        leftIcon={faDownload}
+                                                        customClassName="text-green-600"
+                                                        title="Tải xuống"
+                                                    />
+                                                    <Button
+                                                        variant="outline"
+                                                        size="small"
+                                                        leftIcon={faPencil}
+                                                        customClassName="text-amber-600"
+                                                        title="Chỉnh sửa"
+                                                    />
+                                                    <Button
+                                                        variant="outline"
+                                                        size="small"
+                                                        leftIcon={faTrash}
+                                                        customClassName="text-red-600"
+                                                        title="Xóa CV"
+                                                        onClick={() => handleDeleteCV(cv.id)}
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                         
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Text weight="medium">Thông báo marketing</Text>
-                            <Text size="sm" variant="muted">Nhận thông tin khuyến mãi và tin tức từ chúng tôi</Text>
-                          </div>
-                          <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                            <input 
-                              type="checkbox" 
-                              id="toggle-marketing" 
-                              className="sr-only"
-                              checked={notifications.marketing}
-                              onChange={() => toggleNotification('marketing')}
-                            />
-                            <label 
-                              className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.marketing ? 'bg-primary-500' : 'bg-gray-300'}`}
-                              htmlFor="toggle-marketing"
-                            >
-                              <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.marketing ? 'translate-x-4' : ''}`}></span>
-                            </label>
-                          </div>
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                            <div className="flex items-start">
+                                <div className="flex-shrink-0 text-blue-500">
+                                    <FontAwesomeIcon icon={faBell} />
+                                </div>
+                                <div className="ml-3">
+                                    <Text weight="medium" className="text-blue-800">Gợi ý việc làm phù hợp</Text>
+                                    <Text size="sm" className="text-blue-600 mt-1">
+                                        Dựa trên CV &quot;Lập trình viên Full Stack&quot; của bạn, chúng tôi đã tìm thấy 12 việc làm phù hợp. 
+                                        <span className="underline ml-1 cursor-pointer">Xem ngay</span>
+                                    </Text>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+                        
+                        <div className="mt-4">
+                            <Text weight="medium" className="mb-2">CV tốt nhất cho vị trí</Text>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="border rounded-lg p-3 hover:border-blue-500 cursor-pointer">
+                                    <Text size="sm" weight="medium">Senior Frontend Developer</Text>
+                                    <div className="flex justify-between items-center mt-1">
+                                        <Text size="xs" variant="muted">FPT Software</Text>
+                                        <Badge content="91% phù hợp" variant="success" size="xs" />
+                                    </div>
+                                </div>
+                                <div className="border rounded-lg p-3 hover:border-blue-500 cursor-pointer">
+                                    <Text size="sm" weight="medium">Lập trình viên React Native</Text>
+                                    <div className="flex justify-between items-center mt-1">
+                                        <Text size="xs" variant="muted">VNG Corporation</Text>
+                                        <Badge content="78% phù hợp" variant="primary" size="xs" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </Card>
-                )
-              },
-              {
-                key: 'account',
-                label: 'Quản lý tài khoản',
-                icon: faTrash,
-                content: (
-                  <Card withShadow>
-                    <div className="p-6 space-y-6">
-                      <div>
-                        <Heading level="h3" size="lg" className="mb-2">Đổi mật khẩu</Heading>
-                        <div className="space-y-3">
-                          <Input 
-                            type="password"
-                            placeholder="Mật khẩu hiện tại"
-                            leftIcon={faLock}
-                          />
-                          <Input 
-                            type="password"
-                            placeholder="Mật khẩu mới"
-                            leftIcon={faLock}
-                          />
-                          <Input 
-                            type="password"
-                            placeholder="Nhập lại mật khẩu mới"
-                            leftIcon={faLock}
-                          />
-                          <Button variant="primary">Cập nhật mật khẩu</Button>
-                        </div>
-                      </div>
-                      
-                      <div className="border-t pt-6">
-                        <Heading level="h3" size="lg" className="mb-2 text-error-600">Xóa tài khoản</Heading>
-                        <Text variant="muted">Khi xóa tài khoản, tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.</Text>
-                        <div className="flex my-2">
-                          <Button 
-                            variant="outline" 
-                            leftIcon={faTrash}
-                            customClassName="text-error-600 hover:bg-error-50 border-error-600"
-                          >
-                            Delete my account
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                )
-              }
-            ]}
-          />
+                </Card>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

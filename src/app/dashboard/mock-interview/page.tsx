@@ -4,15 +4,19 @@ import React, { useState } from 'react';
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 import { faVideo, faMicrophone, faRedo, faPlay, faStop, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import DropdownMenu from '@/components/molecules/dropdown';
+// Add Rating import
+import Rating from '@/components/atomic/rating';
+import Input from '@/components/atomic/input';
 
 const { Heading, Text } = Typography;
 
 export default function MockInterview() {
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [interviewCompleted, setInterviewCompleted] = useState(false);
+  // Add feedback state
+  const [feedback, setFeedback] = useState('');
   
   const jobRoles = [
     { key: 'frontend', label: 'Frontend Developer' },
@@ -44,6 +48,10 @@ export default function MockInterview() {
     setInterviewStarted(false);
     setInterviewCompleted(false);
     // Reset the interview flow
+  };
+
+  const handleFeedbackChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFeedback(e.target.value);
   };
 
   return (
@@ -268,6 +276,57 @@ export default function MockInterview() {
                       <Text size="sm">Nên nhìn vào camera nhiều hơn để tạo kết nối với người phỏng vấn.</Text>
                     </li>
                   </ul>
+                </div>
+                
+                {/* Add ratings for different skills */}
+                <div className="border-t pt-4 mt-4">
+                  <Text weight="medium" className="mb-3">Đánh giá kỹ năng</Text>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Rating 
+                      label="Kỹ năng chuyên môn" 
+                      value={4} 
+                      readOnly 
+                      showValue 
+                      variant="primary" 
+                    />
+                    <Rating 
+                      label="Kỹ năng giao tiếp" 
+                      value={3.5} 
+                      readOnly 
+                      showValue 
+                      precision="half" 
+                      variant="secondary" 
+                    />
+                    <Rating 
+                      label="Khả năng giải quyết vấn đề" 
+                      value={4.5} 
+                      readOnly 
+                      showValue 
+                      precision="half" 
+                      variant="success" 
+                    />
+                    <Rating 
+                      label="Sự tự tin" 
+                      value={3} 
+                      readOnly 
+                      showValue 
+                      variant="warning" 
+                    />
+                  </div>
+                </div>
+                
+                {/* Add feedback input */}
+                <div className="border-t pt-4 mt-4">
+                  <Input
+                    label="Phản hồi của bạn về buổi phỏng vấn ảo"
+                    placeholder="Chia sẻ cảm nhận và gợi ý của bạn..."
+                    value={feedback}
+                    onChange={handleFeedbackChange}
+                    asTextArea
+                    rows={3}
+                    variant="outlined"
+                    size="medium"
+                  />
                 </div>
               </div>
             </Card>

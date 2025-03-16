@@ -8,7 +8,6 @@ import {
   faBriefcase, 
   faCog,
   faSignOutAlt,
-  faChartPie,
   faUser,
   faUserTie,
 } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +19,6 @@ import Button from '@/components/atomic/button';
 const sidebarItems = [
   { key: 'overview', label: 'Tổng quan', href: '/dashboard', icon: faTachometerAlt },
   { key: 'ai-scoring', label: 'Chấm điểm CV', href: '/dashboard/ai-scoring', icon: faFileAlt },
-  { key: 'cv-optimizer', label: 'Tối ưu CV', href: '/dashboard/cv-optimizer', icon: faChartPie },
   { key: 'mock-interview', label: 'Phỏng vấn ảo', href: '/dashboard/mock-interview', icon: faUser },
   { key: 'career-advisor', label: 'Tư vấn nghề nghiệp', href: '/dashboard/career-advisor', icon: faUserTie },
   { key: 'job-tracker', label: 'Theo dõi ứng tuyển', href: '/dashboard/job-tracker', icon: faBriefcase },

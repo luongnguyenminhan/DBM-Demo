@@ -10,6 +10,7 @@ import Spinner, { Loader } from '@/components/atomic/spinner';
 import Typography from '@/components/atomic/typo';
 import Badge, { Tag } from '@/components/atomic/badge';
 import Avatar, { AvatarGroup } from '@/components/atomic/avatar';
+import Tooltip from '@/components/atomic/tooltip';
 
 import {
   faUser,
@@ -27,6 +28,8 @@ import {
   faExclamationTriangle,
   faPlus,
   faArrowRight,
+  faQuestion,
+  faLightbulb,
 } from '@fortawesome/free-solid-svg-icons';
 
 const { Heading, Text } = Typography;
@@ -743,6 +746,83 @@ export default function ComponentShowcase() {
             </div>
           </div>
         </Card>
+      </section>
+
+      {/* Tooltip Variants */}
+      <section id="tooltips" className="space-y-8">
+        <Heading level="h2">Tooltip Variants</Heading>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card title="Tooltip Placements" size="small">
+            <div className="flex flex-wrap justify-around gap-4 py-8">
+              <Tooltip content="Top tooltip" placement="top">
+                <Button variant="outline" size="small">Top</Button>
+              </Tooltip>
+              <Tooltip content="Bottom tooltip" placement="bottom">
+                <Button variant="outline" size="small">Bottom</Button>
+              </Tooltip>
+              <Tooltip content="Left tooltip" placement="left">
+                <Button variant="outline" size="small">Left</Button>
+              </Tooltip>
+              <Tooltip content="Right tooltip" placement="right">
+                <Button variant="outline" size="small">Right</Button>
+              </Tooltip>
+            </div>
+          </Card>
+          
+          <Card title="Tooltip Triggers" size="small">
+            <div className="flex flex-wrap justify-around gap-4 py-8">
+              <Tooltip content="Hover to see tooltip" trigger="hover">
+                <Button variant="primary" size="small">Hover</Button>
+              </Tooltip>
+              <Tooltip content="Click to see tooltip" trigger="click">
+                <Button variant="secondary" size="small">Click</Button>
+              </Tooltip>
+            </div>
+          </Card>
+          
+          <Card title="Tooltip with Icons" size="small">
+            <div className="flex justify-around gap-4 py-8">
+              <Tooltip content="Help information" placement="top">
+                <IconButton icon={faQuestion} variant="primary" withBackground rounded />
+              </Tooltip>
+              <Tooltip content="Useful tip" placement="bottom">
+                <IconButton icon={faLightbulb} variant="warning" withBackground rounded />
+              </Tooltip>
+              <Tooltip content="Important information" placement="right">
+                <IconButton icon={faInfoCircle} variant="info" withBackground rounded />
+              </Tooltip>
+            </div>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card title="Tooltip with Delay & Offset" size="small">
+            <div className="flex flex-wrap justify-around gap-4 py-8">
+              <Tooltip content="Delayed tooltip" delay={500} placement="top">
+                <Button variant="ghost" size="small">With Delay</Button>
+              </Tooltip>
+              <Tooltip content="Offset tooltip" offset={[0, 15]} placement="bottom">
+                <Button variant="ghost" size="small">With Offset</Button>
+              </Tooltip>
+            </div>
+          </Card>
+          
+          <Card title="Custom Tooltip Content" size="small">
+            <div className="flex justify-around py-8">
+              <Tooltip 
+                content={
+                  <div className="p-2">
+                    <Text weight="bold">Rich Content</Text>
+                    <Text size="xs">This tooltip has custom styling and content</Text>
+                  </div>
+                } 
+                placement="top"
+              >
+                <Button variant="primary">Rich Tooltip</Button>
+              </Tooltip>
+            </div>
+          </Card>
+        </div>
       </section>
 
       {/* Summary */}

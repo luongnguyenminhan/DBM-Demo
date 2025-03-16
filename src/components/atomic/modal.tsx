@@ -9,7 +9,7 @@ import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import Button from './button';
 import { createPortal } from 'react-dom';
 
-export type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+export type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full';
 export type ModalPosition = 'center' | 'top' | 'right' | 'bottom' | 'left';
 
 export interface ModalProps {
@@ -80,6 +80,7 @@ const Modal: React.FC<ModalProps> = ({
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
+    xxl: 'max-w-5xl',
     full: 'max-w-full min-h-screen w-screen',
   };
 

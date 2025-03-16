@@ -179,3 +179,28 @@ a:hover {
 .animate-shake {
   animation: shake 0.8s ease-in-out both;
 }
+
+/* Add grid utility classes */
+.grid-fixed-height {
+  grid-template-rows: minmax(500px, auto);
+  max-height: 500px;
+}
+
+.custom-scrollbar {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+  border-radius: 3px;
+}
