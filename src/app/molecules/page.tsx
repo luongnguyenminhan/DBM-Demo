@@ -8,7 +8,7 @@ import PaginationControl from '@/components/molecules/paginationControl';
 import Alert from '@/components/molecules/alert';
 import TabNavigation from '@/components/molecules/tabNavigation';
 import Breadcrumb from '@/components/molecules/breadcrumb';
-import StatCard from '@/components/molecules/StatCard';
+import StatCard from '@/components/molecules/statCard';
 import { 
   faUser, 
   faEdit, 

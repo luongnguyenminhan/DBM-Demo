@@ -1,17 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
 import { faPlus, faChartLine, faCode, faDatabase, faLaptopCode, faPuzzlePiece, faMicrochip, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import SkillCard from '@/components/molecules/SkillCard';
-import SectionHeader from '@/components/molecules/SectionHeader';
+import SectionHeader from '@/components/molecules/sectionHeader';
 import Card from '@/components/atomic/card';
 import Button from '@/components/atomic/button';
 import DropdownMenu from '@/components/molecules/dropdown';
-import SearchBar from '@/components/molecules/SearchBar';
+import SearchBar from '@/components/molecules/searchBar';
 import Typography from '@/components/atomic/typo';
+import ProgressStats from '@/components/molecules/ProgressStats';
 
 export interface Skill {
   id: string;
@@ -222,6 +223,10 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({
     label: category
   }));
 
+  // Add state for displaying skill stats
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [showDetailStats, setShowDetailStats] = useState(false);
+
   // Render toolbar with search and filters
   const renderToolbar = () => {
     if (!withSearch && !withFilters) return null;
@@ -270,6 +275,13 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({
     );
   };
 
+  // Handle skill click to show detailed statistics
+  const handleSkillClick = (skill: Skill) => {
+    setSelectedSkill(skill);
+    setShowDetailStats(true);
+    if (onSkillClick) onSkillClick(skill);
+  };
+
   // Render skills grid
   const renderSkills = () => {
     if (loading) {
@@ -315,13 +327,81 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({
           withAnimation={false} // Already handling animation with container
           withShadow
           withHover
-          onClick={() => onSkillClick && onSkillClick(skill)}
+          onClick={() => handleSkillClick(skill)}
           showStats={withStats}
           stats={skill.stats}
           trend={skill.trend}
         />
       </motion.div>
     ));
+  };
+
+  // Render skill detail statistics using ProgressStats
+  const renderSkillDetailStats = () => {
+    if (!selectedSkill || !showDetailStats) return null;
+
+    return (
+      <motion.div 
+        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setShowDetailStats(false)}
+      >
+        <motion.div 
+          className="bg-white rounded-lg max-w-lg w-full p-6"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <Typography.Heading level="h3" size="lg">
+              {selectedSkill.name} {selectedSkill.verified && <span className="text-blue-500">✓</span>}
+            </Typography.Heading>
+            <Button 
+              variant="ghost" 
+              size="small"
+              onClick={() => setShowDetailStats(false)}
+            >
+              Đóng
+            </Button>
+          </div>
+
+          <ProgressStats 
+            label="Cấp độ kỹ năng"
+            value={selectedSkill.level}
+            maxValue={100}
+            barHeight="md"
+            barVariant="primary"
+            format="percentage"
+            icon={selectedSkill.icon}
+            subtitle={selectedSkill.category}
+            description={selectedSkill.ranking ? `Bạn đang xếp hạng ${selectedSkill.ranking} trong nhóm kỹ năng này` : undefined}
+            withAnimation
+            animationDuration={1}
+            trend={selectedSkill.trend}
+            withLabelStats
+            stats={selectedSkill.stats || [
+              { label: 'Bài kiểm tra đã hoàn thành', value: 3 },
+              { label: 'Thời gian đạt được', value: '2 tháng' }
+            ]}
+          />
+
+          <div className="flex justify-end mt-6">
+            <Button 
+              variant="primary"
+              onClick={() => {
+                // Action to improve skill
+                setShowDetailStats(false);
+              }}
+            >
+              Cải thiện kỹ năng này
+            </Button>
+          </div>
+        </motion.div>
+      </motion.div>
+    );
   };
 
   // Main content
@@ -340,6 +420,60 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({
     </div>
   );
 
+  // Add overview statistics using ProgressStats
+  const renderSkillsOverview = () => {
+    if (limitedSkills.length === 0 || visibleSkills) return null;
+
+    // Calculate average skill level
+    const avgSkillLevel = Math.round(
+      displaySkills.reduce((sum, skill) => sum + skill.level, 0) / displaySkills.length
+    );
+
+    // Count verified skills
+    const verifiedSkills = displaySkills.filter(skill => skill.verified).length;
+
+    return (
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card withShadow padding="md">
+          <ProgressStats
+            label="Mức độ kỹ năng trung bình"
+            value={avgSkillLevel}
+            maxValue={100}
+            icon={faChartLine}
+            barVariant="success"
+            withAnimation
+            trend={avgSkillLevel > 75 ? { value: 5, isPositive: true, label: 'so với trung bình ngành' } : undefined}
+          />
+        </Card>
+        
+        <Card withShadow padding="md">
+          <ProgressStats
+            label="Kỹ năng đã xác minh"
+            value={verifiedSkills}
+            maxValue={displaySkills.length}
+            format="fraction"
+            icon={faCode}
+            barVariant="primary"
+            withAnimation
+          />
+        </Card>
+        
+        <Card withShadow padding="md">
+          <ProgressStats
+            label="Tương thích công việc"
+            value={85}
+            maxValue={100}
+            icon={faBriefcase}
+            barVariant="secondary"
+            withAnimation
+            trend={{ value: 10, isPositive: true, label: 'tháng này' }}
+            description="Dựa trên các kỹ năng được yêu cầu nhiều nhất"
+          />
+        </Card>
+      </div>
+    );
+  };
+
   // Wrap with card if required
   const content = (
     <>
@@ -353,7 +487,9 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({
         />
       )}
       {renderToolbar()}
+      {renderSkillsOverview()}
       {skillsContent}
+      {renderSkillDetailStats()}
     </>
   );
 

@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import {faBars, faBell, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import Typography from '@/components/atomic/typo';
 import Badge from '@/components/atomic/badge';
-import SearchBar from '@/components/molecules/SearchBar';
+import SearchBar from '@/components/molecules/searchBar';
 import Avatar from '@/components/atomic/avatar';
 import { IconButton } from '@/components/atomic/icon';
 

@@ -196,13 +196,15 @@ const SkillCard: React.FC<SkillCardProps> = ({
           )}
         </div>
         
-        {/* Skill progress bar */}
+        {/* Use ProgressBar with enhanced animation and styling */}
         <ProgressBar
           value={skillLevel}
           maxValue={maxLevel}
           variant="primary"
           size={size === 'sm' ? 'xs' : size === 'lg' ? 'md' : 'sm'}
           withAnimation={withAnimation}
+          animationDuration={0.8}
+          shape="rounded"
           label={!hideDetails && showCategory ? (
             <div className="flex justify-between">
               <span className={sizeClasses[size]}>{skillCategory}</span>

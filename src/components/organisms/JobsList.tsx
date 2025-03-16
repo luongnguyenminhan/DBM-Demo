@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
 
-import JobCard from '@/components/molecules/JobCard';
-import SectionHeader from '@/components/molecules/SectionHeader';
+import JobCard from '@/components/molecules/jobCard';
+import SectionHeader from '@/components/molecules/sectionHeader';
 import Card from '@/components/atomic/card';
 import DropdownMenu from '@/components/molecules/dropdown';
-import SearchBar from '@/components/molecules/SearchBar';
+import SearchBar from '@/components/molecules/searchBar';
 import PaginationControl from '@/components/molecules/paginationControl';
 import Typography from '@/components/atomic/typo';
 import Alert from '@/components/molecules/alert';

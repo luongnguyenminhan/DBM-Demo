@@ -8,7 +8,7 @@ import { faBriefcase, faPlus, faBuilding, faCheck, faUser, faCalendarAlt, faChev
 import Badge from '@/components/atomic/badge';
 import Icon from '@/components/atomic/icon';
 import Image from 'next/image';
-import StatCard from '@/components/molecules/StatCard';
+import StatCard from '@/components/molecules/statCard';
 
 const { Heading, Text } = Typography;
 

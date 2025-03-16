@@ -4,7 +4,7 @@ import React from 'react';
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
-import StatCard from '@/components/molecules/StatCard';
+import StatCard from '@/components/molecules/statCard';
 import Icon from '@/components/atomic/icon';
 import { faChartLine, faList, faUser, faCalendarCheck, faEye, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 

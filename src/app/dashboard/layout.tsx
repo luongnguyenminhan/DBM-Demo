@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import Sidebar from '@/components/organisms/sidebar';
-import PageHeader from '@/components/organisms/PageHeader';
+import PageHeader from '@/components/organisms/pageHeader';
 import Button from '@/components/atomic/button';
 
 const sidebarItems = [

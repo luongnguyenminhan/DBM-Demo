@@ -7,12 +7,12 @@ import { motion } from 'framer-motion';
 import Typography from '@/components/atomic/typo';
 
 // Import organism components
-import DashboardMetrics from '@/components/organisms/DashboardMetrics';
-import SkillsContainer from '@/components/organisms/SkillsContainer';
-import JobsList from '@/components/organisms/JobsList';
+import DashboardMetrics from '@/components/organisms/dashboardMetrics';
+import SkillsContainer from '@/components/organisms/skillsContainer';
+import JobsList from '@/components/organisms/jobsList';
 import ChatSection from '@/components/organisms/ChatSection';
 import CVPreview from '@/components/organisms/CVPreview';
-import BadgesContainer from '@/components/organisms/BadgesContainer';
+import BadgesContainer from '@/components/organisms/badgesContainer';
 import { MessageSender } from '@/components/atomic/message';
 
 // Mock data for CV preview

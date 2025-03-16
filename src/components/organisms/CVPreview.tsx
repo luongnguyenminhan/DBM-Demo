@@ -19,7 +19,7 @@ import {
   faCertificate
 } from '@fortawesome/free-solid-svg-icons';
 
-import SectionHeader from '@/components/molecules/SectionHeader';
+import SectionHeader from '@/components/molecules/sectionHeader';
 import Card from '@/components/atomic/card';
 import Button from '@/components/atomic/button';
 import Typography from '@/components/atomic/typo';

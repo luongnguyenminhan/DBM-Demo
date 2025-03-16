@@ -15,8 +15,8 @@ import {
     IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
 
-import MetricCard from '@/components/molecules/MetricCard';
-import SectionHeader from '@/components/molecules/SectionHeader';
+import MetricCard from '@/components/molecules/metricCard';
+import SectionHeader from '@/components/molecules/sectionHeader';
 import Card from '@/components/atomic/card';
 
 export interface Metric {

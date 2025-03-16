@@ -15,8 +15,8 @@ import {
   IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
 
-import BadgeItem, { BadgeItemLevel } from '@/components/molecules/BadgeItem';
-import SectionHeader from '@/components/molecules/SectionHeader';
+import BadgeItem, { BadgeItemLevel } from '@/components/molecules/badgeItem';
+import SectionHeader from '@/components/molecules/sectionHeader';
 import Card from '@/components/atomic/card';
 import Button from '@/components/atomic/button';
 import Typography from '@/components/atomic/typo';
