@@ -5,7 +5,7 @@ import { faChartLine, faFileAlt, faUsers } from '@fortawesome/free-solid-svg-ico
 import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
-import StatCard from '@/components/molecules/StatCard';
+import StatCard from '@/components/molecules/statCard';
 import Avatar from '@/components/atomic/avatar';
 import Badge from '@/components/atomic/badge';
 

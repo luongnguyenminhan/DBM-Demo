@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { faCalendarAlt, faClock, faChartLine, faUsers } from '@fortawesome/free-solid-svg-icons';
-import StatCard, { StatCardProps } from '@/components/molecules/StatCard';
+import StatCard, { StatCardProps } from '@/components/molecules/statCard';
 
 export interface StatsData {
   totalMeetings: number;
