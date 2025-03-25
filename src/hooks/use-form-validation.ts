@@ -94,11 +94,11 @@ export const useFormValidation = () => {
       password,
       {
         required: true,
-        minLength: 6,
+        minLength: 8,
       },
       {
         required: 'Mật khẩu không được để trống',
-        minLength: 'Mật khẩu phải có ít nhất 6 ký tự',
+        minLength: 'Mật khẩu phải có ít nhất 8 ký tự',
       },
       'Mật khẩu'
     );

@@ -1,69 +1,74 @@
 'use client';
 
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import authReducer from './slices/authSlice';
 
-// Define a simple initial state
+interface UserState {
+  isLoggedIn: boolean;
+  name: string | null;
+  email: string | null;
+}
+
+interface ThemeState {
+  darkMode: boolean;
+}
+
 interface AppState {
-  user: {
-    isLoggedIn: boolean;
-    name: string | null;
-  };
-  theme: {
-    darkMode: boolean;
-  };
+  user: UserState;
+  theme: ThemeState;
 }
 
 const initialState: AppState = {
   user: {
     isLoggedIn: false,
     name: null,
+    email: null,
   },
   theme: {
     darkMode: false,
   },
 };
 
-// Define action type
-type Action = {
-  type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload?: any;
-};
-
-// Define a simple reducer
-const rootReducer = (state = initialState, action: Action) => {
-  switch (action.type) {
-    case 'LOGIN':
-      return {
-        ...state,
-        user: {
-          isLoggedIn: true,
-          name: action.payload.name,
-        },
-      };
-    case 'LOGOUT':
-      return {
-        ...state,
-        user: {
-          isLoggedIn: false,
-          name: null,
-        },
-      };
-    case 'TOGGLE_THEME':
-      return {
-        ...state,
-        theme: {
-          darkMode: !state.theme.darkMode,
-        },
-      };
-    default:
-      return state;
+// User slice
+const userSlice = createSlice({
+  name: 'user',
+  initialState: initialState.user,
+  reducers: {
+    login: (state, action: PayloadAction<{ name?: string; email: string }>) => {
+      state.isLoggedIn = true;
+      state.name = action.payload.name || action.payload.email.split('@')[0];
+      state.email = action.payload.email;
+    },
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.name = null;
+      state.email = null;
+    }
   }
-};
+});
 
-// Create the store
+// Theme slice
+const themeSlice = createSlice({
+  name: 'theme',
+  initialState: initialState.theme,
+  reducers: {
+    toggleTheme: (state) => {
+      state.darkMode = !state.darkMode;
+    }
+  }
+});
+
+// Export actions
+export const { login, logout } = userSlice.actions;
+export const { toggleTheme } = themeSlice.actions;
+
+// Create the store with combined reducers
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    user: userSlice.reducer,
+    theme: themeSlice.reducer,
+    auth: authReducer
+  }
 });
 
 // Export types

@@ -1,14 +1,13 @@
 'use client';
 
 import React from 'react';
-import { faCalendarAlt, faClock, faChartLine, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faClock, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import StatCard, { StatCardProps } from '@/components/molecules/statCard';
 
 export interface StatsData {
   totalMeetings: number;
   totalMeetingHours: number;
   averageDuration: number;
-  totalParticipants: number;
 }
 
 interface StatsSummaryProps {
@@ -37,13 +36,6 @@ const StatsSummary: React.FC<StatsSummaryProps> = ({ stats }) => {
       change: '-5%', 
       icon: faChartLine, 
       color: 'purple' 
-    },
-    { 
-      metric: 'Participants', 
-      value: stats.totalParticipants, 
-      change: '+20%', 
-      icon: faUsers, 
-      color: 'orange' 
     },
   ];
 

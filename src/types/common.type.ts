@@ -20,3 +20,12 @@ export interface Pagination<T = unknown> {
   has_previous: boolean;
   has_next: boolean;
 }
+
+export interface PaginationMetadata {
+  total_count: number;
+  page_size: number;
+  current_page: number;
+  total_pages: number;
+  has_next: boolean;
+  has_previous: boolean;
+}

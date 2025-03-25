@@ -18,7 +18,7 @@ export default function MoleculesLayout({
     <div className="min-h-screen flex flex-col">
       {/* Molecules Header */}
       <Header 
-        logoText="ENTERVIU"
+        logoText="Meobeo.ai"
         navItems={navItems}
         position="sticky"
         variant="default"

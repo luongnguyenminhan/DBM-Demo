@@ -3,7 +3,7 @@
 import React, { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ResetPasswordForm from '@/components/auth/resetPasswordForm';
-import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
+import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import { useAuthPage } from '@/hooks/use_authPage';
 

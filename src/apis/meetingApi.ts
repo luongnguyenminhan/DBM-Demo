@@ -1,6 +1,12 @@
 import axiosInstance from './axiosInstance';
 import type { CommonResponse, Pagination, PaginationParameter } from '../types/common.type';
-import { MeetingCreateRequest, MeetingResponse, MeetingSearchParameters, MeetingUpdateRequest } from '../types/meeting.type';
+import { 
+    MeetingCreateRequest, 
+    MeetingResponse, 
+    MeetingSearchParameters, 
+    MeetingUpdateRequest,
+    MeetingDetailResponse,
+} from '../types/meeting.type';
 
 const meetingApi = {
     searchMeetings: async (
@@ -34,7 +40,20 @@ const meetingApi = {
     createMeetingsBulk: async (meetings: MeetingCreateRequest[]): Promise<CommonResponse<MeetingResponse[]>> => {
         const response = await axiosInstance.post('/meetings/bulk', meetings);
         return response.data;
-    }
-};
+    },
+
+    getMeetingContentById: async (id: string): Promise<MeetingDetailResponse> => {
+        const response = await axiosInstance.get(`/meetings/${id}`);
+        return response.data;
+    },
+
+    getMeetingContent: async (meetingId: string): Promise<CommonResponse<MeetingDetailResponse>> => {
+        const response = await axiosInstance.get('/meetings/content', {
+            params: { meeting_id: meetingId }
+        });
+        return response.data;
+    },
+
+}; // Keep the closing bracket for the meetingApi object
 
 export default meetingApi;

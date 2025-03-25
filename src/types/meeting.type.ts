@@ -1,3 +1,5 @@
+import { UserResponse } from "./auth.type";
+
 // Meeting Models
 export interface MeetingSearchParameters {
     id?: string;
@@ -53,4 +55,10 @@ export interface MeetingAnalytics {
     totalMeetingHours: number;
     averageDuration: number;
     totalParticipants: number;
+}
+export interface MeetingDetailResponse {
+    meeting?: MeetingResponse;
+    transcript_content?: string;
+    meeting_note_content?: string;
+    participants?: Array<UserResponse>;
 }

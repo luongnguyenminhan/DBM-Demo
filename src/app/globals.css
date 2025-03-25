@@ -6,14 +6,14 @@
   --background: #ffffff;
   --foreground: #171717;
   
-  /* Main color scheme - Changed to pink palette */
-  --color-primary: #F0A8D0;
-  --color-primary-light: #F7B5CA;
-  --color-primary-dark: #DC87B9;
+  /* Main color scheme - Changed to orange palette */
+  --color-primary: #FFA500;          /* Orange */
+  --color-primary-light: #FFB347;     /* Lighter orange */
+  --color-primary-dark: #FF8C00;        /* Darker orange */
   
-  --color-secondary: #FFC6C6;
-  --color-secondary-light: #FFEBD4;
-  --color-secondary-dark: #FFB3B3;
+  --color-secondary: #FFD180;         /* Soft orange */
+  --color-secondary-light: #FFE0B2;    /* Lighter soft orange */
+  --color-secondary-dark: #FFB74D;      /* Darker soft orange */
   
   /* Darker text colors for better contrast */
   --color-dark: #212121;  /* Darker than before */

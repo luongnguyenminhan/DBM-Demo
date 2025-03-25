@@ -74,9 +74,9 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
 
   return (
     <AuthTemplate
-      sideTitle="Create a new password"
+      sideTitle="Đặt lại mât khẩu mới"
       sideDescription="Đặt lại mật khẩu mới để bảo vệ tài khoản của bạn an toàn."
-      sideTag="EnterViu"
+      sideTag="Meobeo.ai"
     >
       <div className="text-center mb-6">
         <Heading level="h1" size="2xl" withGradient className="mb-2">

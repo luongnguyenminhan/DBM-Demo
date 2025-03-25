@@ -2,7 +2,7 @@
 
 import React from 'react';
 import LoginForm from '@/components/auth/loginForm';
-import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
+import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthPage } from '@/hooks/use_authPage';
 
 export default function LoginPage() {

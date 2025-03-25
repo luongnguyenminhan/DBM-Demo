@@ -50,64 +50,65 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
   const [showActions, setShowActions] = useState<boolean>(false);
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
-  // Format the date and time
+  // Định dạng ngày và giờ
   const formatDate = (dateString?: string) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return 'Không có';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString(undefined, {
+      return date.toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
       });
     } catch (error) {
-      console.error('Error formatting date:', error);
-      return 'Invalid Date';
+      console.error('Lỗi định dạng ngày:', error);
+      return 'Ngày không hợp lệ';
     }
   };
 
   const formatTime = (dateString?: string) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return 'Không có';
     try {
       const date = new Date(dateString);
-      return date.toLocaleTimeString(undefined, {
+      return date.toLocaleTimeString('vi-VN', {
         hour: '2-digit',
         minute: '2-digit',
       });
     } catch (error) {
-      console.error('Error formatting time:', error);
-      return 'Unknown';
+      console.error('Lỗi định dạng giờ:', error);
+      return 'Không xác định';
     }
   };
 
-  // Calculate duration
+  // Tính thời lượng
   const calculateDuration = () => {
-    if (!meeting.start_time || !meeting.end_time) return 'N/A';
+    if (!meeting.start_time || !meeting.end_time) return 'Không có';
     try {
       const start = new Date(meeting.start_time);
       const end = new Date(meeting.end_time);
       const durationMs = end.getTime() - start.getTime();
       const durationMins = Math.round(durationMs / 60000);
       if (durationMins < 60) {
-        return `${durationMins} min${durationMins !== 1 ? 's' : ''}`;
+        return `${durationMins} phút`;
       } else {
         const hours = Math.floor(durationMins / 60);
         const mins = durationMins % 60;
-        return `${hours} hr${hours !== 1 ? 's' : ''} ${mins > 0 ? `${mins} min${mins !== 1 ? 's' : ''}` : ''}`;
+        return `${hours} giờ${mins > 0 ? ` ${mins} phút` : ''}`;
       }
     } catch (error) {
-      console.error('Error calculating duration:', error);
-      return 'N/A';
+      console.error('Lỗi tính thời lượng:', error);
+      return 'Không có';
     }
   };
 
-  // Get status badge variant based on meeting status
+  // Lấy trạng thái badge dựa trên trạng thái cuộc họp
   const getStatusBadge = () => {
     if (!meeting.status) return null;
     const status = meeting.status.toLowerCase();
     let variant: BadgeVariant = 'default';
     let icon = faCalendarDay;
     switch (status) {
+      case 'active':
       case 'scheduled':
         variant = 'primary';
         icon = faCalendarAlt;
@@ -123,9 +124,27 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
       default:
         break;
     }
+    
+    // Dịch trạng thái sang tiếng Việt
+    let statusText = '';
+    switch(status) {
+      case 'active':
+      case 'scheduled':
+        statusText = 'Đã lên lịch';
+        break;
+      case 'completed':
+        statusText = 'Hoàn thành';
+        break;
+      case 'cancelled':
+        statusText = 'Đã hủy';
+        break;
+      default:
+        statusText = meeting.status.charAt(0).toUpperCase() + meeting.status.slice(1).toLowerCase();
+    }
+    
     return (
       <Badge
-        content={meeting.status.charAt(0).toUpperCase() + meeting.status.slice(1).toLowerCase()}
+        content={statusText}
         variant={variant}
         leftIcon={icon}
         size="sm"
@@ -133,7 +152,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
     );
   };
 
-  // Handle actions
+  // Xử lý các hành động
   const handleViewDetails = () => {
     onViewDetails?.(meeting);
   };
@@ -153,55 +172,55 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
     }
   };
 
-  // Render card content in a single row
+  // Hiển thị nội dung thẻ trong một hàng
   const renderCardContent = () => {
     if (isLoading) {
       return (
         <div className="flex items-center justify-center p-4">
-          <Spinner size="md" variant="primary" text="Loading meeting..." />
+          <Spinner size="md" variant="primary" text="Đang tải cuộc họp..." />
         </div>
       );
     }
 
     return (
       <div className="flex items-center justify-between w-full space-x-4">
-        {/* Meeting ID */}
+        {/* Mã cuộc họp */}
         <div className="flex-1 min-w-0">
           <Text weight="medium" truncate>
-            {meeting.meeting_id || 'Untitled Meeting'}
+            {meeting.meeting_id || meeting.title || 'Cuộc họp không tên'}
           </Text>
         </div>
 
-        {/* Platform */}
+        {/* Nền tảng */}
         <div className="flex items-center space-x-1">
           <Icon icon={faMapMarkerAlt} size="xs" variant="primary" />
           <Text size="sm" variant="primary">
-            {meeting.platform || 'N/A'}
+            {meeting.platform || 'Không có'}
           </Text>
         </div>
 
-        {/* Date */}
+        {/* Ngày */}
         <div className="flex items-center space-x-1">
           <Icon icon={faCalendarAlt} size="sm" variant="secondary" />
           <Text size="sm">{formatDate(meeting.start_time)}</Text>
         </div>
 
-        {/* Time */}
+        {/* Giờ */}
         <div className="flex items-center space-x-1">
           <Icon icon={faClock} size="sm" variant="secondary" />
           <Text size="sm">{formatTime(meeting.start_time)}</Text>
         </div>
 
-        {/* Duration */}
+        {/* Thời lượng */}
         <div className="flex items-center space-x-1">
           <Icon icon={faClock} size="sm" variant="secondary" />
           <Text size="sm">{calculateDuration()}</Text>
         </div>
 
-        {/* Status Badge */}
+        {/* Trạng thái */}
         {getStatusBadge()}
 
-        {/* Actions */}
+        {/* Hành động */}
         <div className="flex items-center space-x-2">
           {onViewDetails && (
             <IconButton
@@ -234,7 +253,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
                       className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                     >
                       <Icon icon={faEdit} size="sm" className="mr-2" />
-                      Edit
+                      Chỉnh sửa
                     </button>
                   )}
                   {onDelete && (
@@ -248,7 +267,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
                       )}
                     >
                       <Icon icon={faTrash} size="sm" className="mr-2" />
-                      {confirmDelete ? "Confirm" : "Delete"}
+                      {confirmDelete ? "Xác nhận" : "Xóa"}
                     </button>
                   )}
                 </motion.div>
@@ -260,13 +279,13 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
     );
   };
 
-  // Animation variants
+  // Biến thể animation
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
   };
 
-  // Determine card variant props
+  // Xác định các thuộc tính biến thể của thẻ
   const getCardProps = () => {
     switch (variant) {
       case 'outline':
@@ -303,7 +322,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
     </Card>
   );
 
-  // Optionally wrap with animation
+  // Tùy chọn bọc bằng animation
   if (withAnimation) {
     return (
       <motion.div

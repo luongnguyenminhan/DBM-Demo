@@ -6,14 +6,12 @@ import Card from '@/components/atomic/card';
 import TabNavigation from '@/components/molecules/tabNavigation';
 import MeetingsTable from './MeetingsTable';
 import MeetingsCalendar from './MeetingsCalendar';
-import { Meeting } from '@/types/meeting.type';
+import {MeetingResponse } from '@/types/meeting.type';
 
 interface MeetingsPanelProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  setActiveFilter: (filter: string) => void;
-  activeFilter: string;
-  currentItems: Meeting[];
+  currentItems: MeetingResponse[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -25,14 +23,12 @@ interface MeetingsPanelProps {
   setCurrentPage: (page: number) => void;
   upcomingMeetingsCount: number;
   pastMeetingsCount: number;
-  onViewDetails?: (meeting: Meeting) => void;
+  onViewDetails?: (meeting: MeetingResponse) => void;
 }
 
 const MeetingsPanel: React.FC<MeetingsPanelProps> = ({
   activeTab,
   setActiveTab,
-  setActiveFilter,
-  activeFilter,
   currentItems,
   totalItems,
   totalPages,
@@ -49,7 +45,6 @@ const MeetingsPanel: React.FC<MeetingsPanelProps> = ({
 }) => {
   const handleTabChange = (key: string) => {
     setActiveTab(key);
-    setActiveFilter('all');
   };
 
   const handleViewOptionChange = (key: string) => {
@@ -71,10 +66,8 @@ const MeetingsPanel: React.FC<MeetingsPanelProps> = ({
             visibleContent={visibleContent}
             filterItems={filterItems}
             viewOptions={viewOptions}
-            activeFilter={activeFilter}
             setCurrentPage={setCurrentPage}
             onViewOptionChange={handleViewOptionChange}
-            onFilterChange={setActiveFilter}
             onViewDetails={onViewDetails}
           />
         ) : (
@@ -82,9 +75,12 @@ const MeetingsPanel: React.FC<MeetingsPanelProps> = ({
             currentItems={currentItems}
             totalItems={totalItems}
             totalPages={totalPages}
+            visibleContent={visibleContent}
+            viewOptions={viewOptions}
             currentPage={currentPage}
             pageSize={pageSize}
             setCurrentPage={setCurrentPage}
+            onViewOptionChange={handleViewOptionChange}
             onViewDetails={onViewDetails}
           />
         )}
@@ -94,28 +90,28 @@ const MeetingsPanel: React.FC<MeetingsPanelProps> = ({
 
   return (
     <Card 
-      title="Meetings"
-      subtitle="Manage your upcoming and past meetings"
+      title="Cuộc Họp"
+      subtitle="Quản lý cuộc họp sắp tới và đã qua"
       headerIcon={faCalendarAlt}
       variant="default"
       withShadow
     >
-      {/* Tab Navigation for meeting types */}
+      {/* Tab Navigation cho các loại cuộc họp */}
       <TabNavigation
         activeKey={activeTab}
         tabs={[
           { 
-            key: 'upcoming', 
-            label: 'Upcoming', 
-            badge: upcomingMeetingsCount.toString(),
-            badgeVariant: 'primary',
+            key: 'past', 
+            label: 'Đã qua', 
+            badge: pastMeetingsCount.toString(),
+            badgeVariant: 'secondary',
             content: renderMeetingTabContent()
           },
           { 
-            key: 'past', 
-            label: 'Past', 
-            badge: pastMeetingsCount.toString(),
-            badgeVariant: 'secondary',
+            key: 'upcoming', 
+            label: 'Sắp tới', 
+            badge: upcomingMeetingsCount.toString(),
+            badgeVariant: 'primary',
             content: renderMeetingTabContent()
           },
         ]}

@@ -5,7 +5,6 @@ import Typography from '@/components/atomic/typo';
 import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
 import Input from '@/components/atomic/input';
-import Breadcrumb from '@/components/molecules/breadcrumb';
 import { faEnvelope, faUser, faPaperPlane, faHeadset, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 const { Heading, Text } = Typography;
@@ -108,7 +107,7 @@ export default function Support() {
           <Heading level="h3" size="lg" className="mb-2">Email hỗ trợ</Heading>
           <Text variant="muted" className="mb-4">Gửi email cho chúng tôi và nhận phản hồi trong vòng 24 giờ</Text>
           <Button variant="outline" leftIcon={faEnvelope}>
-            support@recuvision.com
+            assistant.meobeo@gmail.com
           </Button>
         </Card>
 

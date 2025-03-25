@@ -10,14 +10,10 @@ import {
   faChevronLeft, 
   faChevronRight, 
   faTimes,
-  faStar, // Import the star icon
   IconDefinition, 
-  faCrown
 } from '@fortawesome/free-solid-svg-icons';
 import Typography from '../atomic/typo';
 import Icon, { IconButton } from '../atomic/icon';
-import Avatar from '../atomic/avatar';
-import Tooltip from '../atomic/tooltip';
 
 export interface SidebarItemProps {
   key: string;
@@ -71,7 +67,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   overlayMode = false,
   activeItemKey,
   onActiveItemChange,
-  userProfile,
   logoText,
   logoImageSrc,
   logoHref = '/',
@@ -309,45 +304,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     );
   };
 
-  const renderUserProfile = () => {
-    if (!userProfile) return null;
-
-    return (
-      <div className={`p-4 border-t ${variantStyles[variant].border === '' ? 'border-gray-700' : 'border-gray-200'}`}>
-        <div className="flex items-center">
-          <Avatar
-            src={userProfile.avatar}
-            name={userProfile.name}
-            size={collapsed ? "sm" : "md"}
-          />
-          
-          {!collapsed && (
-            <div className="ml-2 overflow-hidden">
-              <Typography.Text weight="semibold" truncate>
-                {userProfile.name}
-              </Typography.Text>
-              {userProfile.role && (
-                <div className="flex items-center">
-                  {userProfile.role === "free" ? (
-                    <Tooltip content={"Người dùng miễn phí"}>
-                      <Icon icon={faStar} size="xs" className="ml-1 text-yellow-500" />
-                    </Tooltip>
-                  ) : (
-                    userProfile.role === "pro" ? (
-                      <Tooltip content={"Người dùng Pro"}>
-                        <Icon icon={faCrown} size="sm" className="ml-1 text-yellow-500" />
-                      </Tooltip>
-                    ) : null
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   const sidebarContent = (
     
     <motion.div
@@ -389,9 +345,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="flex-1 overflow-y-auto p-2 scrollbar-thin">
       {renderSidebarItems(items)}
       </div>
-
-      {/* User Profile */}
-      {renderUserProfile()}
 
       {/* Custom Footer Component */}
       {footer && (

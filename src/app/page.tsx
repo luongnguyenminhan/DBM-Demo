@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header
-        logoText="DBM Demo"
+        logoText="Meobeo.ai"
         navItems={navItems}
         position="sticky"
         variant="default"
@@ -22,7 +22,7 @@ export default function Home() {
 
       <main className="flex-1 flex flex-col items-center justify-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <div className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-          <h1 className="text-3xl">Welcome to DBM Demo</h1>
+          <h1 className="text-3xl">Welcome to Meobeo.ai</h1>
           
           <Image
             className="dark:invert"

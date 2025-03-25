@@ -15,12 +15,12 @@ import Button from '@/components/atomic/button';
 import Icon from '@/components/atomic/icon';
 import PaginationControl from '@/components/molecules/paginationControl';
 import DropdownMenu from '@/components/molecules/dropdown';
-import { Meeting } from '@/types/meeting.type';
+import {MeetingResponse } from '@/types/meeting.type';
 
 const { Text } = Typography;
 
 interface MeetingsTableProps {
-  currentItems: Meeting[];
+  currentItems: MeetingResponse[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -28,11 +28,9 @@ interface MeetingsTableProps {
   visibleContent: 'table' | 'calendar';
   filterItems: Array<{ key: string; label: string; icon?: IconDefinition; divider?: boolean }>;
   viewOptions: Array<{ key: string; label: string; icon?: IconDefinition }>;
-  activeFilter: string;
   setCurrentPage: (page: number) => void;
   onViewOptionChange?: (view: string) => void;
-  onFilterChange?: (filter: string) => void;
-  onViewDetails?: (meeting: Meeting) => void;
+  onViewDetails?: (meeting: MeetingResponse) => void;
 }
 
 const MeetingsTable: React.FC<MeetingsTableProps> = ({
@@ -42,85 +40,81 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
   currentPage,
   pageSize,
   visibleContent,
-  filterItems,
   viewOptions,
-  activeFilter,
   setCurrentPage,
   onViewOptionChange,
-  onFilterChange,
   onViewDetails
 }) => {
-  // Define columns for Ant Design Table with status color coding
-  const columns: ColumnsType<Meeting> = [
+  // Định nghĩa cột cho Bảng Ant Design với mã hóa màu trạng thái
+  const columns: ColumnsType<MeetingResponse> = [
     {
-      title: 'Meeting',
-      dataIndex: 'title',
-      key: 'title',
-      sorter: (a, b) => a.title.localeCompare(b.title),
+      title: 'Cuộc họp',
+      dataIndex: 'meeting_id',
+      key: 'meeting_id',
       render: (text) => <Text weight="medium">{text}</Text>,
-      width: '25%',
+      width: '20%',
       ellipsis: true,
     },
     {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
-      sorter: (a, b) => a.date.localeCompare(b.date),
-      render: (text) => <Text variant="muted" size="sm">{text}</Text>,
-      width: '15%',
+      title: 'Ngày',
+      dataIndex: 'start_time',
+      key: 'start_time',
+      render: (text) => {
+        const date = new Date(text);
+        const formattedDate = date.toLocaleDateString('vi-VN', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+        const formattedTime = date.toLocaleTimeString('vi-VN', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        return <Text variant="muted" size="sm">{`${formattedDate}, ${formattedTime}`}</Text>;
+      },
+      width: '20%',
     },
     {
-      title: 'Duration',
-      dataIndex: 'duration',
-      key: 'duration',
-      render: (text) => <Text variant="muted" size="sm">{text}</Text>,
-      width: '15%',
-    },
-    {
-      title: 'Attendees',
-      dataIndex: 'attendees',
-      key: 'attendees',
-      sorter: (a, b) => a.attendees - b.attendees,
-      render: (text) => <Text variant="primary" weight="medium">{text}</Text>,
-      width: '10%',
-    },
-    {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      width: '15%',
+      width: '10%',
       render: (status) => {
         let color = '';
         let icon;
+        let statusText = '';
         
-        switch(status) {
-          case 'scheduled':
+        switch(status.toLowerCase()) {
+          case 'active':
             color = 'text-blue-600 bg-blue-50 border border-blue-200';
             icon = faCalendarAlt;
+            statusText = 'Đã lên lịch';
             break;
           case 'completed':
             color = 'text-green-600 bg-green-50 border border-green-200';
             icon = faCheck;
+            statusText = 'Hoàn thành';
             break;
           case 'cancelled':
             color = 'text-red-600 bg-red-50 border border-red-200';
             icon = faTimes;
+            statusText = 'Đã hủy';
             break;
         }
         
         return (
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${color} flex items-center gap-1 w-fit`}>
             <Icon icon={icon!} size="xs" />
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            {statusText}
           </span>
         );
       },
     },
     {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
       align: 'right',
-      width: '15%',
+      width: '10%',
       render: (_, record) => (
         <Button 
           variant="outline" 
@@ -129,7 +123,7 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
           rounded
           onClick={() => onViewDetails?.(record)}
         >
-          Details
+          Chi tiết
         </Button>
       ),
     },
@@ -139,7 +133,7 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
     <div className="overflow-auto py-2">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
         <Text size="sm" variant="muted">
-          Showing {currentItems.length} of {totalItems} meetings
+          Hiển thị {currentItems.length} trong số {totalItems} cuộc họp
         </Text>
         <div className="flex flex-wrap gap-2">
           <DropdownMenu
@@ -149,35 +143,18 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
               icon: item.icon as IconDefinition | undefined,
               divider: false
             }))}
-            label={visibleContent === 'table' ? 'Table View' : 'Calendar View'}
+            label={visibleContent === 'table' ? 'Xem Bảng' : 'Xem Lịch'}
             variant="outline"
             size="small"
             rounded
             onSelect={onViewOptionChange}
-          />
-          <DropdownMenu
-            items={filterItems.map(item => 
-              item.divider 
-            ? { key: item.key, divider: true as const } 
-            : {
-                key: item.key,
-                label: item.label,
-                icon: item.icon as IconDefinition | undefined,
-                divider: false
-              }
-            )}
-            label={`Filter: ${filterItems.find(item => item.key === activeFilter)?.label || 'All'}`}
-            variant="outline"
-            size="small"
-            rounded
-            onSelect={onFilterChange}
           />
         </div>
       </div>
       
       {visibleContent === 'table' ? (
         <>
-          <Table 
+          <Table
             columns={columns} 
             dataSource={currentItems} 
             rowKey="id"
@@ -187,8 +164,8 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
             scroll={{ x: 800 }}
             locale={{
               emptyText: totalItems === 0 ? 
-                'No meetings found' : 
-                'No meetings match your filters'
+                'Không tìm thấy cuộc họp nào' : 
+                'Không có cuộc họp nào phù hợp với bộ lọc của bạn'
             }}
           />
           

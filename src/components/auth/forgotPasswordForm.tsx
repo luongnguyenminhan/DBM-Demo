@@ -59,9 +59,9 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSubmit, isLoa
 
   return (
     <AuthTemplate
-      sideTitle="Recover your account"
+      sideTitle="Lấy lại tài khoản của bạn"
       sideDescription="Quên mật khẩu? Đừng lo lắng. Chúng tôi sẽ giúp bạn khôi phục tài khoản."
-      sideTag="EnterViu"
+      sideTag="Meobeo.ai"
     >
       <div className="text-center mb-6">
         <Heading level="h1" size="2xl" withGradient className="mb-2">

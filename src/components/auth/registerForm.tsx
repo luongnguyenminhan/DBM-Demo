@@ -63,9 +63,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
 
   return (
     <AuthTemplate
-      sideTitle="Bắt đầu hành trình mới"
-      sideDescription="Đăng ký để trở thành thành viên của EnterViu - nơi bạn khám phá tiềm năng của bản thân."
-      sideTag="EnterViu"
+      sideTitle="Nâng tầm hiệu quả cuộc họp"
+      sideDescription="Đăng ký để trở thành thành viên của Meobeo.ai - trợ lý thông minh ghi chú cuộc họp của bạn."
+      sideTag="Meobeo.ai"
     >
       <div className="text-center mb-6">
         <Heading level="h1" size="2xl" withGradient className="mb-2">
@@ -163,7 +163,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
         </div>
       </form>
 
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>
@@ -201,7 +201,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
             </div>
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <div className="text-center mt-6">
         <Text variant="secondary" size="sm">

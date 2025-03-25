@@ -2,7 +2,7 @@
 
 import React from 'react';
 import RegisterForm from '@/components/auth/registerForm';
-import AuthContentWrapper from '@/components/auth/AuthContentWrapper';
+import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthPage } from '@/hooks/use_authPage';
 
 export default function RegisterPage() {

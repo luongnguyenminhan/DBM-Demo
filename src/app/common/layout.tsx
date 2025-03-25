@@ -18,7 +18,7 @@ export default function CommonLayout({
     <div className="min-h-screen flex flex-col">
       {/* Components Header */}
       <Header 
-        logoText="ENTERVIU"
+        logoText="Meobeo.ai"
         navItems={navItems}
         position="sticky"
         variant="default"

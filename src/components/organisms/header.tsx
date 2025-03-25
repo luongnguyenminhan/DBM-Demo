@@ -14,6 +14,10 @@ import {
   faQuestionCircle,
   IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { logout } from '@/redux/slices/authSlice';
+import { useRouter } from 'next/navigation';
 
 import Button from '../atomic/button';
 import Avatar from '../atomic/avatar';
@@ -53,10 +57,10 @@ export interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({
   logo,
-  logoText = 'ENTERVIU',
+  logoText = 'Meobeo.ai',
   navItems = [],
-  isLoggedIn = false,
-  user,
+  isLoggedIn: propsIsLoggedIn = false,
+  user: propsUser,
   onLogout,
   onMenuToggle,
   hideMenu = false,
@@ -69,10 +73,41 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const dispatch = useDispatch();
+  const router = useRouter();
+  
+  // Get auth state from Redux
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  
+  // Use either props or Redux state for authentication status
+  const isLoggedIn = isAuthenticated || propsIsLoggedIn;
+  
+  // Merge user data from props and Redux state, with Redux taking precedence
+  const userData = isAuthenticated ? user : propsUser;
 
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
     if (onMenuToggle) onMenuToggle();
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    // Clear tokens
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    
+    // Clear cookies
+    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    
+    // Dispatch logout action
+    dispatch(logout());
+    
+    // Call onLogout prop if provided
+    if (onLogout) onLogout();
+    
+    // Redirect to login page
+    router.push('/auth/login');
   };
 
   // Determine navigation item active state based on current path
@@ -123,7 +158,7 @@ const Header: React.FC<HeaderProps> = ({
       key: 'logout',
       label: 'Đăng xuất',
       icon: faSignOutAlt as IconDefinition,
-      onClick: onLogout
+      onClick: handleLogout
     }
   ];
 
@@ -201,14 +236,13 @@ const Header: React.FC<HeaderProps> = ({
                 trigger={
                   <div className="flex items-center cursor-pointer">
                     <Avatar 
-                      src={user?.avatar}
-                      name={user?.name || 'User'}
+                      name={userData?.name || 'User'}
                       size="sm"
                       withBorder
                       className="mr-2"
                     />
                     <span className={`hidden md:block ${variant === 'colored' ? 'text-white' : ''}`}>
-                      {user?.name || 'User'}
+                      {userData?.name || 'User'}
                     </span>
                   </div>
                 }

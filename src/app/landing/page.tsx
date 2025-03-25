@@ -17,7 +17,7 @@ export default function LandingPage() {
       <header className="bg-white shadow-sm py-4">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center">
-            <h1 className="text-xl font-bold text-gray-800">ENTERVIU</h1>
+            <h1 className="text-xl font-bold text-gray-800">Meobeo.ai</h1>
           </div>
           <nav>
             <ul className="flex space-x-6">
@@ -38,7 +38,7 @@ export default function LandingPage() {
           <div className="md:w-1/2 mb-10 md:mb-0">
             <Heading level="h1" size="4xl" className="mb-6">Tối ưu hóa CV và phỏng vấn<br />với <span className="text-primary-600">AI</span></Heading>
             <Text size="lg" variant="muted" className="mb-8">
-              ENTERVIU giúp bạn tăng khả năng được nhà tuyển dụng chú ý với công nghệ AI đánh giá và cải thiện CV cùng kỹ năng phỏng vấn.
+            Meobeo.ai giúp bạn tăng khả năng được nhà tuyển dụng chú ý với công nghệ AI đánh giá và cải thiện CV cùng kỹ năng phỏng vấn.
             </Text>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button variant="primary" size="large" rightIcon={faArrowRight} withRipple>
@@ -53,7 +53,7 @@ export default function LandingPage() {
             <div className="relative w-full h-[400px]">
               <Image 
                 src="/images/hero-image.svg" 
-                alt="ENTERVIU AI Resume Analyzer" 
+                alt="Meobeo.ai AI Resume Analyzer" 
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain"
@@ -64,10 +64,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Giới thiệu về ENTERVIU */}
+      {/* Giới thiệu về Meobeo.ai */}
       <section className="about py-16 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <Heading level="h2" size="2xl" className="mb-4">Tại sao chọn ENTERVIU?</Heading>
+          <Heading level="h2" size="2xl" className="mb-4">Tại sao chọn Meobeo.ai?</Heading>
           <Text size="lg" variant="muted" className="max-w-3xl mx-auto mb-8">
             Chúng tôi kết hợp công nghệ AI tiên tiến để phân tích CV và kỹ năng phỏng vấn, 
             giúp bạn tối ưu hóa hồ sơ và chuẩn bị tốt nhất cho các buổi phỏng vấn.
@@ -131,7 +131,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 text-center">
           <Heading level="h2" size="2xl" className="mb-6">Sẵn sàng nâng cao cơ hội nghề nghiệp?</Heading>
           <Text size="lg" className="mb-8 max-w-2xl mx-auto">
-            Đăng ký ngay hôm nay và khám phá cách ENTERVIU có thể giúp bạn đạt được mục tiêu nghề nghiệp.
+            Đăng ký ngay hôm nay và khám phá cách Meobeo.ai có thể giúp bạn đạt được mục tiêu nghề nghiệp.
           </Text>
           
           <div className="max-w-md mx-auto">
@@ -157,7 +157,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">ENTERVIU</h3>
+              <h3 className="text-xl font-bold mb-4">Meobeo.ai</h3>
               <p className="text-gray-300">Công nghệ AI hỗ trợ phát triển sự nghiệp toàn diện.</p>
             </div>
             <div>
@@ -186,7 +186,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-700 text-gray-400 text-sm text-center">
-            <p>© {new Date().getFullYear()} ENTERVIU. Tất cả các quyền được bảo lưu.</p>
+            <p>© {new Date().getFullYear()} Meobeo.ai. Tất cả các quyền được bảo lưu.</p>
           </div>
         </div>
       </footer>

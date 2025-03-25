@@ -21,7 +21,7 @@ const authTemplate: React.FC<authTemplateProps> = ({
   children,
   sideTitle,
   sideDescription,
-  sideTag = 'EnterViu',
+  sideTag = 'Meobeo.ai',
   logoSize = 160,
   mobileLogo = true,
 }) => {
@@ -52,7 +52,7 @@ const authTemplate: React.FC<authTemplateProps> = ({
           <div className="text-center relative z-10">
             <Image 
               src="/logo.png" 
-              alt="EnterViu Logo" 
+              alt="Meobeo.ai Logo" 
               width={logoSize} 
               height={logoSize}
               className="mx-auto mb-6 drop-shadow-lg"

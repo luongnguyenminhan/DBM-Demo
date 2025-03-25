@@ -20,8 +20,8 @@ const RegistrationCompleteForm: React.FC<RegistrationCompleteFormProps> = ({
   return (
     <AuthTemplate
       sideTitle="Success!"
-      sideDescription="Chúc mừng bạn đã đăng ký thành công và trở thành thành viên của EnterViu."
-      sideTag="EnterViu"
+      sideDescription="Chúc mừng bạn đã đăng ký thành công và trở thành thành viên của Meobeo.ai"
+      sideTag="Meobeo.ai"
     >
       <div className="flex flex-col items-center justify-center py-8">
         <div className="text-green-500 mb-6">

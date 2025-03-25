@@ -97,7 +97,7 @@ const OtpConfirmationForm: React.FC<OtpConfirmationFormProps> = ({
     <AuthTemplate
       sideTitle={sideTitle}
       sideDescription={sideDescription}
-      sideTag="EnterViu"
+      sideTag="Meobeo.ai"
     >
       <div className="text-center mb-6">
         <Heading level="h1" size="2xl" withGradient className="mb-2">

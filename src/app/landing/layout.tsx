@@ -19,7 +19,7 @@ export default function LandingLayout({
     <div className="min-h-screen flex flex-col">
       {/* Landing Header */}
       <Header 
-        logoText="ENTERVIU"
+        logoText="Meobeo.ai"
         navItems={navItems}
         position="fixed"
         variant="default"
