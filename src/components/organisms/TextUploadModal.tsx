@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import Modal from '@/components/atomic/modal';
 import Button from '@/components/atomic/button';
@@ -22,8 +22,15 @@ const TextUploadModal: React.FC<TextUploadModalProps> = ({
   meetingId
 }) => {
   // Allow the user to override the meeting ID if needed
-  const [customMeetingId, setCustomMeetingId] = useState<string>(meetingId || '');
+  const [customMeetingId, setCustomMeetingId] = useState<string>('');
   const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  // Update customMeetingId whenever meetingId prop changes
+  useEffect(() => {
+    if (meetingId) {
+      setCustomMeetingId(meetingId);
+    }
+  }, [meetingId, isOpen]); // Add isOpen to reset/update when modal reopens
 
   const handleUpload = () => {
     const textArea = document.getElementById('transcript-text') as HTMLTextAreaElement;
@@ -45,10 +52,23 @@ const TextUploadModal: React.FC<TextUploadModalProps> = ({
     } catch (error) {
       console.error('Error in text upload:', error);
       onNotification('Có lỗi xảy ra khi tải lên bản ghi', 'error');
-    } finally {
+      setIsUploading(false); // Make sure to reset isUploading state on error
+    }
+    // Note: success case is handled by parent component which will call onClose
+  };
+
+  // Reset the form when modal opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      // When modal opens, initialize the meeting ID
+      if (meetingId) {
+        setCustomMeetingId(meetingId);
+      }
+    } else {
+      // When modal closes, reset the uploading state
       setIsUploading(false);
     }
-  };
+  }, [isOpen, meetingId]);
 
   return (
     <Modal
@@ -81,9 +101,10 @@ const TextUploadModal: React.FC<TextUploadModalProps> = ({
           rows={10}
           className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
           placeholder="Nhập nội dung bản ghi văn bản ở đây..."
+          disabled={isUploading}
         ></textarea>
         
-        {/* Meeting ID input field */}
+        {/* Meeting ID input field - now auto-initialized */}
         <div>
           <label htmlFor="meeting-id" className="block text-sm font-medium text-gray-700 mb-1">
             Meeting ID <span className="text-red-500">*</span>
@@ -97,9 +118,17 @@ const TextUploadModal: React.FC<TextUploadModalProps> = ({
             onChange={(e) => setCustomMeetingId(e.target.value)}
             disabled={isUploading}
           />
-          {meetingId && (
+          {meetingId && customMeetingId !== meetingId && (
             <p className="text-xs text-gray-500 mt-1">
               Meeting ID hiện tại: {meetingId}
+              {' '}
+              <button 
+                type="button"
+                className="text-blue-500 hover:text-blue-700 underline"
+                onClick={() => setCustomMeetingId(meetingId)}
+              >
+                Sử dụng
+              </button>
             </p>
           )}
         </div>

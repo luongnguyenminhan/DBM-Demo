@@ -6,7 +6,7 @@ import Button from '@/components/atomic/button';
 import Card from '@/components/atomic/card';
 import Input from '@/components/atomic/input';
 import Avatar from '@/components/atomic/avatar';
-import { faUser, faBell, faTrash, faCamera, faSave, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faTrash, faCamera, faSave, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import TabNavigation from '@/components/molecules/tabNavigation';
 
 const { Heading, Text } = Typography;
@@ -156,84 +156,84 @@ export default function UserSettings() {
                   </Card>
                 )
               },
-              {
-                key: 'notifications',
-                label: 'Thông báo',
-                icon: faBell,
-                content: (
-                  <Card withShadow>
-                    <div className="p-6 space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Text weight="medium">Thông báo qua email</Text>
-                            <Text size="sm" variant="muted">Nhận thông báo qua email</Text>
-                          </div>
-                          <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                            <input 
-                              type="checkbox" 
-                              id="toggle-email" 
-                              className="sr-only"
-                              checked={notifications.email}
-                              onChange={() => toggleNotification('email')}
-                            />
-                            <label 
-                              className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.email ? 'bg-primary-500' : 'bg-gray-300'}`}
-                              htmlFor="toggle-email"
-                            >
-                              <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.email ? 'translate-x-4' : ''}`}></span>
-                            </label>
-                          </div>
-                        </div>
+              // {
+              //   key: 'notifications',
+              //   label: 'Thông báo',
+              //   icon: faBell,
+              //   content: (
+              //     <Card withShadow>
+              //       <div className="p-6 space-y-6">
+              //         <div className="space-y-4">
+              //           <div className="flex items-center justify-between">
+              //             <div>
+              //               <Text weight="medium">Thông báo qua email</Text>
+              //               <Text size="sm" variant="muted">Nhận thông báo qua email</Text>
+              //             </div>
+              //             <div className="relative inline-block w-10 mr-2 align-middle select-none">
+              //               <input 
+              //                 type="checkbox" 
+              //                 id="toggle-email" 
+              //                 className="sr-only"
+              //                 checked={notifications.email}
+              //                 onChange={() => toggleNotification('email')}
+              //               />
+              //               <label 
+              //                 className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.email ? 'bg-primary-500' : 'bg-gray-300'}`}
+              //                 htmlFor="toggle-email"
+              //               >
+              //                 <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.email ? 'translate-x-4' : ''}`}></span>
+              //               </label>
+              //             </div>
+              //           </div>
                         
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Text weight="medium">Thông báo về đơn ứng tuyển</Text>
-                            <Text size="sm" variant="muted">Nhận thông báo khi có cập nhật về đơn ứng tuyển</Text>
-                          </div>
-                          <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                            <input 
-                              type="checkbox" 
-                              id="toggle-application" 
-                              className="sr-only"
-                              checked={notifications.application}
-                              onChange={() => toggleNotification('application')}
-                            />
-                            <label 
-                              className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.application ? 'bg-primary-500' : 'bg-gray-300'}`}
-                              htmlFor="toggle-application"
-                            >
-                              <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.application ? 'translate-x-4' : ''}`}></span>
-                            </label>
-                          </div>
-                        </div>
+              //           <div className="flex items-center justify-between">
+              //             <div>
+              //               <Text weight="medium">Thông báo về đơn ứng tuyển</Text>
+              //               <Text size="sm" variant="muted">Nhận thông báo khi có cập nhật về đơn ứng tuyển</Text>
+              //             </div>
+              //             <div className="relative inline-block w-10 mr-2 align-middle select-none">
+              //               <input 
+              //                 type="checkbox" 
+              //                 id="toggle-application" 
+              //                 className="sr-only"
+              //                 checked={notifications.application}
+              //                 onChange={() => toggleNotification('application')}
+              //               />
+              //               <label 
+              //                 className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.application ? 'bg-primary-500' : 'bg-gray-300'}`}
+              //                 htmlFor="toggle-application"
+              //               >
+              //                 <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.application ? 'translate-x-4' : ''}`}></span>
+              //               </label>
+              //             </div>
+              //           </div>
                         
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Text weight="medium">Thông báo marketing</Text>
-                            <Text size="sm" variant="muted">Nhận thông tin khuyến mãi và tin tức từ chúng tôi</Text>
-                          </div>
-                          <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                            <input 
-                              type="checkbox" 
-                              id="toggle-marketing" 
-                              className="sr-only"
-                              checked={notifications.marketing}
-                              onChange={() => toggleNotification('marketing')}
-                            />
-                            <label 
-                              className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.marketing ? 'bg-primary-500' : 'bg-gray-300'}`}
-                              htmlFor="toggle-marketing"
-                            >
-                              <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.marketing ? 'translate-x-4' : ''}`}></span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                )
-              },
+              //           <div className="flex items-center justify-between">
+              //             <div>
+              //               <Text weight="medium">Thông báo marketing</Text>
+              //               <Text size="sm" variant="muted">Nhận thông tin khuyến mãi và tin tức từ chúng tôi</Text>
+              //             </div>
+              //             <div className="relative inline-block w-10 mr-2 align-middle select-none">
+              //               <input 
+              //                 type="checkbox" 
+              //                 id="toggle-marketing" 
+              //                 className="sr-only"
+              //                 checked={notifications.marketing}
+              //                 onChange={() => toggleNotification('marketing')}
+              //               />
+              //               <label 
+              //                 className={`block overflow-hidden h-6 rounded-full cursor-pointer ${notifications.marketing ? 'bg-primary-500' : 'bg-gray-300'}`}
+              //                 htmlFor="toggle-marketing"
+              //               >
+              //                 <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${notifications.marketing ? 'translate-x-4' : ''}`}></span>
+              //               </label>
+              //             </div>
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </Card>
+              //   )
+              // },
               {
                 key: 'account',
                 label: 'Quản lý tài khoản',

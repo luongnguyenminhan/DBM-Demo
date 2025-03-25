@@ -18,7 +18,7 @@ const MeetingHeader: React.FC<MeetingHeaderProps> = ({ title, actionItems }) => 
       <Typography.Heading level="h1" size="3xl">
         {title || "Meeting Details"}
       </Typography.Heading>
-      <div className="flex gap-3">
+      {/* <div className="flex gap-3">
         <DropdownMenu
           items={actionItems}
           trigger={
@@ -32,7 +32,7 @@ const MeetingHeader: React.FC<MeetingHeaderProps> = ({ title, actionItems }) => 
             Back to Dashboard
           </Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

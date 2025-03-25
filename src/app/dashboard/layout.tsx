@@ -11,7 +11,6 @@ import { RootState } from '@/redux/store';
 
 const sidebarItems = [
   { key: 'overview', label: 'Tổng quan', href: '/dashboard', icon: faTachometerAlt },
-  { key: 'settings', label: 'Cài đặt', href: '/dashboard/settings', icon: faCog },
 ];
 
 export default function DashboardLayout({
@@ -48,7 +47,7 @@ export default function DashboardLayout({
           logoHref="/dashboard"
           isLoggedIn={isLoggedIn}
           user={{
-            name: name || (email ? email.split('@')[0] : "User"),
+            name: name || (email ? email.split('@')[0] : email),
             avatar: `https://ui-avatars.com/api/?name=${name || email?.charAt(0) || "U"}&background=random`
           }}
           navItems={[

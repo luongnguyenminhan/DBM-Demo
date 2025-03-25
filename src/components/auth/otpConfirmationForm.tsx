@@ -223,7 +223,7 @@ const OtpConfirmationForm: React.FC<OtpConfirmationFormProps> = ({
           Quay lại{' '}
           <Text
             asLink
-            href="auth/login"
+            href="/auth/login"
             variant="primary"
             size="sm"
             customClassName="hover:underline font-medium"

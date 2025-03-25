@@ -19,7 +19,7 @@ import { useMeeting } from '@/hooks/use-meeting';
 
 export default function MeetingDetailsPage() {
     const params = useParams();
-    const meetingId = params.id as string;
+    const routeId = params.id as string;
     
     const {
         // Data
@@ -50,8 +50,11 @@ export default function MeetingDetailsPage() {
         openTextModal,
         closeTextModal,
         openAudioModal,
-        closeAudioModal
-    } = useMeeting(meetingId);
+        closeAudioModal,
+        
+        // Get the actual meeting_id from API response
+        meetingId
+    } = useMeeting(routeId);
 
     // Loading and error states
     if (isLoading) {
@@ -96,6 +99,9 @@ export default function MeetingDetailsPage() {
 
     const { meeting, transcript_content, meeting_note_content, participants } = meetingDetail.data;
 
+    // Extract the actual meeting_id to pass to modals
+    const actualMeetingId = meetingId;
+
     const actionItems = [
         { key: 'export', label: 'Xuất báo cáo', icon: faFileAlt },
         { key: 'share', label: 'Chia sẻ', icon: faUsers },
@@ -110,6 +116,7 @@ export default function MeetingDetailsPage() {
                 onClose={closeTextModal}
                 onUpload={handleTextUpload}
                 onNotification={handleNotification}
+                meetingId={actualMeetingId}
             />
             
             <AudioUploadModal
@@ -117,10 +124,11 @@ export default function MeetingDetailsPage() {
                 onClose={closeAudioModal}
                 onUpload={handleAudioUpload}
                 onNotification={handleNotification}
+                meetingId={actualMeetingId}
             />
 
             <MeetingHeader 
-                title={meetingInfo?.title || "Chi tiết cuộc họp"} 
+                title={meetingInfo?.meeting_id || "Chi tiết cuộc họp"} 
                 actionItems={actionItems} 
             />
 

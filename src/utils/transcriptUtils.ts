@@ -182,16 +182,20 @@ export const processStandardTranscript = (transcriptText: string) => {
         };
     }
     console.log('Transcript text:', transcriptText.split('\n'));
-    const lines = transcriptText.split('\\n').filter(line => line.trim());
+    const lines = transcriptText.split('\n').filter(line => line.trim());
     console.log(`Found ${lines.length} non-empty lines in transcript`);
     const messages: TranscriptMessage[] = [];
 
     // Process each line to find speaker messages
-    for (let i = 0; i < lines.length; i++) {
+    let i = 0;
+    console.log('Starting to process lines...');
+    while (i < lines.length) {
         const line = lines[i].trim();
         
         // Check for pattern: SPEAKER_X [date time]
         const speakerMatch = line.match(/^(\w+)(?:\s+\[([\d/]+\s+[\d:]+\s+[AP]M)\])?/i);
+        console.log(`Processing line ${i}: ${line}`);
+        console.log(`Speaker match: ${speakerMatch}`);
         if (speakerMatch) {
             const speaker = speakerMatch[1];
             const timestamp = speakerMatch[2] || "";
@@ -210,7 +214,7 @@ export const processStandardTranscript = (transcriptText: string) => {
                 text.push(nextLine.trim());
                 j++;
             }
-            i = j - 1;
+            i = j; // Move to next speaker (or past end if this was the last one)
             
             messages.push({
                 speaker,
@@ -218,6 +222,9 @@ export const processStandardTranscript = (transcriptText: string) => {
                 text: text.join(' ')
             });
             console.log(`Added message for ${speaker}, text length: ${text.join(' ').length} chars`);
+        } else {
+            // Skip any lines that don't match the speaker pattern
+            i++;
         }
     }
     
