@@ -5,7 +5,7 @@ import authApi from '@/apis/authenticationApi';
 import { Toast } from '@/components/molecules/alert';
 import { LoginRequest, SignupRequest, PasswordResetConfirmRequest } from '@/types/auth.type';
 import { useDispatch } from 'react-redux';
-import { loginStart, loginSuccess, loginFailure, logout } from '@/redux/slices/authSlice';
+import { login } from '@/redux/store';
 
 interface RegisterData {
   name: string;
@@ -27,7 +27,6 @@ export const useAuthPage = () => {
   // Login functionality
   const handleLogin = async (credentials: LoginRequest) => {
     setIsLoading(true);
-    dispatch(loginStart());
     
     try {
       const response = await authApi.login(credentials);
@@ -44,12 +43,8 @@ export const useAuthPage = () => {
             document.cookie = `access_token=${response.data.access_token}; path=/; max-age=86400; SameSite=Strict`;
             document.cookie = `refresh_token=${response.data.refresh_token}; path=/; max-age=604800; SameSite=Strict`;
             
-            // Store user data in Redux using the new auth slice
-            dispatch(loginSuccess({ 
-              email: response.data.email,
-              token: response.data.access_token,
-              refreshToken: response.data.refresh_token,
-            }));
+            // Store user data in Redux
+            dispatch(login({ email: response.data.email }));
             
             // Show success toast on successful login
             Toast.success('Login successful!', {
@@ -62,7 +57,6 @@ export const useAuthPage = () => {
         }
       } else if (response.status === 401 && !response.message?.includes("không chính xác")) {
         // Email verification required case
-        dispatch(loginFailure('Email verification required'));
         Toast.warning('Your email address needs to be verified', {
           autoCloseDuration: 3000,
           position: 'top-right'
@@ -75,7 +69,6 @@ export const useAuthPage = () => {
         return redirectWithDelay(`otp-confirmation?email=${encodedEmail}&purpose=login`, 1500);
       } else {
         // Other non-success cases
-        dispatch(loginFailure(response.message || 'Login failed'));
         Toast.error(response.message || 'Login failed', {
           autoCloseDuration: 3000,
           position: 'top-right'
@@ -84,9 +77,6 @@ export const useAuthPage = () => {
       }
     } catch (error: unknown) {
       console.error('Login failed:', error);
-      
-      // Dispatch login failure
-      dispatch(loginFailure('Email or password is incorrect'));
       
       // Default error message for API failures
       Toast.error('Email or password is incorrect', {
@@ -201,7 +191,7 @@ export const useAuthPage = () => {
         });
         
         // Redirect to login page on success
-        return redirectWithDelay('/auth/login', 2000);
+        return redirectWithDelay('auth/login', 2000);
       } else {
         Toast.error(response.message || 'Không thể đặt lại mật khẩu', {
           position: "top-right",
@@ -242,9 +232,9 @@ export const useAuthPage = () => {
         
         // Redirect based on purpose
         if (purpose === 'passwordReset') {
-          return redirectWithDelay(`auth/reset-password?email=${encodedEmail}`, 1000);
+          return redirectWithDelay(`/reset-password?email=${encodedEmail}`, 1000);
         } else if (purpose === 'registration') {
-          return redirectWithDelay('auth/registration-complete', 1000);
+          return redirectWithDelay('/registration-complete', 1000);
         } else {
           return redirectWithDelay('/dashboard', 1000);
         }
@@ -296,23 +286,6 @@ export const useAuthPage = () => {
     }
   };
   
-  // Update logout handler to use the new auth slice logout action
-  const handleLogout = () => {
-    // Clear tokens
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    
-    // Clear cookies
-    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    
-    // Dispatch logout action
-    dispatch(logout());
-    
-    // Redirect to login page
-    router.push('/auth/login');
-  };
-
   return {
     isLoading,
     handleLogin,
@@ -320,7 +293,6 @@ export const useAuthPage = () => {
     handleForgotPassword,
     handleResetPassword,
     handleOtpConfirmation,
-    handleResendOtp,
-    handleLogout
+    handleResendOtp
   };
 };

@@ -69,7 +69,7 @@ export const processSentimentTranscript = (transcriptText: string) => {
   
   // Track if we're in the summary section
   let inSummary = false;
-  let summaryLines: string[] = [];
+  const summaryLines: string[] = [];
 
   // Process each line
   for (let i = 0; i < lines.length; i++) {
@@ -173,14 +173,17 @@ export const processSentimentTranscript = (transcriptText: string) => {
  * @returns Object with transcript messages
  */
 export const processStandardTranscript = (transcriptText: string) => {
+    console.log('Processing standard transcript...');
     if (!transcriptText) {
+        console.log('Empty transcript received, returning empty result');
         return {
             messages: [],
             type: TranscriptType.STANDARD
         };
     }
-
-    const lines = transcriptText.split('\n').filter(line => line.trim());
+    console.log('Transcript text:', transcriptText.split('\n'));
+    const lines = transcriptText.split('\\n').filter(line => line.trim());
+    console.log(`Found ${lines.length} non-empty lines in transcript`);
     const messages: TranscriptMessage[] = [];
 
     // Process each line to find speaker messages
@@ -192,21 +195,33 @@ export const processStandardTranscript = (transcriptText: string) => {
         if (speakerMatch) {
             const speaker = speakerMatch[1];
             const timestamp = speakerMatch[2] || "";
+            console.log(`Found speaker: ${speaker}, timestamp: ${timestamp || 'none'}`);
             
-            // The text is on the next line
-            let text = '';
-            if (i + 1 < lines.length) {
-                text = lines[++i].trim();
+            // Collect all text until the next speaker pattern
+            const text = [];
+            let j = i + 1;
+            while (j < lines.length) {
+                const nextLine = lines[j];
+                const isNewSpeaker = nextLine.match(/^(\w+)(?:\s+\[([\d/]+\s+[\d:]+\s+[AP]M)\])?/i);
+                if (isNewSpeaker) {
+                    console.log(`Detected new speaker at line ${j}`);
+                    break;
+                }
+                text.push(nextLine.trim());
+                j++;
             }
+            i = j - 1;
             
             messages.push({
                 speaker,
                 timestamp,
-                text
+                text: text.join(' ')
             });
+            console.log(`Added message for ${speaker}, text length: ${text.join(' ').length} chars`);
         }
     }
     
+    console.log(`Processed ${messages.length} messages in total`);
     return {
         messages,
         type: TranscriptType.STANDARD
@@ -345,7 +360,7 @@ export const formatStandardTranscriptForDisplay = (data: ReturnType<typeof proce
   
   if (messages.length > 0) {
     let currentSpeaker = '';
-    let speakerColors: Record<string, string> = {};
+    const speakerColors: Record<string, string> = {};
     const colorClasses = [
       'bg-blue-50 border-blue-200',
       'bg-green-50 border-green-200',

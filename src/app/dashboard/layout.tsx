@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { 
   faTachometerAlt, 
-  // faCog,
+  faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { Sidebar, Header } from '@/components/organisms';
 import { useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ import { RootState } from '@/redux/store';
 
 const sidebarItems = [
   { key: 'overview', label: 'Tổng quan', href: '/dashboard', icon: faTachometerAlt },
-  // { key: 'settings', label: 'Cài đặt', href: '/dashboard/settings', icon: faCog },
+  { key: 'settings', label: 'Cài đặt', href: '/dashboard/settings', icon: faCog },
 ];
 
 export default function DashboardLayout({
