@@ -249,19 +249,21 @@ const Header: React.FC<HeaderProps> = ({
               />
             </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center">
               <Link href="/auth/login" className={variant === 'colored' ? 'text-white' : 'text-gray-600 hover:text-gray-900'}>
                 Đăng nhập
               </Link>
-              <Button variant="primary" size="small" href="/auth/register">
-                Đăng ký
-              </Button>
+              <div className="ml-4">
+                <Button variant="primary" size="small" href="/auth/register">
+                  Đăng ký
+                </Button>
+              </div>
             </div>
           )}
 
           {/* Mobile Menu Button */}
           {!hideMenu && (
-            <div className="md:hidden">
+            <div className="md:hidden ml-4">
               <IconButton
                 icon={isMobileMenuOpen ? faTimes : faBars}
                 variant={variant === 'colored' ? 'default' : 'primary'}

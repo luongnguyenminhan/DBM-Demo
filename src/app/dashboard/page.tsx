@@ -33,7 +33,7 @@ export default function DashboardPage() {
 
   // Override the handleViewMeetingDetails to use router
   const handleViewMeetingDetails = (meeting: MeetingResponse) => {
-    router.push(`/meetings/${meeting.id}`);
+    router.push(`/dashboard/meetings/${meeting.id}`);
   };
 
   if (isLoading && currentItems.length === 0) {

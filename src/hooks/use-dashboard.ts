@@ -149,7 +149,7 @@ export const useDashboard = () => {
 
   const handleViewMeetingDetails = (meeting: MeetingResponse) => {
     console.log('Xem chi tiết cuộc họp:', meeting);
-    return router.push(`/meetings/${meeting.id}`);
+    return router.push(`/dashboard/meetings/${meeting.id}`);
   };
 
   const handleViewFullReport = () => {

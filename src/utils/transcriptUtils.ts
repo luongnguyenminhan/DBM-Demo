@@ -340,9 +340,6 @@ export const formatSentimentTranscriptForDisplay = (data: ReturnType<typeof proc
           <p class="text-gray-800 pr-20">
             <span class="font-medium text-[var(--color-secondary)] hidden sm:inline">${message.speaker}: </span>${message.text}
           </p>
-          <div class="absolute bottom-1 right-2 text-xs text-gray-500 bg-white/80 px-1 rounded">
-            ${message.sentiment} (${message.sentimentScore}%)
-          </div>
         </div>
       </div>`;
     }
