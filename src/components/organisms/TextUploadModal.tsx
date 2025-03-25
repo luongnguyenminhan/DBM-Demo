@@ -137,7 +137,7 @@ const TextUploadModal: React.FC<TextUploadModalProps> = ({
           <p>Định dạng bản ghi:</p>
           <ul className="list-disc pl-5 mt-1">
             <li>Mỗi người nói nên được đánh dấu rõ ràng</li>
-            <li>Ví dụ: "Speaker 1: Nội dung..."</li>
+            <li>Ví dụ: &quot;Speaker 1: Nội dung...&quot;</li>
             <li>Phần thời gian (nếu có) nên đặt trong ngoặc vuông [00:00]</li>
           </ul>
         </div>

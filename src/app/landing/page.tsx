@@ -13,25 +13,6 @@ const { Heading, Text } = Typography;
 export default function LandingPage() {
   return (
     <div className="landing-page min-h-screen">
-      {/* Header */}
-      <header className="bg-white shadow-sm py-4">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <h1 className="text-xl font-bold text-gray-800">Meobeo.ai</h1>
-          </div>
-          <nav>
-            <ul className="flex space-x-6">
-              <li><a href="#" className="text-gray-600 hover:text-gray-900">Trang chủ</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-gray-900">Tính năng</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-gray-900">Bảng giá</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-gray-900">Blog</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-gray-900">Hỗ trợ</a></li>
-              <li><a href="/auth/login" className="text-primary-600 hover:text-primary-800">Đăng nhập</a></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
       {/* Hero section */}
       <section className="hero bg-gradient-to-r from-primary-50 to-secondary-50 py-16">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">

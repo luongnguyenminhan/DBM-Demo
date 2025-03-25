@@ -1,76 +1,29 @@
 'use client';
 
-import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
-
-interface UserState {
-  isLoggedIn: boolean;
-  name: string | null;
-  email: string | null;
-}
-
-interface ThemeState {
-  darkMode: boolean;
-}
-
-interface AppState {
-  user: UserState;
-  theme: ThemeState;
-}
-
-const initialState: AppState = {
-  user: {
-    isLoggedIn: false,
-    name: null,
-    email: null,
-  },
-  theme: {
-    darkMode: false,
-  },
-};
-
-// User slice
-const userSlice = createSlice({
-  name: 'user',
-  initialState: initialState.user,
-  reducers: {
-    login: (state, action: PayloadAction<{ name?: string; email: string }>) => {
-      state.isLoggedIn = true;
-      state.name = action.payload.name || action.payload.email.split('@')[0];
-      state.email = action.payload.email;
-    },
-    logout: (state) => {
-      state.isLoggedIn = false;
-      state.name = null;
-      state.email = null;
-    }
-  }
-});
-
-// Theme slice
-const themeSlice = createSlice({
-  name: 'theme',
-  initialState: initialState.theme,
-  reducers: {
-    toggleTheme: (state) => {
-      state.darkMode = !state.darkMode;
-    }
-  }
-});
-
-// Export actions
-export const { login, logout } = userSlice.actions;
-export const { toggleTheme } = themeSlice.actions;
+import themeReducer from './slices/themeSlice';
 
 // Create the store with combined reducers
 export const store = configureStore({
   reducer: {
-    user: userSlice.reducer,
-    theme: themeSlice.reducer,
-    auth: authReducer
-  }
+    auth: authReducer,
+    theme: themeReducer
+  },
+  // Add middleware to handle serialization issues with JWT tokens if needed
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types to prevent serialization errors with JWT tokens
+        ignoredActions: ['auth/loginSuccess'],
+      },
+    }),
 });
 
 // Export types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+// Re-export actions for convenience
+export * from './slices/authSlice';
+export * from './slices/themeSlice';

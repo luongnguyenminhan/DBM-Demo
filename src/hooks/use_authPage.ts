@@ -5,7 +5,7 @@ import authApi from '@/apis/authenticationApi';
 import { Toast } from '@/components/molecules/alert';
 import { LoginRequest, SignupRequest, PasswordResetConfirmRequest } from '@/types/auth.type';
 import { useDispatch } from 'react-redux';
-import { login } from '@/redux/store';
+import { loginStart, loginSuccess, loginFailure, logout } from '@/redux/store';
 
 interface RegisterData {
   name: string;
@@ -27,6 +27,7 @@ export const useAuthPage = () => {
   // Login functionality
   const handleLogin = async (credentials: LoginRequest) => {
     setIsLoading(true);
+    dispatch(loginStart());
     
     try {
       const response = await authApi.login(credentials);
@@ -43,8 +44,12 @@ export const useAuthPage = () => {
             document.cookie = `access_token=${response.data.access_token}; path=/; max-age=86400; SameSite=Strict`;
             document.cookie = `refresh_token=${response.data.refresh_token}; path=/; max-age=604800; SameSite=Strict`;
             
-            // Store user data in Redux
-            dispatch(login({ email: response.data.email }));
+            // Store user data in Redux using the JWT payload structure
+            dispatch(loginSuccess({
+              accessToken: response.data.access_token,
+              refreshToken: response.data.refresh_token,
+              email: response.data.email
+            }));
             
             // Show success toast on successful login
             Toast.success('Login successful!', {
@@ -69,17 +74,22 @@ export const useAuthPage = () => {
         return redirectWithDelay(`otp-confirmation?email=${encodedEmail}&purpose=login`, 1500);
       } else {
         // Other non-success cases
-        Toast.error(response.message || 'Login failed', {
+        const errorMessage = response.message || 'Login failed';
+        dispatch(loginFailure(errorMessage));
+        Toast.error(errorMessage, {
           autoCloseDuration: 3000,
           position: 'top-right'
         });
-        throw new Error(response.message || 'Đăng nhập thất bại');
+        throw new Error(errorMessage || 'Đăng nhập thất bại');
       }
     } catch (error: unknown) {
       console.error('Login failed:', error);
       
       // Default error message for API failures
-      Toast.error('Email or password is incorrect', {
+      const errorMessage = 'Email or password is incorrect';
+      dispatch(loginFailure(errorMessage));
+      
+      Toast.error(errorMessage, {
         autoCloseDuration: 3000,
         position: 'top-right'
       });
@@ -88,6 +98,16 @@ export const useAuthPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    dispatch(logout());
+    Toast.success('Logged out successfully', {
+      autoCloseDuration: 1000,
+      position: 'top-right'
+    });
+    return redirectWithDelay('/login', 1000);
   };
   
   // Register functionality
@@ -289,6 +309,7 @@ export const useAuthPage = () => {
   return {
     isLoading,
     handleLogin,
+    handleLogout,
     handleRegister,
     handleForgotPassword,
     handleResetPassword,

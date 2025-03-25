@@ -3,11 +3,10 @@
 import React, { useState } from 'react';
 import { 
   faTachometerAlt, 
-  faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { Sidebar, Header } from '@/components/organisms';
-import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { useAppSelector } from '@/redux/hooks';
 
 const sidebarItems = [
   { key: 'overview', label: 'Tổng quan', href: '/dashboard', icon: faTachometerAlt },
@@ -19,7 +18,9 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const { isLoggedIn, name, email } = useSelector((state: RootState) => state.user);
+  
+  // Use the auth state from Redux
+  const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -39,16 +40,17 @@ export default function DashboardLayout({
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
+        {/* Header with auth data from Redux */}
         <Header
           variant="default"
           position="static"
           logoText="Meobeo.ai"
           logoHref="/dashboard"
-          isLoggedIn={isLoggedIn}
+          isLoggedIn={isAuthenticated}
           user={{
-            name: name || (email ? email.split('@')[0] : email),
-            avatar: `https://ui-avatars.com/api/?name=${name || email?.charAt(0) || "U"}&background=random`
+            name: user.name || undefined,
+            role: user.role || undefined,
+            // Add avatar if available
           }}
           navItems={[
             { label: 'Dashboard', href: '/dashboard', isActive: true },

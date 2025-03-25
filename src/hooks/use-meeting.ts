@@ -21,6 +21,7 @@ export function useMeeting(meetingId: string) {
   const [formattedNote, setFormattedNote] = useState<string>('');
   const [formattedTranscript, setFormattedTranscript] = useState<string>('');
   const [meetingInfo, setMeetingInfo] = useState<MeetingInfo | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [transcriptData, setTranscriptData] = useState<any>(null);
   const [transcriptType, setTranscriptType] = useState<string>('standard');
   
@@ -122,7 +123,7 @@ export function useMeeting(meetingId: string) {
       } else {
         handleNotification('Không nhận được kết quả phân tích hợp lệ', 'error');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error analyzing transcript:', err);
       handleErrorNotification(err);
     } finally {
@@ -223,7 +224,7 @@ export function useMeeting(meetingId: string) {
         setIsTextModalOpen(false);
         refreshMeetingData();
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error uploading transcript:', err);
       handleErrorNotification(err);
     }
@@ -262,7 +263,7 @@ export function useMeeting(meetingId: string) {
         // Set up polling for transcript status (optional enhancement)
         // pollTranscriptStatus(actualMeetingId);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error uploading audio file:', err);
       handleErrorNotification(err);
     }
@@ -318,8 +319,7 @@ export function useMeeting(meetingId: string) {
       console.error('Error refreshing meeting data:', err);
     }
   };
-
-  // Handle error notifications with improved error message extraction
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleErrorNotification = (err: any) => {
     // Check for specific API error formats
     if (err.response?.data?.detail) {
