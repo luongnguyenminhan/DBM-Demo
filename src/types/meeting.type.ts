@@ -10,6 +10,9 @@ export interface MeetingSearchParameters {
     status?: string;
     start_time_from?: string;
     start_time_to?: string;
+    // Add these properties to support view-specific pagination
+    is_past?: boolean;
+    is_upcoming?: boolean;
 }
 
 export interface MeetingCreateRequest {

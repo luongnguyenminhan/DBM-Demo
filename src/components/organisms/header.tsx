@@ -7,11 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faBars, 
   faTimes, 
-  faBell,
+  // faBell,
   faSignOutAlt,
-  faUserCircle,
-  faCog,
-  faQuestionCircle,
+  // faUserCircle,
+  // faCog,
+  // faQuestionCircle,
   IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -131,29 +131,29 @@ const Header: React.FC<HeaderProps> = ({
 
   // User dropdown items
   const userDropdownItems = [
-    {
-      key: 'profile',
-      label: 'Thông tin cá nhân',
-      icon: faUserCircle as IconDefinition,
-      onClick: () => { console.log('Profile clicked') }
-    },
-    {
-      key: 'settings',
-      label: 'Cài đặt',
-      icon: faCog as IconDefinition,
-      onClick: () => { console.log('Settings clicked') }
-    },
-    {
-      key: 'help',
-      label: 'Trợ giúp',
-      icon: faQuestionCircle as IconDefinition,
-      onClick: () => { console.log('Help clicked') }
-    },
-    {
-      key: 'divider',
-      divider: true,
-      label: '' // Add a label, even if it's an empty string for dividers
-    },
+    // {
+    //   key: 'profile',
+    //   label: 'Thông tin cá nhân',
+    //   icon: faUserCircle as IconDefinition,
+    //   onClick: () => { console.log('Profile clicked') }
+    // },
+    // {
+    //   key: 'settings',
+    //   label: 'Cài đặt',
+    //   icon: faCog as IconDefinition,
+    //   onClick: () => { console.log('Settings clicked') }
+    // },
+    // {
+    //   key: 'help',
+    //   label: 'Trợ giúp',
+    //   icon: faQuestionCircle as IconDefinition,
+    //   onClick: () => { console.log('Help clicked') }
+    // },
+    // {
+    //   key: 'divider',
+    //   divider: true,
+    //   label: '' // Add a label, even if it's an empty string for dividers
+    // },
     {
       key: 'logout',
       label: 'Đăng xuất',
@@ -220,7 +220,7 @@ const Header: React.FC<HeaderProps> = ({
           {/* User Menu or Login Button */}
           {isLoggedIn ? (
             <div className="flex items-center">
-              <div className="hidden md:block mr-4">
+              {/* <div className="hidden md:block mr-4">
                 <IconButton 
                   icon={faBell}
                   variant={variant === 'colored' ? 'default' : 'primary'}
@@ -228,7 +228,7 @@ const Header: React.FC<HeaderProps> = ({
                   withBackground={variant !== 'colored'}
                   customColor={variant === 'colored' ? 'white' : undefined}
                 />
-              </div>
+              </div> */}
               <DropdownMenu
                 items={userDropdownItems}
                 placement="bottom"

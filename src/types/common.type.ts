@@ -3,7 +3,7 @@ export interface CommonResponse<T = unknown> {
   error_code?: number | null;
   message?: string | null;
   data?: T | null;
-  metadata?: Record<string, unknown> | null;
+  metadata?: Record<string, PaginationMetadata> | null;
 }
 
 export interface PaginationParameter {

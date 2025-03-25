@@ -22,6 +22,8 @@ export interface UseMeetingResult {
     change: string;
     icon: string;
   }>;
+  // Add method for view-specific page setting
+  setCurrentPageForView: (page: number, viewKey: string) => void;
 }
 
 export function useMeetings(
@@ -40,6 +42,43 @@ export function useMeetings(
   const [searchParams, setSearchParams] = useState<MeetingSearchParameters>(initialSearchParams);
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [hasPreviousPage, setHasPreviousPage] = useState<boolean>(false);
+  
+  // Internal tracking of page numbers for different views
+  const [viewPageState, setViewPageState] = useState<Record<string, number>>({
+    active: initialPage,
+    past: initialPage,
+    upcoming: initialPage,
+    all: initialPage
+  });
+
+  // Set current page specifically for a view
+  const setCurrentPageForView = (page: number, viewKey: string) => {
+    // Update the view-specific page state
+    setViewPageState(prev => ({
+      ...prev,
+      [viewKey]: page
+    }));
+    
+    // Only update the current page if it's the active view
+    const currentViewKey = getCurrentViewKey();
+    if (currentViewKey === viewKey) {
+      setCurrentPage(page);
+    }
+  };
+
+  // Helper to get the current view key based on search params
+  const getCurrentViewKey = (): string => {
+    if (searchParams.status?.toLowerCase() === 'active') {
+      return 'active';
+    } else if (searchParams.is_past === true) {
+      return 'past';
+    } else if (searchParams.is_upcoming === true) {
+      return 'upcoming';
+    } else if (!searchParams.status && !searchParams.is_past && !searchParams.is_upcoming) {
+      return 'all';
+    }
+    return 'active'; // Default
+  };
 
   // Fetch meetings from API
   const fetchMeetings = async () => {
@@ -80,6 +119,17 @@ export function useMeetings(
     }
   };
 
+  // Update current page when search params change to use the correct view's pagination
+  useEffect(() => {
+    // Get the current view key based on search params
+    const currentViewKey = getCurrentViewKey();
+    
+    // Use the stored page state for this view
+    setCurrentPage(viewPageState[currentViewKey] || initialPage);
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   // Fetch meetings on component mount and when pagination or search params change
   useEffect(() => {
     fetchMeetings();
@@ -117,7 +167,7 @@ export function useMeetings(
       { metric: 'Average Duration', value: `${avgDuration} mins`, change: '-5%', icon: 'faClock' },
       { metric: 'Completion Rate', value: completionRate, change: '+7%', icon: 'faCheckCircle' }
     ];
-  }, [meetings, totalItems]); // Only recalculate when meetings or totalItems change
+  }, [meetings, totalItems]);
 
   // Calculate statistics function that returns the memoized value
   const calculateStatistics = () => statistics;
@@ -137,5 +187,6 @@ export function useMeetings(
     setSearchParams,
     refreshData: fetchMeetings,
     calculateStatistics,
+    setCurrentPageForView,
   };
 }

@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { MeetingResponse } from '@/types/meeting.type';
 import meetingApi from '@/apis/meetingApi';
 import { PaginationMetadata } from '@/types/common.type';
@@ -13,7 +14,13 @@ import { useRouter } from 'next/navigation';
 export const useDashboard = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('past');
-  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Track pagination separately for each tab
+  const [paginationState, setPaginationState] = useState({
+    upcoming: { currentPage: 1 },
+    past: { currentPage: 1 }
+  });
+  
   const [pageSize] = useState(9);
   const [visibleContent, setVisibleContent] = useState<'table' | 'calendar'>('table');
   
@@ -21,67 +28,137 @@ export const useDashboard = () => {
   const [upcomingMeetingsMetadata, setUpcomingMeetingsMetadata] = useState<PaginationMetadata>({
     total_count: 0,
     page_size: pageSize,
-    current_page: currentPage,
+    current_page: 1,
     total_pages: 0,
     has_next: false,
     has_previous: false
   });
+  
+  const [pastMeetings, setPastMeetings] = useState<MeetingResponse[]>([]);
   const [pastMeetingsMetadata, setPastMeetingsMetadata] = useState<PaginationMetadata>({
     total_count: 0,
     page_size: pageSize,
-    current_page: currentPage,
+    current_page: 1,
     total_pages: 0,
     has_next: false,
     has_previous: false
   });
-  const [pastMeetings, setPastMeetings] = useState<MeetingResponse[]>([]);
+  
   const [isLoading, setIsLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [completedMeetingsCount, setCompletedMeetingsCount] = useState(0);
   const [cancelledMeetingsCount, setCancelledMeetingsCount] = useState(0);
   
-  useEffect(() => {
-    const fetchUpcomingMeetings = async () => {
-      try {
-        const response = await meetingApi.searchMeetings(
-          { status: 'Active' },
-          { page_index: currentPage, page_size: pageSize }
-        );
-        
-        const meetings = response.data?.items || [];
-        const metadata = response.metadata as unknown as PaginationMetadata;
-        
+  // Current page is derived from the active tab's pagination state
+  const currentPage = paginationState[activeTab as 'upcoming' | 'past'].currentPage;
+  
+  // Custom setter for the current page that respects the active tab
+  const setCurrentPage = (page: number) => {
+    setPaginationState(prev => ({
+      ...prev,
+      [activeTab]: { ...prev[activeTab as 'upcoming' | 'past'], currentPage: page }
+    }));
+  };
+
+  // Helper function to safely extract metadata total_count from API response
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const extractTotalCount = (response: any): number => {
+    // Check if metadata exists directly
+    if (response.metadata && typeof response.metadata.total_count === 'number') {
+      return response.metadata.total_count;
+    }
+    
+    // Check if metadata is nested in data
+    if (response.data && response.data.metadata && typeof response.data.metadata.total_count === 'number') {
+      return response.data.metadata.total_count;
+    }
+    
+    // Check if total_count is directly in data
+    if (response.data && typeof response.data.total_count === 'number') {
+      return response.data.total_count;
+    }
+    
+    // Default fallback
+    return 0;
+  };
+
+  // Set current page specifically for a view
+  const setCurrentPageForView = (page: number, viewKey: string) => {
+    if (viewKey === 'upcoming' || viewKey === 'past') {
+      setPaginationState(prev => ({
+        ...prev,
+        [viewKey]: { ...prev[viewKey], currentPage: page }
+      }));
+      
+      // Only update the current page and fetch data if this is the active tab
+      if (viewKey === activeTab) {
+        fetchMeetingsData(viewKey);
+      }
+    }
+  };
+
+  // Helper function to fetch meetings data for a specific tab
+  const fetchMeetingsData = useCallback(async (tab: 'upcoming' | 'past') => {
+    const currentTabPage = paginationState[tab].currentPage;
+    const status = tab === 'upcoming' ? 'Active' : 'completed';
+    
+    try {
+      setIsLoading(true);
+      const response = await meetingApi.searchMeetings(
+        { status },
+        { page_index: currentTabPage, page_size: pageSize }
+      );
+      
+      const meetings = response.data?.items || [];
+      
+      // Safely extract metadata
+      const totalCount = extractTotalCount(response);
+      const metadata: PaginationMetadata = {
+        total_count: totalCount,
+        page_size: pageSize,
+        current_page: currentTabPage,
+        total_pages: Math.ceil(totalCount / pageSize),
+        has_next: currentTabPage * pageSize < totalCount,
+        has_previous: currentTabPage > 1
+      };
+      
+      if (tab === 'upcoming') {
         setUpcomingMeetings(meetings);
         setUpcomingMeetingsMetadata(metadata);
-      } catch (error) {
-        console.error('Lỗi khi tải dữ liệu cuộc họp sắp tới:', error);
-      }
-    };
-
-    const fetchPastMeetings = async () => {
-      try {
-        const response = await meetingApi.searchMeetings(
-          { status: 'completed' },
-          { page_index: currentPage, page_size: pageSize }
-        );
-        
-        const meetings = response.data?.items || [];
-        const metadata = response.metadata as unknown as PaginationMetadata;
-        
+      } else {
         setPastMeetings(meetings);
         setPastMeetingsMetadata(metadata);
-        
-        // Update total counts based on active tab
-        if (activeTab === 'past') {
-          setTotalItems(metadata?.total_count as number);
-          setTotalPages(metadata?.total_pages as number);
-        }
-      } catch (error) {
-        console.error('Lỗi khi tải dữ liệu cuộc họp đã qua:', error);
       }
-    };
+      
+      // Update total counts if this is the active tab
+      if (tab === activeTab) {
+        setTotalItems(metadata.total_count);
+        setTotalPages(metadata.total_pages);
+      }
+    } catch (error) {
+      console.error(`Error fetching ${tab} meetings:`, error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [activeTab, pageSize, paginationState]);
+  
+  // Handle tab changes
+  const handleTabChange = (tab: 'upcoming' | 'past') => {
+    setActiveTab(tab);
     
+    // Update total items and pages for the new tab
+    if (tab === 'upcoming') {
+      setTotalItems(upcomingMeetingsMetadata?.total_count || 0);
+      setTotalPages(upcomingMeetingsMetadata?.total_pages || 1);
+    } else {
+      setTotalItems(pastMeetingsMetadata?.total_count || 0);
+      setTotalPages(pastMeetingsMetadata?.total_pages || 1);
+    }
+  };
+  
+  // Fetch status counts only once when the component mounts
+  useEffect(() => {
     const fetchStatusCounts = async () => {
       try {
         // Fetch completed meetings count
@@ -89,45 +166,49 @@ export const useDashboard = () => {
           { status: 'completed' },
           { page_index: 1, page_size: 1 }
         );
-        setCompletedMeetingsCount(completedResponse.metadata?.total_count as number);
+        
+        // Safely extract the total count
+        const completedCount = extractTotalCount(completedResponse);
+        setCompletedMeetingsCount(completedCount);
         
         // Fetch cancelled meetings count
         const cancelledResponse = await meetingApi.searchMeetings(
           { status: 'cancelled' },
           { page_index: 1, page_size: 1 }
         );
-        if (cancelledResponse.metadata) {
-          setCancelledMeetingsCount(cancelledResponse.metadata?.total_count as number);
-        } else {
-          setCancelledMeetingsCount(0);
-        }
+        
+        // Safely extract the total count
+        const cancelledCount = extractTotalCount(cancelledResponse);
+        setCancelledMeetingsCount(cancelledCount);
+        
       } catch (error) {
-        console.error('Lỗi khi tải dữ liệu số lượng:', error);
+        console.error('Error fetching status counts:', error);
       }
     };
     
-    setIsLoading(true);
-    
-    Promise.all([
-      fetchUpcomingMeetings(),
-      fetchPastMeetings(),
-      fetchStatusCounts()
-    ]).finally(() => {
-      setIsLoading(false);
-    });
-    
-  }, [currentPage, pageSize, activeTab]);
-
+    fetchStatusCounts();
+  }, []);
+  
+  // Initial data fetch for both tabs
   useEffect(() => {
-    // Update total items and pages when active tab changes
-    if (activeTab === 'upcoming') {
-      setTotalItems(upcomingMeetingsMetadata?.total_count as number);
-      setTotalPages(upcomingMeetingsMetadata?.total_pages as number);
-    } else {
-      setTotalItems(pastMeetingsMetadata?.total_count as number);
-      setTotalPages(pastMeetingsMetadata?.total_pages as number);
-    }
-  }, [activeTab, upcomingMeetingsMetadata, pastMeetingsMetadata]);
+    const initData = async () => {
+      try {
+        await Promise.all([
+          fetchMeetingsData('upcoming'),
+          fetchMeetingsData('past')
+        ]);
+      } catch (error) {
+        console.error('Error initializing dashboard data:', error);
+      }
+    };
+    
+    initData();
+  }, []);
+  
+  // Fetch data only when page changes for the active tab
+  useEffect(() => {
+    fetchMeetingsData(activeTab as 'upcoming' | 'past');
+  }, [activeTab, paginationState[activeTab as 'upcoming' | 'past'].currentPage, fetchMeetingsData]);
   
   const filterItems = [
     { key: 'all', label: 'Tất cả cuộc họp' },
@@ -153,27 +234,30 @@ export const useDashboard = () => {
   };
 
   const handleViewFullReport = () => {
-    console.log('Xem báo cáo phân tích đầy đủ');
+    router.push('/dashboard/meetings');
   };
 
   return {
     // State
     activeTab,
-    setActiveTab,
-    currentPage,
-    setCurrentPage,
-    pageSize,
-    visibleContent,
+    setActiveTab: handleTabChange,
+    visibleContent, 
     setVisibleContent,
+    currentPage,
+    pageSize,
     upcomingMeetings,
     upcomingMeetingsMetadata,
-    pastMeetingsMetadata, // Fixed variable name
     pastMeetings,
+    pastMeetingsMetadata,
     isLoading,
     totalItems,
     totalPages,
     completedMeetingsCount,
     cancelledMeetingsCount,
+    
+    // Pagination
+    setCurrentPage,
+    setCurrentPageForView,
     
     // Derived values
     currentItems,

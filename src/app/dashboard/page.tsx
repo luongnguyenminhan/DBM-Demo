@@ -19,7 +19,7 @@ export default function DashboardPage() {
     visibleContent,
     setVisibleContent,
     upcomingMeetingsMetadata,
-    pastMeetingsMetadata, // Fixed variable name
+    pastMeetingsMetadata,
     currentItems,
     isLoading,
     totalItems,
@@ -34,6 +34,14 @@ export default function DashboardPage() {
   // Override the handleViewMeetingDetails to use router
   const handleViewMeetingDetails = (meeting: MeetingResponse) => {
     router.push(`/dashboard/meetings/${meeting.id}`);
+  };
+  
+  // Create a type-safe wrapper for setActiveTab to handle string input
+  const handleTabChange = (tab: string) => {
+    // Only set the tab if it's a valid value
+    if (tab === 'upcoming' || tab === 'past') {
+      setActiveTab(tab as 'upcoming' | 'past');
+    }
   };
 
   if (isLoading && currentItems.length === 0) {
@@ -61,7 +69,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 space-y-4">
           <MeetingsPanel
             activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            setActiveTab={handleTabChange} // Use the wrapper function to handle type conversion
             currentItems={currentItems}
             totalItems={totalItems}
             totalPages={totalPages}

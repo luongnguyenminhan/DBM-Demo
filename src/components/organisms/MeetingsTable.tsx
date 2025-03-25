@@ -31,6 +31,8 @@ interface MeetingsTableProps {
   setCurrentPage: (page: number) => void;
   onViewOptionChange?: (view: string) => void;
   onViewDetails?: (meeting: MeetingResponse) => void;
+  currentViewKey?: string; // Current view key for pagination tracking
+  setCurrentPageForView?: (page: number, viewKey: string) => void; // Method to set page for specific view
 }
 
 const MeetingsTable: React.FC<MeetingsTableProps> = ({
@@ -43,9 +45,11 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
   viewOptions,
   setCurrentPage,
   onViewOptionChange,
-  onViewDetails
+  onViewDetails,
+  currentViewKey = 'active', // Default to 'active' view if not specified
+  setCurrentPageForView
 }) => {
-  // Định nghĩa cột cho Bảng Ant Design với mã hóa màu trạng thái
+  // Define columns for Ant Design Table with status color encoding
   const columns: ColumnsType<MeetingResponse> = [
     {
       title: 'Cuộc họp',
@@ -129,6 +133,16 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
     },
   ];
 
+  // Handle page change with view-specific pagination
+  const handlePageChange = (page: number) => {
+    // Use the view-specific setter if available, otherwise fall back to the regular setter
+    if (setCurrentPageForView && currentViewKey) {
+      setCurrentPageForView(page, currentViewKey);
+    } else {
+      setCurrentPage(page);
+    }
+  };
+
   return (
     <div className="overflow-auto py-2">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
@@ -174,7 +188,7 @@ const MeetingsTable: React.FC<MeetingsTableProps> = ({
               <PaginationControl
                 totalPages={totalPages}
                 currentPage={currentPage}
-                onChange={setCurrentPage}
+                onChange={handlePageChange} // Uses our custom handler that respects view state
                 showTotal
                 totalItems={totalItems}
                 pageSize={pageSize}
