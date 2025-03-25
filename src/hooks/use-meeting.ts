@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import meetingApi from '@/apis/meetingApi';
 import transcriptApi from '@/apis/transcriptApi';
@@ -44,6 +43,7 @@ export function useMeeting(meetingId: string) {
     const fetchMeetingDetails = async () => {
       setIsLoading(true);
       try {
+        console.log('Fetching meeting details for ID:', meetingId);
         const response = await meetingApi.getMeetingContent(meetingId);
         setMeetingDetail(response);
         
@@ -88,7 +88,7 @@ export function useMeeting(meetingId: string) {
     setTimeout(() => setNotification(null), 5000);
   };
 
-  // Process transcript
+  // Process transcript - now uses enhanced API with better error handling
   const handleProcessTranscript = async () => {
     if (!meetingDetail?.data) {
       handleNotification('Không có bản ghi để phân tích', 'error');
@@ -104,15 +104,25 @@ export function useMeeting(meetingId: string) {
     
     setIsProcessingTranscript(true);
     try {
+      console.log(`Analyzing transcript for meeting ID: ${actualMeetingId}`);
       const response = await transcriptApi.analyzeTranscript(actualMeetingId);
       
+      // Using updated response structure with metadata
       if (response.data) {
-        handleNotification('Phân tích cảm xúc thành công', 'success');
+        let message = 'Phân tích cảm xúc thành công';
+        
+        // Add sentiment information to notification if available
+        if (response.metadata?.sentiment_summary) {
+          const summary = response.metadata.sentiment_summary;
+          message += `: ${summary.positive_percentage}% tích cực, ${summary.negative_percentage}% tiêu cực`;
+        }
+        
+        handleNotification(message, 'success');
         refreshMeetingData();
       } else {
         handleNotification('Không nhận được kết quả phân tích hợp lệ', 'error');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error analyzing transcript:', err);
       handleErrorNotification(err);
     } finally {
@@ -136,6 +146,7 @@ export function useMeeting(meetingId: string) {
     
     setIsGeneratingNote(true);
     try {
+      console.log(`Generating meeting note for meeting ID: ${actualMeetingId}`);
       const response = await meetingNoteApi.generateMeetingNote({ 
         prompt: meetingDetail.data.transcript_content, 
         meeting_id: actualMeetingId 
@@ -185,7 +196,7 @@ export function useMeeting(meetingId: string) {
     URL.revokeObjectURL(url);
   };
 
-  // Upload transcript text
+  // Upload transcript text - now uses enhanced API with validation
   const handleTextUpload = async (content: string, overrideMeetingId?: string) => {
     try {
       // Use provided meeting ID, or get from meeting detail, or use the initial one
@@ -201,6 +212,7 @@ export function useMeeting(meetingId: string) {
         return;
       }
       
+      console.log(`Uploading transcript for meeting ID: ${actualMeetingId}`);
       const response = await transcriptApi.uploadTranscript({
         transcript_content: content,
         meeting_id: actualMeetingId
@@ -211,13 +223,13 @@ export function useMeeting(meetingId: string) {
         setIsTextModalOpen(false);
         refreshMeetingData();
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error uploading transcript:', err);
       handleErrorNotification(err);
     }
   };
 
-  // Upload audio file
+  // Upload audio file - now uses enhanced API with better params handling
   const handleAudioUpload = async (file: File, numSpeakers?: number, overrideMeetingId?: string) => {
     try {
       // Use provided meeting ID, or get from meeting detail, or use the initial one
@@ -236,6 +248,7 @@ export function useMeeting(meetingId: string) {
       // Check file size and type
       validateAudioFile(file);
       
+      console.log(`Uploading audio file for meeting ID: ${actualMeetingId}, speakers: ${numSpeakers || 'auto'}`);
       const response = await transcriptApi.uploadAudioForTranscription(
         file, 
         actualMeetingId,
@@ -245,16 +258,41 @@ export function useMeeting(meetingId: string) {
       if (response) {
         handleNotification('Tải lên file âm thanh thành công. Quá trình xử lý có thể mất một chút thời gian.', 'success');
         setIsAudioModalOpen(false);
+        
+        // Set up polling for transcript status (optional enhancement)
+        // pollTranscriptStatus(actualMeetingId);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error uploading audio file:', err);
       handleErrorNotification(err);
     }
   };
 
+  // Optional: Poll for transcript status after audio upload
+  /*
+  const pollTranscriptStatus = (meetingId: string) => {
+    const checkInterval = setInterval(async () => {
+      try {
+        const response = await transcriptApi.getTranscriptByMeetingId(meetingId);
+        if (response.data?.transcript_processed) {
+          handleNotification('Bản ghi âm đã được xử lý thành công!', 'success');
+          clearInterval(checkInterval);
+          refreshMeetingData();
+        }
+      } catch (err) {
+        console.error('Error polling transcript status:', err);
+      }
+    }, 10000); // Check every 10 seconds
+
+    // Stop polling after 5 minutes
+    setTimeout(() => clearInterval(checkInterval), 5 * 60 * 1000);
+  };
+  */
+
   // Refresh meeting data
   const refreshMeetingData = async () => {
     try {
+      console.log(`Refreshing meeting data for ID: ${meetingId}`);
       const updatedMeeting = await meetingApi.getMeetingContent(meetingId);
       setMeetingDetail(updatedMeeting);
       
@@ -281,30 +319,32 @@ export function useMeeting(meetingId: string) {
     }
   };
 
-  // Handle error notifications
-  const handleErrorNotification = (err: unknown) => {
-    let message = 'Đã xảy ra lỗi. Vui lòng thử lại sau.';
-    
-    if (typeof err === 'object' && err !== null && 'response' in err) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const response = err.response as any;
-      
-      if (response?.data?.detail) {
-        message = `Lỗi: ${response.data.detail}`;
-      } else if (response?.status) {
-        const statusMessages: Record<number, string> = {
-          400: 'Dữ liệu không hợp lệ',
-          404: 'Không tìm thấy dữ liệu',
-          413: 'File quá lớn',
-          415: 'Định dạng không được hỗ trợ',
-          500: 'Lỗi máy chủ'
-        };
-        
-        message = statusMessages[response.status] || message;
-      }
+  // Handle error notifications with improved error message extraction
+  const handleErrorNotification = (err: any) => {
+    // Check for specific API error formats
+    if (err.response?.data?.detail) {
+      handleNotification(`Lỗi: ${err.response.data.detail}`, 'error');
+    } else if (err.response?.data?.message) {
+      handleNotification(`Lỗi: ${err.response.data.message}`, 'error');
+    } else if (err.message) {
+      handleNotification(`Lỗi: ${err.message}`, 'error');
+    } else if (err.response?.status === 400) {
+      handleNotification('Dữ liệu không hợp lệ', 'error');
+    } else if (err.response?.status === 401) {
+      handleNotification('Không có quyền thực hiện thao tác này', 'error');
+    } else if (err.response?.status === 404) {
+      handleNotification('Không tìm thấy dữ liệu', 'error');
+    } else if (err.response?.status === 413) {
+      handleNotification('File quá lớn', 'error');
+    } else if (err.response?.status === 415) {
+      handleNotification('Định dạng không được hỗ trợ', 'error');
+    } else if (err.response?.status === 422) {
+      handleNotification('Dữ liệu đầu vào không hợp lệ', 'error');
+    } else if (err.response?.status === 500) {
+      handleNotification('Lỗi máy chủ', 'error');
+    } else {
+      handleNotification('Đã xảy ra lỗi. Vui lòng thử lại sau.', 'error');
     }
-    
-    handleNotification(message, 'error');
   };
 
   // Validate audio file
@@ -314,8 +354,9 @@ export function useMeeting(meetingId: string) {
       throw new Error('Kích thước file vượt quá giới hạn cho phép (100MB)');
     }
     
-    if (!file.type.startsWith('audio/')) {
-      throw new Error('Chỉ chấp nhận file âm thanh');
+    const validAudioTypes = ['audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/webm', 'audio/m4a'];
+    if (!validAudioTypes.includes(file.type) && !file.type.startsWith('audio/')) {
+      throw new Error('Định dạng file không được hỗ trợ. Vui lòng sử dụng MP3, WAV, M4A hoặc WEBM');
     }
   };
 
