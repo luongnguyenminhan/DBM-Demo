@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '@/redux/store';
 
 // Define JWT structure based on your token
 interface JwtPayload {
@@ -146,6 +147,24 @@ const authSlice = createSlice({
     },
   },
 });
+
+// Selectors for easier access to auth state
+export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
+export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectUserRole = (state: RootState) => state.auth.user.role;
+
+// Function to check if token is valid and not expired
+export const isValidToken = (token: string | null): boolean => {
+  if (!token) return false;
+  
+  try {
+    const decodedToken = decodeJwt(token);
+    return !!decodedToken && decodedToken.exp * 1000 > Date.now();
+  } catch (error) {
+    console.error('Error validating token:', error);
+    return false;
+  }
+};
 
 export const {
   loginStart,

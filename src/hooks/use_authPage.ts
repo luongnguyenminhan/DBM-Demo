@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthRedirect } from './useAuthRedirect';
 import authApi from '@/apis/authenticationApi';
 import { Toast } from '@/components/molecules/alert';
 import { LoginRequest, SignupRequest, PasswordResetConfirmRequest } from '@/types/auth.type';
-import { useDispatch } from 'react-redux';
-import { loginStart, loginSuccess, loginFailure, logout } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginStart, loginSuccess, loginFailure, logout } from '@/redux/slices/authSlice';
+import { RootState } from '@/redux/store';
 
 interface RegisterData {
   name: string;
@@ -21,8 +22,17 @@ interface ResetPasswordData {
 export const useAuthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { redirectWithDelay } = useAuthRedirect();
   const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  
+  // Redirect authenticated users away from auth pages
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]);
   
   // Login functionality
   const handleLogin = async (credentials: LoginRequest) => {
@@ -57,8 +67,12 @@ export const useAuthPage = () => {
               position: 'top-right'
             });
             
-            // Redirect to dashboard after a short delay
-            return redirectWithDelay('/dashboard', 1500);
+            // Check if there's a redirect URL in the query params
+            const from = searchParams.get('from');
+            const redirectPath = from || '/dashboard';
+            
+            // Redirect to the appropriate page after a short delay
+            return redirectWithDelay(redirectPath, 1500);
         }
       } else if (response.status === 401 && !response.message?.includes("không chính xác")) {
         // Email verification required case
