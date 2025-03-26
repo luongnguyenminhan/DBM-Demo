@@ -53,11 +53,9 @@ export const StatCard: React.FC<StatCardProps> = ({
   changeClassName,
   onClick,
 }) => {
-  // Determine if change is positive, negative, or neutral
   const isPositive = change?.startsWith('+');
   const isNegative = change?.startsWith('-');
   
-  // Size classes
   const sizeClasses = {
     small: 'px-2 py-2',
     medium: 'px-3 py-3 sm:p-4',
@@ -70,7 +68,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     lg: 'shadow-lg',
   };
 
-  // Variant classes for different styling based on variant
   const variantClasses = {
     default: '',
     primary: 'bg-[var(--color-primary)] text-white',
@@ -81,7 +78,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     info: 'bg-[var(--color-info)] text-white',
   };
 
-  // Border color classes based on variant
   const borderColorClasses = {
     default: 'border-gray-200',
     primary: 'border-[var(--color-primary)]',
@@ -92,7 +88,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     info: 'border-[var(--color-info)]',
   };
 
-  // Container classes
   const containerClasses = classNames(
     variant === 'default' ? 'bg-white' : '',
     'overflow-hidden',
@@ -110,7 +105,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     className
   );
 
-  // Animation variants
   const animationVariants = {
     fade: {
       hidden: { opacity: 0 },
@@ -126,14 +120,12 @@ export const StatCard: React.FC<StatCardProps> = ({
     },
   };
 
-  // Handle change color class
   const getChangeColorClass = () => {
     if (isPositive) return 'bg-[var(--stat-positive-bg,#dcfce7)] text-[var(--stat-positive-text,#16a34a)]';
     if (isNegative) return 'bg-[var(--stat-negative-bg,#fee2e2)] text-[var(--stat-negative-text,#dc2626)]';
     return 'bg-[var(--stat-neutral-bg,#f3f4f6)] text-[var(--stat-neutral-text,#4b5563)]';
   };
 
-  // Render the icon if provided
   const renderIcon = () => {
     if (!icon) return null;
 
@@ -149,7 +141,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     );
   };
 
-  // Render the metric content
   const renderMetric = () => {
     if (!metric) return null;
 
@@ -166,7 +157,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     );
   };
 
-  // Render the value content
   const renderValue = () => {
     return typeof value === 'string' || typeof value === 'number' ? (
       <Typography.Text 
@@ -182,11 +172,9 @@ export const StatCard: React.FC<StatCardProps> = ({
     );
   };
 
-  // Render the change indicator
   const renderChange = () => {
     if (!change) return null;
     
-    // Adjust change indicator colors based on card variant
     const changeClasses = variant === 'default' ? 
       getChangeColorClass() :
       'bg-white bg-opacity-20 text-current !text-[var(--text-primary)]';
@@ -204,7 +192,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     );
   };
 
-  // Content to be rendered
   const content = (
     <div className={containerClasses} onClick={onClick}>
       {icon && iconPosition === 'left' && renderIcon()}
@@ -222,7 +209,6 @@ export const StatCard: React.FC<StatCardProps> = ({
     </div>
   );
 
-  // Apply animation if enabled
   if (withAnimation) {
     return (
       <motion.div

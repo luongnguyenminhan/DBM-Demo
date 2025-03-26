@@ -27,14 +27,12 @@ export const useAuthPage = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   
-  // Redirect authenticated users away from auth pages
   useEffect(() => {
     if (isAuthenticated) {
       router.push('/dashboard');
     }
   }, [isAuthenticated, router]);
   
-  // Login functionality
   const handleLogin = async (credentials: LoginRequest) => {
     setIsLoading(true);
     dispatch(loginStart());
@@ -42,52 +40,40 @@ export const useAuthPage = () => {
     try {
       const response = await authApi.login(credentials);
       
-      // Check status code to handle different scenarios
       if (response.status === 200) {
-        // Success case: User authenticated successfully
         if (response.data?.access_token && response.data?.refresh_token) {
-            // Store tokens in localStorage
             localStorage.setItem('access_token', response.data.access_token);
             localStorage.setItem('refresh_token', response.data.refresh_token);
             
-            // Store tokens in cookies
             document.cookie = `access_token=${response.data.access_token}; path=/; max-age=86400; SameSite=Strict`;
             document.cookie = `refresh_token=${response.data.refresh_token}; path=/; max-age=604800; SameSite=Strict`;
             
-            // Store user data in Redux using the JWT payload structure
             dispatch(loginSuccess({
               accessToken: response.data.access_token,
               refreshToken: response.data.refresh_token,
               email: response.data.email
             }));
             
-            // Show success toast on successful login
             Toast.success('Login successful!', {
               autoCloseDuration: 1000,
               position: 'top-right'
             });
             
-            // Check if there's a redirect URL in the query params
             const from = searchParams.get('from');
             const redirectPath = from || '/dashboard';
             
-            // Redirect to the appropriate page after a short delay
             return redirectWithDelay(redirectPath, 1500);
         }
       } else if (response.status === 401 && !response.message?.includes("không chính xác")) {
-        // Email verification required case
         Toast.warning('Your email address needs to be verified', {
           autoCloseDuration: 3000,
           position: 'top-right'
         });
         
-        // Encode email for security
         const encodedEmail = btoa(credentials.email);
         
-        // Redirect to OTP confirmation with email parameter after short delay
         return redirectWithDelay(`otp-confirmation?email=${encodedEmail}&purpose=login`, 1500);
       } else {
-        // Other non-success cases
         const errorMessage = response.message || 'Login failed';
         dispatch(loginFailure(errorMessage));
         Toast.error(errorMessage, {
@@ -99,7 +85,6 @@ export const useAuthPage = () => {
     } catch (error: unknown) {
       console.error('Login failed:', error);
       
-      // Default error message for API failures
       const errorMessage = 'Email or password is incorrect';
       dispatch(loginFailure(errorMessage));
       
@@ -114,7 +99,6 @@ export const useAuthPage = () => {
     }
   };
 
-  // Handle logout
   const handleLogout = () => {
     dispatch(logout());
     Toast.success('Logged out successfully', {
@@ -124,12 +108,10 @@ export const useAuthPage = () => {
     return redirectWithDelay('/login', 1000);
   };
   
-  // Register functionality
   const handleRegister = async (userData: RegisterData) => {
     setIsLoading(true);
     
     try {
-      // Prepare signup data according to SignupRequest interface
       const signupData: SignupRequest = {
         email: userData.email,
         username: userData.name,
@@ -141,16 +123,13 @@ export const useAuthPage = () => {
       const response = await authApi.signup(signupData);
       
       if (response.status === 200 || response.status === 201) {
-        // Show success toast on successful registration
         Toast.success('Đăng ký thành công!', {
           autoCloseDuration: 1500,
           position: 'top-right'
         });
         
-        // Encrypt email for security
         const encryptedEmail = btoa(userData.email);
         
-        // Redirect to OTP confirmation page after a short delay
         return redirectWithDelay(`otp-confirmation?email=${encryptedEmail}&purpose=registration`, 1500);
       } else {
         console.error('Registration failed:', response);
@@ -163,7 +142,6 @@ export const useAuthPage = () => {
     } catch (error: unknown) {
       console.error('Registration failed:', error);
       
-      // Handle error from API response if available
       const errorMessage = 'Email đã được sử dụng hoặc đăng ký thất bại';
       
       Toast.error(errorMessage, {
@@ -177,7 +155,6 @@ export const useAuthPage = () => {
     }
   };
   
-  // Forgot password functionality
   const handleForgotPassword = async (email: string) => {
     setIsLoading(true);
     
@@ -190,10 +167,8 @@ export const useAuthPage = () => {
           autoCloseDuration: 3000,
         });
         
-        // Encrypt email for security
         const encryptedEmail = btoa(email);
         
-        // Redirect to OTP confirmation page with the email and purpose
         return router.push(`/auth/otp-confirmation?email=${encryptedEmail}&purpose=passwordReset`);
       } else {
         throw new Error(response.message || 'Không thể gửi email đặt lại mật khẩu');
@@ -206,7 +181,6 @@ export const useAuthPage = () => {
     }
   };
   
-  // Reset password functionality
   const handleResetPassword = async (passwordData: ResetPasswordData, token: string) => {
     setIsLoading(true);
     
@@ -224,7 +198,6 @@ export const useAuthPage = () => {
           autoCloseDuration: 3000,
         });
         
-        // Redirect to login page on success
         return redirectWithDelay('auth/login', 2000);
       } else {
         Toast.error(response.message || 'Không thể đặt lại mật khẩu', {
@@ -245,7 +218,6 @@ export const useAuthPage = () => {
     }
   };
   
-  // OTP verification functionality
   const handleOtpConfirmation = async (otp: string, email: string, purpose: string, encodedEmail: string) => {
     setIsLoading(true);
     
@@ -258,13 +230,11 @@ export const useAuthPage = () => {
       const response = await authApi.verifyEmail(verificationData);
       
       if (response.status === 200) {
-        // Success case
         Toast.success('Xác thực OTP thành công!', {
           position: "top-right",
           autoCloseDuration: 3000,
         });
         
-        // Redirect based on purpose
         if (purpose === 'passwordReset') {
           return redirectWithDelay(`/reset-password?email=${encodedEmail}`, 1000);
         } else if (purpose === 'registration') {
@@ -292,7 +262,6 @@ export const useAuthPage = () => {
     }
   };
   
-  // Resend OTP functionality
   const handleResendOtp = async (email: string) => {
     try {
       const response = await authApi.requestEmailVerification({ email });

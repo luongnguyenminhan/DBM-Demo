@@ -21,7 +21,6 @@ const AudioUploadModal: React.FC<AudioUploadModalProps> = ({
   onNotification,
   meetingId
 }) => {
-  // Allow the user to override the meeting ID if needed
   const [customMeetingId, setCustomMeetingId] = useState<string>(meetingId || '');
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [fileSelected, setFileSelected] = useState<boolean>(false);
@@ -54,12 +53,10 @@ const AudioUploadModal: React.FC<AudioUploadModalProps> = ({
 
     const numSpeakers = speakerInput?.value ? parseInt(speakerInput.value) : undefined;
     
-    // Validate file type and size here
     const audioFile = fileInput.files[0];
-    
+
     setIsUploading(true);
     try {
-      // Call the onUpload function with the updated parameters
       onUpload(audioFile, numSpeakers, finalMeetingId);
     } catch (error) {
       console.error('Error uploading audio:', error);

@@ -7,16 +7,13 @@ import { Toast } from '@/components/molecules/alert';
 import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthPage } from '@/hooks/use_authPage';
 
-// Client component that safely uses useSearchParams
 function OtpConfirmationContent() {
   const { isLoading, handleOtpConfirmation, handleResendOtp } = useAuthPage();
   const searchParams = useSearchParams();
   
-  // Get encoded email and purpose from query parameters
   const encodedEmail = searchParams.get('email') || '';
   const purpose = (searchParams.get('purpose') || 'registration') as 'registration' | 'passwordReset' | 'login';
   
-  // Decode the base64-encoded email
   let email = '';
   try {
     if (encodedEmail) {
@@ -24,7 +21,6 @@ function OtpConfirmationContent() {
     }
   } catch (error) {
     console.error('Error decoding email:', error);
-    // If decoding fails, use the raw value (might be unencoded in some cases)
     email = encodedEmail;
   }
   
@@ -39,12 +35,10 @@ function OtpConfirmationContent() {
   
   const handleOtpSubmit = async (otp: string, emailAddress: string) => {
     await handleOtpConfirmation(otp, emailAddress, purpose, encodedEmail);
-    // Not returning anything ensures Promise<void>
   };
 
   const handleResendOtpRequest = async () => {
     await handleResendOtp(email);
-    // Not returning anything ensures Promise<void>
   };
 
   return (
@@ -58,7 +52,6 @@ function OtpConfirmationContent() {
   );
 }
 
-// Loading fallback component
 function LoadingFallback() {
   return (
     <div className="text-center p-8">
@@ -67,7 +60,6 @@ function LoadingFallback() {
   );
 }
 
-// Main page component with Suspense boundary
 export default function OtpConfirmationPage() {
   return (
     <AuthContentWrapper>

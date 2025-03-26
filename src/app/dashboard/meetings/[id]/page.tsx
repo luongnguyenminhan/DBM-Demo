@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Button from '@/components/atomic/button';
 import Alert from '@/components/molecules/alert';
 
-// Components
 import MeetingHeader from '@/components/organisms/MeetingHeader';
 import MeetingContent from '@/components/organisms/MeetingContent';
 import MeetingInfoPanel from '@/components/organisms/MeetingInfoPanel';
@@ -14,7 +13,6 @@ import TextUploadModal from '@/components/organisms/TextUploadModal';
 import AudioUploadModal from '@/components/organisms/AudioUploadModal';
 import NotificationToast from '@/components/organisms/NotificationToast';
 
-// Custom hook
 import { useMeeting } from '@/hooks/use-meeting';
 
 export default function MeetingDetailsPage() {
@@ -22,7 +20,6 @@ export default function MeetingDetailsPage() {
     const routeId = params.id as string;
     
     const {
-        // Data
         meetingDetail,
         formattedNote,
         formattedTranscript,
@@ -30,7 +27,6 @@ export default function MeetingDetailsPage() {
         transcriptData,
         transcriptType,
         
-        // UI state
         isLoading,
         error,
         isProcessingTranscript,
@@ -39,7 +35,6 @@ export default function MeetingDetailsPage() {
         isAudioModalOpen,
         notification,
         
-        // Methods
         handleProcessTranscript,
         handleGenerateNote,
         handleDownloadTranscript,
@@ -52,11 +47,9 @@ export default function MeetingDetailsPage() {
         openAudioModal,
         closeAudioModal,
         
-        // Get the actual meeting_id from API response
         meetingId
     } = useMeeting(routeId);
 
-    // Loading and error states
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -99,7 +92,6 @@ export default function MeetingDetailsPage() {
 
     const { meeting, transcript_content, meeting_note_content, participants } = meetingDetail.data;
 
-    // Extract the actual meeting_id to pass to modals
     const actualMeetingId = meetingId;
 
     const actionItems = [

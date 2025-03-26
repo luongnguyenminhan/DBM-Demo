@@ -64,7 +64,6 @@ const Avatar: React.FC<AvatarProps> = ({
   const [initials, setInitials] = useState('');
   const [initialsColor, setInitialsColor] = useState<string>('');
 
-  // Generate initials from name
   useEffect(() => {
     if (name) {
       const nameParts = name.trim().split(' ');
@@ -76,19 +75,17 @@ const Avatar: React.FC<AvatarProps> = ({
         );
       }
       
-      // Generate consistent color based on name
       if (customInitialsColors && customInitialsColors.length > 0) {
         const colorIndex = name
           .split('')
           .reduce((acc, char) => acc + char.charCodeAt(0), 0) % customInitialsColors.length;
         setInitialsColor(customInitialsColors[colorIndex]);
       } else {
-        setInitialsColor('#FD2B7B'); // Default color
+        setInitialsColor('#FD2B7B'); 
       }
     }
   }, [name, customInitialsColors]);
 
-  // Sizes for avatar
   const sizeClasses = {
     xs: 'w-6 h-6 text-xs',
     sm: 'w-8 h-8 text-sm',
@@ -98,21 +95,18 @@ const Avatar: React.FC<AvatarProps> = ({
     '2xl': 'w-20 h-20 text-2xl',
   };
 
-  // Shadow classes
   const shadowClasses = {
     sm: 'shadow-sm',
     md: 'shadow',
     lg: 'shadow-lg',
   };
 
-  // Shape classes
   const shapeClasses = {
     circle: 'rounded-full',
     square: 'rounded-none',
     rounded: 'rounded-md',
   };
 
-  // Background color variants
   const backgroundVariants = {
     default: 'bg-gray-200 text-gray-700',
     primary: 'bg-[var(--color-primary-light)] text-[var(--color-primary)]',
@@ -121,13 +115,11 @@ const Avatar: React.FC<AvatarProps> = ({
     dark: 'bg-gray-700 text-gray-100',
   };
 
-  // Handle image load error
   const handleError = () => {
     setError(true);
     if (onError) onError();
   };
 
-  // Container classes
   const avatarClasses = classNames(
     'relative flex items-center justify-center overflow-hidden',
     sizeClasses[size],
@@ -149,7 +141,6 @@ const Avatar: React.FC<AvatarProps> = ({
       }
     : {};
 
-  // Animation variants
   const avatarVariants = {
     initial: { scale: 0.8, opacity: 0 },
     animate: { scale: 1, opacity: 1 },
@@ -157,21 +148,17 @@ const Avatar: React.FC<AvatarProps> = ({
     tap: { scale: 0.95 },
   };
 
-  // Handle click events
   const handleClick = () => {
     if (!isDisabled && onClick) {
       onClick();
     }
   };
 
-  // Render content based on availability and error state
   const renderAvatarContent = () => {
-    // If children are provided, render them
     if (children) {
       return children;
     }
     
-    // Show image if src is available and no error occurred
     if (src && !error) {
       return (
         <Image 
@@ -185,7 +172,6 @@ const Avatar: React.FC<AvatarProps> = ({
       );
     }
 
-    // Show fallback image if provided and showFallback is true
     if (fallbackSrc && error && showFallback) {
       return (
         <Image 
@@ -199,7 +185,6 @@ const Avatar: React.FC<AvatarProps> = ({
       );
     }
 
-    // Show initials if name is provided
     if (name && initials) {
       return (
         <span 
@@ -211,7 +196,6 @@ const Avatar: React.FC<AvatarProps> = ({
       );
     }
 
-    // Default fallback icon
     return <FontAwesomeIcon icon={icon} />;
   };
 
@@ -225,7 +209,6 @@ const Avatar: React.FC<AvatarProps> = ({
     </div>
   );
 
-  // Apply animation if required
   if (withAnimation) {
     return (
       <motion.div
@@ -244,7 +227,6 @@ const Avatar: React.FC<AvatarProps> = ({
   return avatarContent;
 };
 
-// AvatarGroup component for displaying multiple avatars in a stack
 export interface AvatarGroupProps {
   avatars: Array<Omit<AvatarProps, 'size' | 'shape'> & { key?: string | number }>;
   max?: number;

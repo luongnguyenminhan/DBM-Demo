@@ -33,11 +33,9 @@ export default function DashboardPage() {
     filterItems,
     viewOptions,
     handleViewFullReport,
-    // Modal states
     isTextModalOpen,
     isAudioModalOpen,
     notification,
-    // Modal handlers
     openTextModal,
     closeTextModal,
     openAudioModal,
@@ -47,20 +45,16 @@ export default function DashboardPage() {
     handleNotification
   } = useDashboard();
 
-  // Override the handleViewMeetingDetails to use router
   const handleViewMeetingDetails = (meeting: MeetingResponse) => {
     router.push(`/dashboard/meetings/${meeting.id}`);
   };
   
-  // Create a type-safe wrapper for setActiveTab to handle string input
   const handleTabChange = (tab: string) => {
-    // Only set the tab if it's a valid value
     if (tab === 'upcoming' || tab === 'past') {
       setActiveTab(tab as 'upcoming' | 'past');
     }
   };
 
-  // Handlers for the upload buttons
   const handleTextUploadClick = () => {
     openTextModal();
   };
@@ -122,7 +116,7 @@ export default function DashboardPage() {
           
           <MeetingsPanel
             activeTab={activeTab}
-            setActiveTab={handleTabChange} // Use the wrapper function to handle type conversion
+            setActiveTab={handleTabChange}
             currentItems={currentItems}
             totalItems={totalItems}
             totalPages={totalPages}

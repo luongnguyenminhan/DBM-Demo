@@ -69,7 +69,6 @@ const Badge: React.FC<BadgeProps> = ({
   position = 'top-right',
   offset = [0, 0],
 }) => {
-  // Base variant colors
   const variantClasses = {
     default: 'bg-gray-50 text-gray-800',
     primary: 'bg-[var(--color-primary)] text-white',
@@ -82,7 +81,6 @@ const Badge: React.FC<BadgeProps> = ({
     light: 'bg-[var(--color-off-white)] text-[var(--text-primary)]',
   };
 
-  // Size classes
   const sizeClasses = {
     xs: isDot ? 'w-1.5 h-1.5' : 'text-xs py-0 px-1.5 min-w-[18px] h-[18px]',
     sm: isDot ? 'w-2 h-2' : 'text-xs py-0.5 px-2 min-w-[20px] h-[20px]',
@@ -90,14 +88,12 @@ const Badge: React.FC<BadgeProps> = ({
     lg: isDot ? 'w-3 h-3' : 'text-sm py-1 px-2.5 min-w-[24px] h-[24px]',
   };
 
-  // Shape classes
   const shapeClasses = {
     square: 'rounded-none',
     rounded: 'rounded',
     pill: 'rounded-full',
   };
 
-  // Position classes for floating badges
   const positionClasses = {
     'top-right': 'top-[-5px] right-[-5px]',
     'top-left': 'top-[-5px] left-[-5px]',
@@ -105,7 +101,6 @@ const Badge: React.FC<BadgeProps> = ({
     'bottom-left': 'bottom-[-5px] left-[-5px]',
   };
 
-  // Default position offset classes
   const offsetPositionStyles = {
     'top-right': { transform: `translate(${offset[0]}px, ${-offset[1]}px)` },
     'top-left': { transform: `translate(${-offset[0]}px, ${-offset[1]}px)` },
@@ -113,7 +108,6 @@ const Badge: React.FC<BadgeProps> = ({
     'bottom-left': { transform: `translate(${-offset[0]}px, ${offset[1]}px)` },
   };
 
-  // Format content for counters (e.g. 99+ for values > maxCount)
     const formattedContent = () => {
     if (isDot) return null;
     
@@ -128,7 +122,6 @@ const Badge: React.FC<BadgeProps> = ({
     return content;
   };
 
-  // Badge classes
   const badgeClasses = classNames(
     'inline-flex items-center justify-center font-medium',
     sizeClasses[size],
@@ -147,7 +140,6 @@ const Badge: React.FC<BadgeProps> = ({
     className
   );
 
-  // Animation variants
   const badgeVariants = {
     initial: { scale: 0.6, opacity: 0 },
     animate: { scale: 1, opacity: 1 },
@@ -162,14 +154,12 @@ const Badge: React.FC<BadgeProps> = ({
     }
   };
 
-  // Handle click events
   const handleClick = () => {
     if (!isDisabled && onClick) {
       onClick();
     }
   };
 
-  // Render the badge content
   const badgeContent = (
     <span
       className={badgeClasses}
@@ -196,7 +186,6 @@ const Badge: React.FC<BadgeProps> = ({
   );
 
   if (!children) {
-    // Apply animations if needed
     if (withAnimation) {
       return (
         <motion.span
@@ -214,7 +203,6 @@ const Badge: React.FC<BadgeProps> = ({
     return badgeContent;
   }
 
-  // If it's a badge attached to children
   return (
     <div className="relative inline-flex">
       {children}
@@ -239,7 +227,6 @@ const Badge: React.FC<BadgeProps> = ({
   );
 };
 
-// Tag component - a variation of Badge for tagging items
 export const Tag: React.FC<
   Omit<BadgeProps, 'isDot' | 'asCounter' | 'maxCount' | 'showZero' | 'isFloating' | 'position' | 'offset'> & {
     onClose?: () => void;

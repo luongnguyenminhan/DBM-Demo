@@ -83,7 +83,6 @@ const Alert: React.FC<AlertProps> = ({
         onClose
     });
 
-    // Get variant icon based on variant
     const getVariantIcon = (): IconDefinition => {
         if (icon) return icon;
         
@@ -96,19 +95,16 @@ const Alert: React.FC<AlertProps> = ({
         }
     };
 
-    // Handle custom action
     const handleAction = () => {
         onAction?.();
     };
 
-    // Size mapping
     const sizeClasses = {
         small: 'p-2 text-sm',
         medium: 'p-3',
         large: 'p-4 text-lg',
     };
 
-    // Variant background classes
     const variantBackgroundClasses = {
         success: 'bg-green-50 text-green-800',
         error: 'bg-red-50 text-red-800',
@@ -116,7 +112,6 @@ const Alert: React.FC<AlertProps> = ({
         info: 'bg-blue-50 text-blue-800',
     };
 
-    // Variant transparent classes
     const variantTransparentClasses = {
         success: 'text-[var(--color-success)]',
         error: 'text-[var(--color-error)]',
@@ -124,7 +119,6 @@ const Alert: React.FC<AlertProps> = ({
         info: 'text-[var(--color-info)]',
     };
 
-    // Variant border classes
     const variantBorderClasses = {
         success: 'border border-green-200',
         error: 'border border-red-200',
@@ -132,7 +126,6 @@ const Alert: React.FC<AlertProps> = ({
         info: 'border border-blue-200',
     };
 
-    // Icon color classes
     const iconColorClasses = {
         success: '!text-[var(--color-success)]',
         error: '!text-[var(--color-error)]',
@@ -140,7 +133,6 @@ const Alert: React.FC<AlertProps> = ({
         info: '!text-[var(--color-info)]',
     };
 
-    // Position classes for floating alerts
     const positionClasses = {
         'top': 'top-4 left-1/2',
         'bottom': 'bottom-4 left-1/2',
@@ -150,7 +142,6 @@ const Alert: React.FC<AlertProps> = ({
         'bottom-right': 'bottom-4 right-4',
     };
 
-    // Border radius classes
     const borderRadiusClasses = {
         'none': '',
         'small': 'rounded',
@@ -159,7 +150,6 @@ const Alert: React.FC<AlertProps> = ({
         'full': 'rounded-full'
     };
 
-    // Container classes
     const alertClasses = classNames(
         'flex items-center gap-3',
         sizeClasses[size],
@@ -168,7 +158,7 @@ const Alert: React.FC<AlertProps> = ({
             [variantBackgroundClasses[variant]]: withBackground,
             [variantTransparentClasses[variant]]: !withBackground,
             [variantBorderClasses[variant]]: withBorder,
-            'rounded-md': rounded, // keep for backward compatibility
+            'rounded-md': rounded, 
             'w-full': fullWidth,
             'shadow-md': withShadow,
             'fixed z-50': isFloating,
@@ -178,7 +168,6 @@ const Alert: React.FC<AlertProps> = ({
         customClassName
     );
 
-    // Animation variants
     const alertVariants = {
         hidden: { 
             opacity: 0
@@ -191,7 +180,6 @@ const Alert: React.FC<AlertProps> = ({
         }
     };
 
-    // Don't render if not visible
     if (!visible) return null;
 
     const alertContent = (
@@ -280,7 +268,6 @@ const Alert: React.FC<AlertProps> = ({
     ) : alertContent;
 };
 
-// Toast notification system to show floating alerts
 interface ToastOptions extends Omit<AlertProps, 'isOpen' | 'onClose'> {
     id?: string;
     duration?: number;
@@ -331,21 +318,16 @@ export class Toast {
             return 'toast-id';
         }
 
-        // Generate unique ID for this toast
         const id = options.id || `toast-${++Toast.counter}`;
         
-        // Get or create the toast container
         const container = Toast.createContainer();
         if (!container) return id;
 
-        // Default options
         const duration = options.duration || options.autoCloseDuration || 5000;
         const position = options.position || 'top-right';
         
-        // Clear any existing toast with this ID
         Toast.dismiss(id);
         
-        // Create toast element
         const toastEl = document.createElement('div');
         toastEl.id = id;
         toastEl.style.pointerEvents = 'auto';
@@ -353,12 +335,9 @@ export class Toast {
         toastEl.style.transition = 'opacity 0.3s ease';
         container.appendChild(toastEl);
         
-        // Render our Alert component into this element using React 18's createRoot API
         if (typeof window !== 'undefined') {
-            // Dynamic import to ensure SSR compatibility
             import('react-dom/client').then((ReactDOMClient) => {
                 try {
-                    // Create a root using React 18 API
                     const root = ReactDOMClient.createRoot(toastEl);
                     
                     const alertComponent = (
@@ -377,11 +356,9 @@ export class Toast {
                         />
                     );
                     
-                    // Render using the root
                     root.render(alertComponent);
                 } catch (error) {
                     console.error('Failed to render toast:', error);
-                    // Fallback to another attempt with react-dom directly
                     import('react-dom/client').then((ReactDOMClient) => {
                         try {
                             console.warn('Attempting alternative createRoot approach');
@@ -411,7 +388,6 @@ export class Toast {
             });
         }
         
-        // Set timeout to dismiss after duration
         if (duration > 0) {
             const timeout = setTimeout(() => {
                 Toast.dismiss(id);
@@ -430,11 +406,10 @@ export class Toast {
             element.style.opacity = '0';
             setTimeout(() => {
                 callback();
-            }, 300); // Match the transition duration
+            }, 300); 
         };
         
         if (id) {
-            // Dismiss specific toast
             const timeout = Toast.toasts.get(id);
             if (timeout) {
                 clearTimeout(timeout);
@@ -450,7 +425,6 @@ export class Toast {
                 });
             }
         } else {
-            // Dismiss all toasts
             Toast.toasts.forEach(timeout => clearTimeout(timeout));
             Toast.toasts.clear();
             

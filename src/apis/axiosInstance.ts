@@ -1,7 +1,6 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
-// Hardcoded API base URL and version
 const API_BASE_URL = 'https://frecord.dev.chickbrain.com/api';
 const API_VERSION = 'v1';
 
@@ -30,7 +29,6 @@ axiosInstance.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             console.error('Unauthorized request - please log in again.');
-            // Optionally implement redirection to a login page here
         }
         return Promise.reject(error);
     }

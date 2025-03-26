@@ -51,10 +51,8 @@ const Spinner: React.FC<SpinnerProps> = ({
   customColor,
   label,
 }) => {
-  // Don't render if not visible
   if (!isVisible) return null;
 
-  // Size classes
   const sizeClasses = {
     xs: 'w-3 h-3 text-xs',
     sm: 'w-4 h-4 text-sm',
@@ -65,7 +63,6 @@ const Spinner: React.FC<SpinnerProps> = ({
     custom: customSize || 'w-6 h-6',
   };
 
-  // Variant classes (colors)
   const variantClasses = {
     default: 'text-gray-600',
     primary: 'text-[var(--color-primary)]',
@@ -77,14 +74,12 @@ const Spinner: React.FC<SpinnerProps> = ({
     light: 'text-white',
   };
 
-  // Speed classes
   const speedClasses = {
-    slow: 'animate-spin-slow', // You'll need to add this in tailwind.config.js
+    slow: 'animate-spin-slow',
     normal: 'animate-spin',
-    fast: 'animate-spin-fast', // You'll need to add this in tailwind.config.js
+    fast: 'animate-spin-fast', 
   };
 
-  // Text placement classes
   const textPlacementClasses = {
     left: 'flex-row-reverse items-center',
     right: 'flex-row items-center',
@@ -92,7 +87,6 @@ const Spinner: React.FC<SpinnerProps> = ({
     bottom: 'flex-col items-center',
   };
 
-  // Container classes based on fullScreen and overlay options
   const containerClasses = classNames(
     'flex gap-2',
     textPlacementClasses[textPlacement],
@@ -104,7 +98,6 @@ const Spinner: React.FC<SpinnerProps> = ({
     className
   );
 
-  // Overlay classes
   const overlayClasses = classNames(
     'absolute inset-0',
     {
@@ -116,11 +109,9 @@ const Spinner: React.FC<SpinnerProps> = ({
     }
   );
 
-  // Custom styles for color
   const customStyles = customColor ? { color: customColor } : {};
 
 
-  // Render border spinner
   const renderBorder = () => {
     return (
       <div 
@@ -138,7 +129,6 @@ const Spinner: React.FC<SpinnerProps> = ({
     );
   };
 
-  // Render icon spinner
   const renderIcon = () => {
     return (
       <FontAwesomeIcon
@@ -155,7 +145,6 @@ const Spinner: React.FC<SpinnerProps> = ({
   };
 
 
-  // Get the appropriate spinner based on type
   const getSpinner = () => {
     switch (type) {
       case 'border': return renderBorder();
@@ -164,7 +153,6 @@ const Spinner: React.FC<SpinnerProps> = ({
     }
   };
 
-  // Base spinner element with optional text
   const spinnerElement = (
     <div className={containerClasses} role="status" aria-label={label || "Loading"}>
       {text && textPlacement === 'left' && <span className="text-sm">{text}</span>}
@@ -179,7 +167,6 @@ const Spinner: React.FC<SpinnerProps> = ({
     </div>
   );
 
-  // If fullScreen or overlay mode is active
   if (fullScreen || overlay) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -194,7 +181,6 @@ const Spinner: React.FC<SpinnerProps> = ({
   return spinnerElement;
 };
 
-// Loader component - a higher-level component that renders a Spinner when loading
 export const Loader: React.FC<{
   isLoading: boolean;
   children: React.ReactNode;

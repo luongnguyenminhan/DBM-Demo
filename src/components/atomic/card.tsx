@@ -67,14 +67,12 @@ const Card: React.FC<CardProps> = ({
   className,
   id,
 }) => {
-  // Size classes
   const sizeClasses = {
     small: 'text-sm',
     medium: 'text-base',
     large: 'text-lg',
   };
 
-  // Variant classes
   const variantClasses = {
     default: 'bg-white text-[var(--text-primary)]',
     primary: 'bg-[var(--color-primary-light)] text-[var(--text-on-primary)]',
@@ -83,7 +81,6 @@ const Card: React.FC<CardProps> = ({
     ghost: 'bg-transparent text-[var(--text-primary)]',
   };
 
-  // Border classes
   const borderClasses = {
     default: withBorder ? 'border border-gray-200' : '',
     primary: withBorder ? 'border border-[var(--color-primary)]' : '',
@@ -92,14 +89,12 @@ const Card: React.FC<CardProps> = ({
     ghost: '',
   };
 
-  // Shadow classes
   const shadowClasses = {
     sm: 'shadow-sm',
     md: 'shadow-md',
     lg: 'shadow-lg',
   };
 
-  // Rounded corner classes
   const roundedClasses = {
     sm: 'rounded-sm',
     md: 'rounded-md',
@@ -107,7 +102,6 @@ const Card: React.FC<CardProps> = ({
     full: 'rounded-xl',
   };
 
-  // Padding classes
   const paddingClasses = {
     none: 'p-0',
     sm: 'p-3',
@@ -116,21 +110,18 @@ const Card: React.FC<CardProps> = ({
     xl: 'p-8',
   };
 
-  // Title size classes
   const titleSizeClasses = {
     small: 'text-base',
     medium: 'text-lg',
     large: 'text-xl',
   };
 
-  // Alignment classes
   const alignmentClasses = {
     left: 'text-left',
     center: 'text-center',
     right: 'text-right',
   };
 
-  // Card container classes
   const cardClasses = classNames(
     'transition-all duration-200 flex flex-col overflow-hidden',
     sizeClasses[size],
@@ -151,7 +142,6 @@ const Card: React.FC<CardProps> = ({
     className
   );
 
-  // Card header classes
   const headerClasses = classNames(
     'flex items-center justify-between mb-3',
     {
@@ -160,13 +150,11 @@ const Card: React.FC<CardProps> = ({
     }
   );
 
-  // Card title classes
   const titleClasses = classNames(
     'font-semibold',
     titleSizeClasses[size]
   );
 
-  // Card subtitle classes
   const subtitleClasses = classNames(
     'text-[var(--text-secondary)]',
     {
@@ -176,7 +164,6 @@ const Card: React.FC<CardProps> = ({
     }
   );
 
-  // Card footer classes
   const footerClasses = classNames(
     'flex items-center justify-between mt-3 pt-3',
     {
@@ -184,10 +171,8 @@ const Card: React.FC<CardProps> = ({
     }
   );
 
-  // Content styles for custom background
   const contentStyle = backgroundColor ? { backgroundColor } : {};
 
-  // Animation variants
   const cardVariants = {
     hover: { 
       scale: 1.01,
@@ -264,7 +249,6 @@ const Card: React.FC<CardProps> = ({
     </div>
   );
 
-  // Optional animation wrapper
   if (withAnimation) {
     return (
       <motion.div

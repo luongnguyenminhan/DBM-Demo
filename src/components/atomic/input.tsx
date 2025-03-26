@@ -61,7 +61,6 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
     },
     ref
   ) => {
-    // Cast the onChange handler to the compatible type
     const handleInputChange = onChange as unknown as (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     const handleInputFocus = onFocus as unknown as (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     const handleInputBlur = onBlur as unknown as (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -73,21 +72,18 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       handleInputBlur
     );
 
-    // Size classes
     const sizeClasses = {
       small: 'px-3 !py-1 !text-sm',
       medium: 'px-4 !py-2',
       large: 'px-5 !py-3 !text-lg',
     };
 
-    // Label size classes
     const labelSizeClasses = {
       small: '!text-xs !mb-1',
       medium: '!text-sm !mb-1',
       large: '!text-base !mb-2',
     };
 
-    // Variant classes
     const variantClasses = {
       default: '!bg-white !border !border-gray-300 !focus:border-[var(--color-primary)] !text-[var(--text-primary)]',
       primary: '!bg-white !border !border-[var(--color-primary)] !text-[var(--text-primary)]',
@@ -96,7 +92,6 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       ghost: '!bg-transparent !border-0 !border-b !border-gray-300 !focus:border-[var(--color-primary)] !text-[var(--text-primary)]',
     };
 
-    // Input container classes
     const inputContainerClasses = classNames(
       'transition-all duration-200 relative',
       {
@@ -104,7 +99,6 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       }
     );
 
-    // Input wrapper classes for the actual input element
     const inputWrapperClasses = classNames(
       'relative flex items-center',
       {
@@ -112,7 +106,6 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       }
     );
 
-    // Input classes
     const inputClasses = classNames(
       'transition-all duration-200 w-full outline-none',
       sizeClasses[size],
@@ -122,14 +115,13 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
         'border-[var(--color-error)]': isError,
         '!rounded-full': rounded,
         '!rounded-md': !rounded,
-        'pl-10': leftIcon, // Add left padding when left icon is present
-        'pr-10': rightIcon, // Add right padding when right icon is present
+        'pl-10': leftIcon, 
+        'pr-10': rightIcon, 
         '!pb-2 !pt-5': withFloatingLabel && (isFocused || hasValue || placeholder),
       },
       customClassName
     );
 
-    // Floating label classes
     const floatingLabelClasses = classNames(
       'transition-all duration-200 absolute pointer-events-none',
       {
@@ -142,7 +134,6 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       }
     );
 
-    // Static label classes
     const staticLabelClasses = classNames(
       labelSizeClasses[size],
       {
@@ -151,7 +142,6 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       }
     );
 
-    // Helper text classes
     const helperTextClasses = classNames(
       'text-xs mt-1',
       {
@@ -160,13 +150,11 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
       }
     );
 
-    // Animation variants
     const inputVariants = {
       focused: { scale: 1.01 },
       blurred: { scale: 1 },
     };
 
-    // Error text animation variants
     const errorTextVariants = {
       initial: { opacity: 0, height: 0, marginTop: 0 },
       animate: { opacity: 1, height: 'auto', marginTop: 4 },
@@ -191,7 +179,6 @@ const Input = React.forwardRef<InputRef, CustomInputProps>(
         }
     };
   
-// Common props for input
 const inputProps = {
     ref,
     disabled: isDisabled,
@@ -203,7 +190,6 @@ const inputProps = {
     placeholder: withFloatingLabel && (isFocused || hasValue) ? placeholder : withFloatingLabel ? '' : placeholder,
   };
 
-  // Common props for textarea
   const textAreaProps = {
     ref,
     disabled: isDisabled,

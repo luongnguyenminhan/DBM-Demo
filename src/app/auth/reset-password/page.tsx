@@ -7,17 +7,14 @@ import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import { useAuthPage } from '@/hooks/use_authPage';
 
-// Create a client component that uses useSearchParams
 function ResetPasswordContent() {
   const { isLoading, handleResetPassword } = useAuthPage();
   const searchParams = useSearchParams();
   const { redirectWithDelay } = useAuthRedirect();
   
-  // Get encoded email from query parameters and decode it
   const encodedEmail = searchParams.get('email') || '';
   const token = searchParams.get('token') || '';
   
-  // Decode the base64-encoded email
   let email = '';
   try {
     if (encodedEmail) {
@@ -25,7 +22,6 @@ function ResetPasswordContent() {
     }
   } catch (error) {
     console.error('Error decoding email:', error);
-    // If decoding fails, use the raw value (might be unencoded in some cases)
     email = encodedEmail;
   }
   
@@ -40,7 +36,6 @@ function ResetPasswordContent() {
   
   const handleResetPasswordWithToken = async (passwordData: { password: string; email: string }) => {
     await handleResetPassword(passwordData, token);
-    // Not returning anything ensures Promise<void>
   };
 
   if (!email) {
@@ -60,7 +55,6 @@ function ResetPasswordContent() {
   );
 }
 
-// Loading fallback component
 function LoadingFallback() {
   return (
     <div className="text-center p-8">
@@ -69,7 +63,6 @@ function LoadingFallback() {
   );
 }
 
-// Main page component with Suspense boundary
 export default function ResetPasswordPage() {
   return (
     <AuthContentWrapper>

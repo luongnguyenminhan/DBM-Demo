@@ -73,7 +73,6 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   const [mounted, setMounted] = useState(false);
 
-  // Size classes for modal
   const sizeClasses = {
     xs: 'max-w-xs',
     sm: 'max-w-sm',
@@ -83,7 +82,6 @@ const Modal: React.FC<ModalProps> = ({
     full: 'max-w-full min-h-screen w-screen',
   };
 
-  // Position classes
   const positionWrapperClasses = {
     center: 'items-center justify-center',
     top: 'items-start justify-center pt-16',
@@ -92,7 +90,6 @@ const Modal: React.FC<ModalProps> = ({
     left: 'items-center justify-start',
   };
 
-  // Footer alignment classes
   const footerAlignClasses = {
     left: 'justify-start',
     center: 'justify-center',
@@ -100,7 +97,6 @@ const Modal: React.FC<ModalProps> = ({
     between: 'justify-between',
   };
 
-  // Animation variants based on animationType
   const animationVariants = {
     fade: {
       hidden: { opacity: 0 },
@@ -132,7 +128,6 @@ const Modal: React.FC<ModalProps> = ({
     }
   };
 
-  // Modal container classes
   const modalClasses = classNames(
     'bg-white rounded-lg shadow-lg relative flex flex-col overflow-hidden mx-4',
     sizeClasses[size],
@@ -146,7 +141,6 @@ const Modal: React.FC<ModalProps> = ({
     contentClassName
   );
 
-  // Header classes
   const headerClasses = classNames(
     'flex items-center justify-between p-4 border-b',
     {
@@ -156,14 +150,12 @@ const Modal: React.FC<ModalProps> = ({
     headerClassName
   );
 
-  // Footer classes
   const footerClasses = classNames(
     'flex items-center p-4 border-t',
     footerAlignClasses[footerAlign],
     footerClassName
   );
 
-  // Handle escape key press
   useEffect(() => {
     setMounted(true);
 
@@ -181,13 +173,11 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [closeOnEsc, onClose, isDismissable]);
 
-  // Handle body scroll lock
   useEffect(() => {
     if (preventScroll && isOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.paddingRight = 'var(--scrollbar-width, 0)';
 
-      // Calculate scrollbar width to prevent layout shift
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     }
@@ -200,7 +190,6 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, [preventScroll, isOpen]);
 
-  // Auto focus the modal when it opens
   useEffect(() => {
     if (isOpen && autoFocus && mounted) {
       const focusableElements = document.querySelectorAll(
@@ -217,10 +206,8 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [isOpen, autoFocus, mounted]);
 
-  // If not mounted yet or not open, don't render
   if (!mounted || !isOpen) return null;
 
-  // Portal for rendering the modal at the document body
   const modalContent = (
     <AnimatePresence>
       {isOpen && (
@@ -239,7 +226,7 @@ const Modal: React.FC<ModalProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className={classNames(
-                'absolute inset-0 bg-black/50 backdrop-blur-md', // Added backdrop-blur-md and background color with opacity
+                'absolute inset-0 bg-black/50 backdrop-blur-md', 
               overlayClassName
               )}
               onClick={closeOnOutsideClick && isDismissable ? onClose : undefined}
@@ -305,11 +292,9 @@ const Modal: React.FC<ModalProps> = ({
     </AnimatePresence>
   );
 
-  // Use portal to render modal at document body
   return createPortal(modalContent, document.body);
 };
 
-// Confirmation modal component based on the Modal component
 export interface ConfirmModalProps extends Omit<ModalProps, 'footer' | 'children'> {
   message: string | ReactNode;
   confirmLabel?: string;

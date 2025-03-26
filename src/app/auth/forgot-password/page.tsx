@@ -1,16 +1,27 @@
 'use client';
-
-import React from 'react';
+import React, { Suspense } from 'react';
 import ForgotPasswordForm from '@/components/auth/forgotPasswordForm';
 import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthPage } from '@/hooks/use_authPage';
 
-export default function ForgotPasswordPage() {
-  const { isLoading, handleForgotPassword } = useAuthPage();
+function LoadingFallback() {
+  return <div className="flex justify-center items-center p-4">Loading...</div>;
+}
 
+function ForgotPasswordContent() {
+  const { isLoading, handleForgotPassword } = useAuthPage();
+  
+  return (
+    <ForgotPasswordForm onSubmit={handleForgotPassword} isLoading={isLoading} />
+  );
+}
+
+export default function ForgotPasswordPage() {
   return (
     <AuthContentWrapper>
-      <ForgotPasswordForm onSubmit={handleForgotPassword} isLoading={isLoading} />
+      <Suspense fallback={<LoadingFallback />}>
+        <ForgotPasswordContent />
+      </Suspense>
     </AuthContentWrapper>
   );
 }

@@ -40,7 +40,6 @@ export interface PaginationControlProps {
     rounded?: boolean;
     withBackground?: boolean;
     withBorder?: boolean;
-    // Add explicit props for API metadata
     hasNextPage?: boolean;
     hasPreviousPage?: boolean;
 }
@@ -65,7 +64,6 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
     rounded = false,
     withBackground = false,
     withBorder = true,
-    // Initialize metadata props with undefined, which means we'll use calculated values
     hasNextPage,
     hasPreviousPage,
 }) => {
@@ -76,7 +74,6 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         siblingCount
     });
 
-    // Container classes
     const containerClasses = classNames(
         'flex flex-wrap gap-2 items-center',
         {
@@ -89,19 +86,15 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         customClassName
     );
 
-    // Button size mapping
     const buttonSizeMap: Record<PaginationSize, 'small' | 'medium' | 'large'> = {
         small: 'small',
         medium: 'medium',
         large: 'large',
     };
 
-    // Calculate if it's the first or last page
-    // If API metadata is provided, use it; otherwise, fall back to calculated values
     const isFirstPage = hasPreviousPage !== undefined ? !hasPreviousPage : currentPage === 1;
     const isLastPage = hasNextPage !== undefined ? !hasNextPage : currentPage === totalPages;
 
-    // Handle page change
     const handlePageChange = (page: number) => {
         if (!isDisabled) {
             pagination.setPage(page);
@@ -109,7 +102,6 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         }
     };
 
-    // Handle quick jump
     const handleQuickJump = () => {
         const page = parseInt(pageNumber, 10);
         if (!isNaN(page) && page >= 1 && page <= totalPages) {
@@ -118,30 +110,25 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         }
     };
 
-    // Handle input change for quick jump
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setPageNumber(value);
     };
 
-    // Handle input keydown for quick jump
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleQuickJump();
         }
     };
 
-    // Animation variants
     const itemVariants = {
         hidden: { opacity: 0, scale: 0.8 },
         visible: { opacity: 1, scale: 1 },
     };
 
-    // Render page buttons
     const renderPageButtons = () => {
         return pagination.pageRange.map((page, index) => {
             if (page < 0) {
-                // Render ellipsis
                 return (
                     <IconButton
                         key={`ellipsis-${page}`}
@@ -155,7 +142,6 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
                 );
             }
 
-            // Render page button
             return (
                 <motion.div
                     key={`page-${page}`}
@@ -178,7 +164,6 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         });
     };
 
-    // Render the total text
     const renderTotalText = () => {
         if (!showTotal || totalItems === 0) return null;
 
@@ -192,7 +177,6 @@ const PaginationControl: React.FC<PaginationControlProps> = ({
         );
     };
 
-    // Render quick jump input
     const renderQuickJump = () => {
         if (!showQuickJump) return null;
 

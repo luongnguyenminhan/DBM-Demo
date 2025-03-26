@@ -19,7 +19,6 @@ export default function DashboardLayout({
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
-  // Use the auth state from Redux
   const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
 
   return (
@@ -50,7 +49,6 @@ export default function DashboardLayout({
           user={{
             name: user.name || undefined,
             role: user.role || undefined,
-            // Add avatar if available
           }}
           navItems={[
             { label: 'Dashboard', href: '/dashboard', isActive: true },

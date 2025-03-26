@@ -44,7 +44,6 @@ const Icon: React.FC<IconProps> = ({
   rotate,
   flip,
 }) => {
-  // Size classes
   const sizeClasses = {
     xs: 'w-3 h-3',
     sm: 'w-4 h-4',
@@ -55,7 +54,6 @@ const Icon: React.FC<IconProps> = ({
     custom: customSize || 'w-5 h-5',
   };
 
-  // Variant classes (colors)
   const variantClasses = {
     default: 'text-[var(--text-primary)]',
     primary: 'text-[var(--color-primary)]',
@@ -66,15 +64,13 @@ const Icon: React.FC<IconProps> = ({
     info: 'text-[var(--color-info)]',
   };
 
-  // Animation classes
   const animationClasses = {
     pulse: 'animate-pulse',
     spin: 'animate-spin',
     bounce: 'animate-bounce',
-    shake: 'animate-shake', // You may need to define this in tailwind.config.js
+    shake: 'animate-shake', 
   };
 
-  // Container classes
   const containerClasses = classNames(
     sizeClasses[size],
     variantClasses[variant],
@@ -87,7 +83,6 @@ const Icon: React.FC<IconProps> = ({
     className
   );
 
-  // Custom styles
   const customStyles: React.CSSProperties = {
     color: customColor,
     transform: rotate ? `rotate(${rotate}deg)` : undefined,
@@ -107,7 +102,6 @@ const Icon: React.FC<IconProps> = ({
     }
   }
 
-  // Animation variants for framer-motion
   const iconVariants = {
     hover: { scale: 1.1 },
     tap: { scale: 0.95 },
@@ -136,7 +130,6 @@ const Icon: React.FC<IconProps> = ({
     </div>
   );
 
-  // Optional animation wrapper
   return withAnimation && isButton && !isDisabled ? (
     <motion.div
       whileHover="hover"
@@ -151,7 +144,6 @@ const Icon: React.FC<IconProps> = ({
   );
 };
 
-// Define a helper component for icon buttons
 export const IconButton: React.FC<
   Omit<IconProps, 'isButton'> & {
     withRipple?: boolean;
@@ -172,7 +164,6 @@ export const IconButton: React.FC<
   borderVariant = 'default',
   ...props
 }) => {
-  // Padding classes
   const paddingClasses = {
     none: 'p-0',
     sm: 'p-1',
@@ -180,7 +171,6 @@ export const IconButton: React.FC<
     lg: 'p-3',
   };
 
-  // Background classes
   const backgroundClasses = {
     default: 'bg-gray-100 hover:bg-gray-200',
     primary: 'bg-[var(--color-primary-light)] hover:bg-[var(--color-primary)]',
@@ -191,7 +181,6 @@ export const IconButton: React.FC<
     info: 'bg-blue-100 hover:bg-blue-200',
   };
 
-  // Border classes
   const borderClasses = {
     default: 'border border-gray-300',
     primary: 'border border-[var(--color-primary)]',
@@ -213,7 +202,6 @@ export const IconButton: React.FC<
     }
   );
 
-  // Handler for ripple effect
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (props.isDisabled || !withRipple) return;
     

@@ -1,22 +1,32 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import LoginForm from '@/components/auth/loginForm';
 import AuthContentWrapper from '@/components/auth/authContentWrapper';
 import { useAuthPage } from '@/hooks/use_authPage';
 
-export default function LoginPage() {
+function LoadingFallback() {
+  return <div className="flex justify-center items-center p-4">Loading...</div>;
+}
+
+function LoginContent() {
   const { isLoading, handleLogin } = useAuthPage();
   
-  // Create a wrapper function that conforms to the expected type
   const handleFormSubmit = async (credentials: { email: string; password: string; }) => {
     await handleLogin(credentials);
-    // Not returning anything ensures Promise<void>
   };
 
   return (
+    <LoginForm onSubmit={handleFormSubmit} isLoading={isLoading} />
+  );
+}
+
+export default function LoginPage() {
+  return (
     <AuthContentWrapper>
-      <LoginForm onSubmit={handleFormSubmit} isLoading={isLoading} />
+      <Suspense fallback={<LoadingFallback />}>
+        <LoginContent />
+      </Suspense>
     </AuthContentWrapper>
   );
 }
