@@ -26,11 +26,9 @@ const MeetingContent: React.FC<MeetingContentProps> = ({
   formattedTranscript,
   meeting_note_content,
   formattedNote,
-  isProcessingTranscript,
   isGeneratingNote,
   onTextUploadClick,
   onAudioUploadClick,
-  onProcessTranscript,
   onGenerateNote,
   onDownloadTranscript,
   onDownloadNote,
@@ -44,10 +42,8 @@ const MeetingContent: React.FC<MeetingContentProps> = ({
         <TranscriptTab
           transcript_content={transcript_content}
           formattedTranscript={formattedTranscript}
-          isProcessingTranscript={isProcessingTranscript}
           onTextUploadClick={onTextUploadClick}
           onAudioUploadClick={onAudioUploadClick}
-          onProcessTranscript={onProcessTranscript}
           onDownloadTranscript={onDownloadTranscript}
         />
       )

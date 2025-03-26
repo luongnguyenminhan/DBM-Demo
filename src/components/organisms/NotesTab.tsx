@@ -25,7 +25,7 @@ const NotesTab: React.FC<NotesTabProps> = ({
   onDownloadNote,
 }) => {
   return (
-    <Card variant="outlined" className="mt-4" withShadow shadowSize="sm">
+    <Card>
       <div className="flex justify-between items-center mb-4">
         <div>
           <Button 

@@ -338,7 +338,7 @@ export const formatSentimentTranscriptForDisplay = (data: ReturnType<typeof proc
         <div class="${iconColor} text-xl flex-shrink-0">${sentimentIcon}</div>
         <div class="${bgColor} p-3 rounded-lg flex-grow relative border ${borderColor}">
           <p class="text-gray-800 pr-20">
-            <span class="font-medium text-[var(--color-secondary)] hidden sm:inline">${message.speaker}: </span>${message.text}
+        <span class="font-medium text-[var(--color-secondary)] hidden sm:inline">${message.speaker}: </span>${message.text.toLocaleLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, '').replace(/<[^>]+>/g, '')}
           </p>
         </div>
       </div>`;
@@ -397,7 +397,7 @@ export const formatStandardTranscriptForDisplay = (data: ReturnType<typeof proce
           </div>
           <div class="flex-grow ml-2">
             <div class="${speakerColors[message.speaker]} p-3 rounded-lg border">
-              ${message.text}
+              ${message.text.toLocaleLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, '').replace(/<[^>]+>/g, '')}
             </div>
           </div>
         </div>`;

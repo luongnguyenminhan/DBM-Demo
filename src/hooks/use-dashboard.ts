@@ -4,12 +4,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { MeetingResponse } from '@/types/meeting.type';
 import meetingApi from '@/apis/meetingApi';
+import transcriptApi from '@/apis/transcriptApi';
 import { PaginationMetadata } from '@/types/common.type';
 import { 
   faFileAlt,
   faCalendarDay
 } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
+import NotificationToast from '@/components/organisms/NotificationToast';
 
 export const useDashboard = () => {
   const router = useRouter();
@@ -24,6 +26,18 @@ export const useDashboard = () => {
   const [pageSize] = useState(9);
   const [visibleContent, setVisibleContent] = useState<'table' | 'calendar'>('table');
   
+  // Modal states
+  const [isTextModalOpen, setIsTextModalOpen] = useState<boolean>(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
+
+  // Modal handlers
+  const openTextModal = () => setIsTextModalOpen(true);
+  const closeTextModal = () => setIsTextModalOpen(false);
+  const openAudioModal = () => setIsAudioModalOpen(true);
+  const closeAudioModal = () => setIsAudioModalOpen(false);
+
   const [upcomingMeetings, setUpcomingMeetings] = useState<MeetingResponse[]>([]);
   const [upcomingMeetingsMetadata, setUpcomingMeetingsMetadata] = useState<PaginationMetadata>({
     total_count: 0,
@@ -59,6 +73,12 @@ export const useDashboard = () => {
       ...prev,
       [activeTab]: { ...prev[activeTab as 'upcoming' | 'past'], currentPage: page }
     }));
+  };
+
+  // Notification handler
+  const handleNotification = (message: string, type: 'success' | 'error' | 'info') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 5000);
   };
 
   // Helper function to safely extract metadata total_count from API response
@@ -157,6 +177,127 @@ export const useDashboard = () => {
     }
   };
   
+  // Validate audio file
+  const validateAudioFile = (file: File) => {
+    const maxSize = 100 * 1024 * 1024; // 100MB
+    if (file.size > maxSize) {
+      throw new Error('Kích thước file vượt quá giới hạn cho phép (100MB)');
+    }
+    
+    const validAudioTypes = ['mp3', 'mpeg', 'wav', 'webm', 'm4a'];
+    console.log('File type:', file.type.split("/")[1]);
+    console.log('Valid audio types:', validAudioTypes);
+    console.log('File size:', file.size);
+    if (!validAudioTypes.includes(file.type.split("/")[1])) {
+      throw new Error('Định dạng file không được hỗ trợ. Vui lòng sử dụng MP3, WAV, M4A hoặc WEBM');
+    }
+  };
+
+  // Handle text upload
+  const handleTextUpload = async (content: string, meetingId?: string) => {
+    if (!content || content.trim() === '') {
+      handleNotification('Nội dung bản ghi không được để trống', 'error');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      let response;
+      
+      // If meetingId is provided, upload transcript to that meeting
+      if (meetingId) {
+        response = await transcriptApi.uploadTranscript({
+          transcript_content: content,
+          meeting_id: meetingId
+        });
+      } else {
+        alert('Vui lòng chọn một cuộc họp để tải lên bản ghi');
+        return;
+      }
+      
+      if (response.data) {
+        handleNotification('Tải lên bản ghi thành công', 'success');
+        setIsTextModalOpen(false);
+        
+        // If this created a new meeting, navigate to it
+        if (response.data && 'meeting_id' in response.data && !meetingId) {
+          NotificationToast({
+            message: 'Tải lên bản ghi thành công',
+            type: 'success',
+          });
+        } else {
+          // Refresh the meeting list
+          await fetchMeetingsData('past');
+          await fetchMeetingsData('upcoming');
+        }
+      }
+    } catch (err) {
+      console.error('Error uploading transcript:', err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errorMsg = (err as any).response?.data?.detail || 
+                       (err as Error).message || 
+                       'Đã xảy ra lỗi khi tải lên bản ghi';
+      handleNotification(errorMsg, 'error');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Handle audio upload
+  const handleAudioUpload = async (file: File, numSpeakers?: number, meetingId?: string) => {
+    if (!file) {
+      handleNotification('Vui lòng chọn file âm thanh', 'error');
+      return;
+    }
+
+    // Validate audio file
+    try {
+      validateAudioFile(file);
+    } catch (error) {
+      handleNotification((error as Error).message, 'error');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      let response;
+      
+      // If meetingId is provided, upload audio to that meeting
+      if (meetingId) {
+        response = await transcriptApi.uploadAudioForTranscription(file, meetingId, numSpeakers);
+      } else {
+        alert('Vui lòng chọn một cuộc họp để tải lên file âm thanh');
+        return;
+      }
+      
+      if (response) {
+        handleNotification('Tải lên file âm thanh thành công. Quá trình xử lý có thể mất một chút thời gian.', 'success');
+        setIsAudioModalOpen(false);
+        
+        // If this created a new meeting, navigate to it
+        if (response.data && 'meeting_id' in response.data && !meetingId) {
+          NotificationToast({
+            message: 'Tải lên file âm thanh thành công. Quá trình xử lý có thể mất một chút thời gian.',
+            type: 'success',
+          });
+        } else {
+          // Refresh the meeting list
+          await fetchMeetingsData('past');
+          await fetchMeetingsData('upcoming');
+        }
+      }
+    } catch (err) {
+      console.error('Error uploading audio:', err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errorMsg = (err as any).response?.data?.detail || 
+                       (err as Error).message || 
+                       'Đã xảy ra lỗi khi tải lên file âm thanh';
+      handleNotification(errorMsg, 'error');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   // Fetch status counts only once when the component mounts
   useEffect(() => {
     const fetchStatusCounts = async () => {
@@ -255,6 +396,12 @@ export const useDashboard = () => {
     completedMeetingsCount,
     cancelledMeetingsCount,
     
+    // Modal states
+    isTextModalOpen,
+    isAudioModalOpen,
+    isUploading,
+    notification,
+    
     // Pagination
     setCurrentPage,
     setCurrentPageForView,
@@ -266,6 +413,15 @@ export const useDashboard = () => {
     
     // Handlers
     handleViewMeetingDetails,
-    handleViewFullReport
+    handleViewFullReport,
+    
+    // Modal handlers
+    openTextModal,
+    closeTextModal,
+    openAudioModal,
+    closeAudioModal,
+    handleTextUpload,
+    handleAudioUpload,
+    handleNotification
   };
 };

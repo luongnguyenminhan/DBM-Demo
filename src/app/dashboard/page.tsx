@@ -7,6 +7,10 @@ import NotificationAlert from '@/components/organisms/NotificationAlert';
 import { useDashboard } from '@/hooks/use-dashboard';
 import { useRouter } from 'next/navigation';
 import { MeetingResponse } from '@/types/meeting.type';
+import Button from '@/components/atomic/button';
+import { faUpload, faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import TextUploadModal from '@/components/organisms/TextUploadModal';
+import AudioUploadModal from '@/components/organisms/AudioUploadModal';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -28,7 +32,19 @@ export default function DashboardPage() {
     cancelledMeetingsCount,
     filterItems,
     viewOptions,
-    handleViewFullReport
+    handleViewFullReport,
+    // Modal states
+    isTextModalOpen,
+    isAudioModalOpen,
+    notification,
+    // Modal handlers
+    openTextModal,
+    closeTextModal,
+    openAudioModal,
+    closeAudioModal,
+    handleTextUpload,
+    handleAudioUpload,
+    handleNotification
   } = useDashboard();
 
   // Override the handleViewMeetingDetails to use router
@@ -42,6 +58,15 @@ export default function DashboardPage() {
     if (tab === 'upcoming' || tab === 'past') {
       setActiveTab(tab as 'upcoming' | 'past');
     }
+  };
+
+  // Handlers for the upload buttons
+  const handleTextUploadClick = () => {
+    openTextModal();
+  };
+
+  const handleAudioUploadClick = () => {
+    openAudioModal();
   };
 
   if (isLoading && currentItems.length === 0) {
@@ -58,15 +83,43 @@ export default function DashboardPage() {
     <div className="p-6 h-full space-y-6">
       
       {/* Thông báo cảnh báo */}
-      <NotificationAlert
-        message="Chào mừng đến với bảng điều khiển của bạn!"
-        description="Tại đây bạn có thể quản lý tất cả các cuộc họp và kiểm tra phân tích."
-      />
+      {notification ? (
+        <NotificationAlert
+          message={notification.message}
+          variant={notification.type}
+          description=""
+        />
+      ) : (
+        <NotificationAlert
+          message="Chào mừng đến với bảng điều khiển của bạn!"
+          description="Tại đây bạn có thể quản lý tất cả các cuộc họp và kiểm tra phân tích."
+        />
+      )}
       
       {/* Khu vực nội dung chính */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Danh sách cuộc họp - Trải dài 2 cột */}
         <div className="lg:col-span-2 space-y-4">
+          {/* Upload buttons */}
+          <div className="flex gap-2 mb-4">
+            <Button 
+              variant="gradient"
+              size="small"
+              leftIcon={faUpload}
+              onClick={handleTextUploadClick}
+            >
+              Tải lên văn bản
+            </Button>
+            <Button 
+              variant="gradient"
+              size="small"
+              leftIcon={faMicrophone}
+              onClick={handleAudioUploadClick}
+            >
+              Tải lên âm thanh
+            </Button>
+          </div>
+          
           <MeetingsPanel
             activeTab={activeTab}
             setActiveTab={handleTabChange} // Use the wrapper function to handle type conversion
@@ -96,6 +149,21 @@ export default function DashboardPage() {
           />
         </div>
       </div>
+      
+      {/* Modal Components */}
+      <TextUploadModal 
+        isOpen={isTextModalOpen} 
+        onClose={closeTextModal}
+        onUpload={handleTextUpload}
+        onNotification={handleNotification}
+      />
+      
+      <AudioUploadModal
+        isOpen={isAudioModalOpen}
+        onClose={closeAudioModal}
+        onUpload={handleAudioUpload}
+        onNotification={handleNotification}
+      />
     </div>
   );
 }

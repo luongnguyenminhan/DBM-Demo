@@ -150,7 +150,7 @@ export function useMeeting(meetingId: string) {
       console.log(`Generating meeting note for meeting ID: ${actualMeetingId}`);
       const response = await meetingNoteApi.generateMeetingNote({ 
         prompt: meetingDetail.data.transcript_content, 
-        meeting_id: actualMeetingId 
+        meeting_id: meetingId 
       });
       
       if (response.data) {
@@ -354,8 +354,8 @@ export function useMeeting(meetingId: string) {
       throw new Error('Kích thước file vượt quá giới hạn cho phép (100MB)');
     }
     
-    const validAudioTypes = ['audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/webm', 'audio/m4a'];
-    if (!validAudioTypes.includes(file.type) && !file.type.startsWith('audio/')) {
+    const validAudioTypes = ['mp3', 'mpeg', 'wav', 'webm', 'm4a'];
+    if (!validAudioTypes.includes(file.type.split('/')[1])) {
       throw new Error('Định dạng file không được hỗ trợ. Vui lòng sử dụng MP3, WAV, M4A hoặc WEBM');
     }
   };

@@ -5,7 +5,6 @@ import {
     TranscriptCreateRequest, 
     TranscriptUpdateRequest,
     TranscriptResponse,
-    TranscriptAnalysisResponse,
     TranscriptAnalysisCommonResponse
 } from '../types/transcript.type';
 

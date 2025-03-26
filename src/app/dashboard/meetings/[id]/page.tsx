@@ -128,7 +128,7 @@ export default function MeetingDetailsPage() {
             />
 
             <MeetingHeader 
-                title={meetingInfo?.meeting_id || "Chi tiết cuộc họp"} 
+                title={meeting?.meeting_id || "Chi tiết cuộc họp"} 
                 actionItems={actionItems} 
             />
 

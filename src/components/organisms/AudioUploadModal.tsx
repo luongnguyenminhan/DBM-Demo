@@ -56,17 +56,7 @@ const AudioUploadModal: React.FC<AudioUploadModalProps> = ({
     
     // Validate file type and size here
     const audioFile = fileInput.files[0];
-    if (!audioFile.type.startsWith('audio/')) {
-      onNotification('Chỉ chấp nhận file âm thanh', 'error');
-      return;
-    }
     
-    const maxSize = 100 * 1024 * 1024; // 100MB
-    if (audioFile.size > maxSize) {
-      onNotification('Kích thước file vượt quá giới hạn cho phép (100MB)', 'error');
-      return;
-    }
-
     setIsUploading(true);
     try {
       // Call the onUpload function with the updated parameters
